@@ -6,12 +6,13 @@
         xmlns:local="clr-namespace:MuseumApp"
         mc:Ignorable="d"
         Height="600" Width="920">
-    <Grid>
+    <Grid x:Name="Login_Form">
         <Image Margin="0,0,0,0" Source="/Images/cover-2-1-b4c03b57f59f99cfb01ec83c400ae689_600x400.jpg" Stretch="Fill" Opacity="0.6">
             <Image.Effect>
                 <BlurEffect/>
             </Image.Effect>
         </Image>
+        <Frame Content="Frame" HorizontalAlignment="Center" Height="163" VerticalAlignment="Center" Width="362" RenderTransformOrigin="0.08,-0.001" Background="#FFF0F2F4"/>
 
     </Grid>
 </Window>

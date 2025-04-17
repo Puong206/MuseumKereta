@@ -86,6 +86,20 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Resource Include="Fonts\PlusJakartaSans-Bold.ttf" />
+    <Resource Include="Fonts\PlusJakartaSans-BoldItalic.ttf" />
+    <Resource Include="Fonts\PlusJakartaSans-ExtraBold.ttf" />
+    <Resource Include="Fonts\PlusJakartaSans-ExtraBoldItalic.ttf" />
+    <Resource Include="Fonts\PlusJakartaSans-ExtraLight.ttf" />
+    <Resource Include="Fonts\PlusJakartaSans-ExtraLightItalic.ttf" />
+    <Resource Include="Fonts\PlusJakartaSans-Italic.ttf" />
+    <Resource Include="Fonts\PlusJakartaSans-Light.ttf" />
+    <Resource Include="Fonts\PlusJakartaSans-LightItalic.ttf" />
+    <Resource Include="Fonts\PlusJakartaSans-Medium.ttf" />
+    <Resource Include="Fonts\PlusJakartaSans-MediumItalic.ttf" />
+    <Resource Include="Fonts\PlusJakartaSans-Regular.ttf" />
+    <Resource Include="Fonts\PlusJakartaSans-SemiBold.ttf" />
+    <Resource Include="Fonts\PlusJakartaSans-SemiBoldItalic.ttf" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -96,7 +110,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Core\" />
-    <Folder Include="Fonts\" />
     <Folder Include="Theme\" />
   </ItemGroup>
   <ItemGroup>
