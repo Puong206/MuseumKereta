@@ -5,8 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MuseumApp"
         mc:Ignorable="d"
-        Height="450" Width="800">
+        Height="600" Width="920">
     <Grid>
-        
+        <Image Margin="0,0,0,0" Source="/Images/cover-2-1-b4c03b57f59f99cfb01ec83c400ae689_600x400.jpg" Stretch="Fill" Opacity="0.6">
+            <Image.Effect>
+                <BlurEffect/>
+            </Image.Effect>
+        </Image>
+
     </Grid>
 </Window>

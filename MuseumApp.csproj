@@ -97,8 +97,10 @@
   <ItemGroup>
     <Folder Include="Core\" />
     <Folder Include="Fonts\" />
-    <Folder Include="Images\" />
     <Folder Include="Theme\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\cover-2-1-b4c03b57f59f99cfb01ec83c400ae689_600x400.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
