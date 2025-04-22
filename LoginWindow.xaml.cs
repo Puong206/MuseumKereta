@@ -20,6 +20,7 @@ namespace MuseumApp
     /// </summary>
     public partial class LoginWindow : Window
     {
+        private string connectionString = "Data Source=LAPTOP-HDNQCJHP\\WILDAN_ZAUHAIR;Initial Catalog=OrganisasiMahasiswa;Integrated Security=True";
         public LoginWindow()
         {
             InitializeComponent();
@@ -32,6 +33,14 @@ namespace MuseumApp
 
         private void Frame_Navigated_1(object sender, NavigationEventArgs e)
         {
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            string email = EmailTextBox.Text;
+            string password = PasswordBox.Password;
+
 
         }
     }
