@@ -42,7 +42,7 @@
                        FontSize="28"
                        Foreground="#2D2B70"/>
 
-            <DataGrid x:Name="dataGridKoleksi" AutoGenerateColumns="False" IsReadOnly="True"
+            <DataGrid x:Name="dataGridKoleksi" FontFamily="Plus Jakarta Sans Medium" AutoGenerateColumns="False" IsReadOnly="True"
                       SelectionMode="Single" SelectionUnit="FullRow" Margin="20,75,20,75" SelectionChanged="dataGridKoleksi_SelectionChanged" Background="White" BorderBrush="{x:Null}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID Barang" Binding="{Binding BarangID}" Width="Auto"/>

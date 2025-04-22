@@ -42,8 +42,8 @@
                        FontFamily="Plus Jakarta Sans Bold"
                        FontSize="28"
                        Foreground="#2D2B70"/>
-            <DataGrid x:Name="dataGridPegawai" AutoGenerateColumns="False" IsReadOnly="True"
-                  SelectionMode="Single" SelectionUnit="FullRow" Margin="0,60,0,90" SelectionChanged="dataGridPegawai_SelectionChanged" Background="White" BorderBrush="{x:Null}">
+            <DataGrid x:Name="dataGridPegawai" FontFamily="Plus Jakarta Sans Medium" Margin="20,75,20,75" AutoGenerateColumns="False" IsReadOnly="True"
+                  SelectionMode="Single" SelectionUnit="FullRow" SelectionChanged="dataGridPegawai_SelectionChanged" Background="White" BorderBrush="{x:Null}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="NIPP" Binding="{Binding NIPP}" Width="200"/>
                     <DataGridTextColumn Header="Nama Pegawai" Binding="{Binding NamaPegawai}" Width="200"/>
