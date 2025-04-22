@@ -20,9 +20,10 @@ namespace MuseumApp
     /// </summary>
     public partial class LoginWindow : Window
     {
+        private string connectionString = "Data Source=LAPTOP-HDNQCJHP\\WILDAN_ZAUHAIR;Initial Catalog=OrganisasiMahasiswa;Integrated Security=True";
         public LoginWindow()
         {
-             InitializeComponent();
+            InitializeComponent();
         }
 
         private void Frame_Navigated(object sender, NavigationEventArgs e)
@@ -40,14 +41,6 @@ namespace MuseumApp
             string email = EmailTextBox.Text;
             string password = PasswordBox.Password;
 
-            if (email == "admin@contoh.com" && password == "aryatampan123")
-            {
-                MessageBox.Show("Login Sukses");
-            }
-            else
-            {
-                MessageBox.Show("Login Gagal");
-            }
 
         }
     }
