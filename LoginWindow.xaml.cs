@@ -40,6 +40,15 @@ namespace MuseumApp
             string email = EmailTextBox.Text;
             string password = PasswordBox.Password;
 
+            if (email == "admin@contoh.com" && password == "aryatampan123")
+            {
+                MessageBox.Show("Login Sukses");
+            }
+            else
+            {
+                MessageBox.Show("Login Gagal");
+            }
+
         }
     }
 }
