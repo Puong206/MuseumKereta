@@ -82,5 +82,10 @@ namespace MuseumApp
                 
            
         }
+
+        private void UsernameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }
