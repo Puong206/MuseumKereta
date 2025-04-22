@@ -33,7 +33,7 @@
               Margin="20,20,20,20">
             <Border Background="White"
                     CornerRadius="20,20,20,20">
-                
+
             </Border>
 
 
@@ -46,11 +46,11 @@
                        FontSize="28"
                        Foreground="#2D2B70"/>
             <Border BorderBrush="Black" BorderThickness="1"/>
-            <DataGrid x:Name="dataGridKaryawan" AutoGenerateColumns="False" IsReadOnly="True"
-                  SelectionMode="Single" SelectionUnit="FullRow" Margin="0,60,0,90" SelectionChanged="dataGridKaryawan_SelectionChanged" Background="White" BorderBrush="{x:Null}">
+            <DataGrid x:Name="dataGridPegawai" AutoGenerateColumns="False" IsReadOnly="True"
+                  SelectionMode="Single" SelectionUnit="FullRow" Margin="0,60,0,90" SelectionChanged="dataGridPegawai_SelectionChanged" Background="White" BorderBrush="{x:Null}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="NIPP" Binding="{Binding Id}" Width="200"/>
-                    <DataGridTextColumn Header="Nama Pegawai" Binding="{Binding NamaKaryawan}" Width="200"/>
+                    <DataGridTextColumn Header="NIPP" Binding="{Binding NIPP}" Width="200"/>
+                    <DataGridTextColumn Header="Nama Pegawai" Binding="{Binding NamaPegawai}" Width="200"/>
                 </DataGrid.Columns>
             </DataGrid>
             <Button Content="Tambah"
@@ -71,7 +71,7 @@
                     Foreground="#F26924"
                     Margin="312,352,312,22" BorderBrush="#FF2D2B70"/>
 
-        <Button Content="Hapus"
+            <Button Content="Hapus"
                 FontFamily="Plus Jakarta Sans Bold"
                 FontSize="16"
                 Height="36"
