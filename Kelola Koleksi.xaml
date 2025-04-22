@@ -34,7 +34,7 @@
             <Border Background="White"
                     CornerRadius="20,20,20,20">
             </Border>
-            <TextBlock Text="Kelola Barang"
+            <TextBlock Text="Kelola Koleksi"
                        HorizontalAlignment="Left"
                        Margin="72,20,0,0"
                        VerticalAlignment="Top"
@@ -45,11 +45,9 @@
             <DataGrid x:Name="dataGridKoleksi" FontFamily="Plus Jakarta Sans Medium" AutoGenerateColumns="False" IsReadOnly="True"
                       SelectionMode="Single" SelectionUnit="FullRow" Margin="20,75,20,75" SelectionChanged="dataGridKoleksi_SelectionChanged" Background="White" BorderBrush="{x:Null}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID Barang" Binding="{Binding BarangID}" Width="Auto"/>
-                    <DataGridTextColumn Header="Nama Barang" Binding="{Binding NamaBarang}"/>
-                    <DataGridTextColumn Header="Tahun Pembuatan" Binding="{Binding TahunPembuatan}"/>
-                    <DataGridTextColumn Header="Asal Barang" Binding="{Binding AsalBarang}"/>
-                    <DataGridTextColumn Header="Deskripsi" Binding="{Binding Deskripsi}"/>
+                    <DataGridTextColumn Header="ID Koleksi" Binding="{Binding KoleksiID}" Width="Auto"/>
+                    <DataGridTextColumn Header="Jenis Koleksi" Binding="{Binding JenisKoleksi}"/>
+                    <DataGridTextColumn Header="Deskripsi" Binding="{Binding Deskripsi}" Width="Auto"/>
                 </DataGrid.Columns>
             </DataGrid>
             <Button x:Name="BtnTambah" Content="Tambah"
