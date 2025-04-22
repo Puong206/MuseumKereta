@@ -41,7 +41,7 @@
                                Width="200"
                                FontFamily="Plus Jakarta Sans Medium"
                                Foreground="#2D2B70"/>
-                    <PasswordBox Width="200"/>
+                    <PasswordBox x:Name="PasswordBox" Width="200"/>
                     <Button Content="Login"
                             FontFamily="Plus Jakarta Sans Bold"
                             Foreground="#ffffff"
@@ -50,7 +50,7 @@
                             Padding="0,0,0,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Margin="0,16,0,2" BorderBrush="{x:Null}" Background="#FFF26924"/>
+                            Margin="0,16,0,2" BorderBrush="{x:Null}" Background="#FFF26924" Click="Button_Click"/>
                 </StackPanel>
             </Frame.Content>
         </Frame>

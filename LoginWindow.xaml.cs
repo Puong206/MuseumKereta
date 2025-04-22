@@ -35,8 +35,19 @@ namespace MuseumApp
 
         }
 
-        private void Frame_Navigated_2(object sender, NavigationEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
+            string email = EmailTextBox.Text;
+            string password = PasswordBox.Password;
+
+            if (email == "admin@contoh.com" && password == "aryatampan123")
+            {
+                MessageBox.Show("Login Sukses");
+            }
+            else
+            {
+                MessageBox.Show("Login Gagal");
+            }
 
         }
     }
