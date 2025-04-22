@@ -59,6 +59,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Kelola Koleksi.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Kelola Pegawai.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -73,6 +77,9 @@
     </Compile>
     <Compile Include="Kelola Barang.xaml.cs">
       <DependentUpon>Kelola Barang.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Kelola Koleksi.xaml.cs">
+      <DependentUpon>Kelola Koleksi.xaml</DependentUpon>
     </Compile>
     <Compile Include="Kelola Pegawai.xaml.cs">
       <DependentUpon>Kelola Pegawai.xaml</DependentUpon>
