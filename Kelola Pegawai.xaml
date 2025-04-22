@@ -42,6 +42,17 @@
                        FontFamily="Plus Jakarta Sans Bold"
                        FontSize="28"
                        Foreground="#2D2B70"/>
+            <StackPanel Orientation="Horizontal" Margin="20,60,20,0">
+                <StackPanel Margin="0,0,20,0">
+                    <TextBlock Text="NIPP" FontWeight="Bold"/>
+                    <TextBox x:Name="txtNIPP" Width="150" Height="30"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Nama Pegawai" FontWeight="Bold"/>
+                    <TextBox x:Name="txtNama" Width="300" Height="30"/>
+                </StackPanel>
+            </StackPanel>
+
             <DataGrid x:Name="dataGridPegawai" FontFamily="Plus Jakarta Sans Medium" Margin="20,75,20,75" AutoGenerateColumns="False" IsReadOnly="True"
                   SelectionMode="Single" SelectionUnit="FullRow" SelectionChanged="dataGridPegawai_SelectionChanged" Background="White" BorderBrush="{x:Null}">
                 <DataGrid.Columns>
