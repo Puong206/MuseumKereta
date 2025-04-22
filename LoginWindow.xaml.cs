@@ -75,9 +75,13 @@ namespace MuseumApp
                         MessageBox.Show("Database error: " + ex.Message, "Error");
                     }
             }
-                {
-                }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Something went wrong");
+            }
+            {
 
+            }
              
                 
            
