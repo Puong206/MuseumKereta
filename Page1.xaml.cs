@@ -20,12 +20,18 @@ namespace MuseumApp
     /// </summary>
     public partial class Page1 : Page
     {
+        private string baseconnectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;";
         public Page1()
         {
             InitializeComponent();
         }
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void RadioButton_Checked_1(object sender, RoutedEventArgs e)
         {
 
         }

@@ -62,7 +62,7 @@
                             FontSize="14"
                             FontFamily="Plus Jakarta Sans Semibold"
                             VerticalAlignment="Center"
-                            Foreground="#FF2D2B70"
+                            Foreground="#FF2D2B70" Checked="RadioButton_Checked_1"
                             />
 
                 <RadioButton Content="Kelola Pegawai"
