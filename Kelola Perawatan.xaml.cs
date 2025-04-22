@@ -23,7 +23,7 @@ namespace MuseumApp
     /// </summary>
     public partial class Kelola_Perawatan : Page
     {
-        private string baseConnectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password";
+        SqlConnection conn = new SqlConnection("Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password");
         SqlCommand cmd;
         SqlDataAdapter adapter;
         DataTable dt;
@@ -31,6 +31,24 @@ namespace MuseumApp
         public Kelola_Perawatan()
         {
             InitializeComponent();
+            LoadData();
+        }
+
+        private void LoadData()
+        {
+            try
+            {
+                conn.Open();
+                adapter = new SqlDataAdapter("SELECT * FROM Perawatan", conn);
+                dt = new DataTable();
+                adapter.Fill(dt);
+                dataGridPerawatan.ItemsSource = dt.DefaultView;
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal memuat data: " + ex.Message);
+            }
         }
 
         private void dataGridPerawatan_SelectionChanged(object sender, SelectionChangedEventArgs e)
