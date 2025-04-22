@@ -20,6 +20,7 @@ namespace MuseumApp
     /// </summary>
     public partial class Kelola_Koleksi : Page
     {
+        private string baseConnectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password";
         public Kelola_Koleksi()
         {
             InitializeComponent();
