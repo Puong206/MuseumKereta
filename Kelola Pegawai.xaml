@@ -45,6 +45,6 @@
                        Foreground="#2D2B70"/>
 
         </Grid>
-        <Button Content="Button" Margin="193,174,448,175"/>
+        <Button Content="Button" Margin="193,174,448,175" Click="Button_Click"/>
     </Grid>
 </Page>

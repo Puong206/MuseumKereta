@@ -20,9 +20,16 @@ namespace MuseumApp
     /// </summary>
     public partial class Kelola_Pegawai : Page
     {
+        private string baseconnectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;";
+
         public Kelola_Pegawai()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
