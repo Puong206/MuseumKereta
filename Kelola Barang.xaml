@@ -42,8 +42,8 @@
                        FontSize="28"
                        Foreground="#2D2B70"/>
 
-            <DataGrid x:Name="dataGridPegawai" AutoGenerateColumns="False" IsReadOnly="True"
-                      SelectionMode="Single" SelectionUnit="FullRow" Margin="20,75,20,75" SelectionChanged="dataGridPegawai_SelectionChanged" Background="White" BorderBrush="{x:Null}">
+            <DataGrid x:Name="dataGridBarang" AutoGenerateColumns="False" IsReadOnly="True"
+                      SelectionMode="Single" SelectionUnit="FullRow" Margin="20,75,20,75" SelectionChanged="dataGridBarang_SelectionChanged" Background="White" BorderBrush="{x:Null}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID Barang" Binding="{Binding BarangID}" Width="Auto"/>
                     <DataGridTextColumn Header="Nama Barang" Binding="{Binding NamaBarang}"/>
