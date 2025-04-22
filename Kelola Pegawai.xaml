@@ -53,32 +53,32 @@
                     <DataGridTextColumn Header="Nama Pegawai" Binding="{Binding NamaPegawai}" Width="200"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <Button Content="Tambah"
+            <Button x:Name="BtnTambah" Content="Tambah"
                     FontFamily="Plus Jakarta Sans Bold"
                     FontSize="16"
                     Height="36"
                     Width="136"
                     Background="#FF2D2B70"
                     Foreground="White"
-                    Margin="107,352,517,22"/>
+                    Margin="107,352,517,22" Click="BtnTambah_Click"/>
 
-            <Button Content="Edit"
+            <Button x:Name="BtnEdit" Content="Edit"
                     FontFamily="Plus Jakarta Sans Bold"
                     FontSize="16"
                     Height="36" 
                     Width="136"
                     Background="White"
                     Foreground="#F26924"
-                    Margin="312,352,312,22" BorderBrush="#FF2D2B70"/>
+                    Margin="312,352,312,22" BorderBrush="#FF2D2B70" Click="BtnEdit_Click"/>
 
-            <Button Content="Hapus"
+            <Button x:Name="BtnHapus" Content="Hapus"
                 FontFamily="Plus Jakarta Sans Bold"
                 FontSize="16"
                 Height="36"
                 Width="136"
                 Background="#F26924"
                 Foreground="White"
-                Margin="505,352,119,22"/>
+                Margin="505,352,119,22" Click="BtnHapus_Click"/>
         </Grid>
     </Grid>
 </Page>
