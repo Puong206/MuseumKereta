@@ -28,18 +28,8 @@
                 <BlurEffect/>
             </Rectangle.Effect>
         </Rectangle>
-        <Frame Margin="75,62,691,62"
-               Width="154"
-               Height="476"
-               VerticalAlignment="Center"
-               Background="White">
-            <Frame.Content>
-                <StackPanel Orientation="Horizontal"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">
-                    
-                </StackPanel>
-            </Frame.Content>
-        </Frame>
+
     </Grid>
+
+
 </Page>
