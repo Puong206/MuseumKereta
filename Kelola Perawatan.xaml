@@ -41,6 +41,29 @@
                        FontFamily="Plus Jakarta Sans Bold"
                        FontSize="28"
                        Foreground="#2D2B70"/>
+            <StackPanel Orientation="Horizontal" Margin="40,60,40,0" VerticalAlignment="Top" HorizontalAlignment="Center" Height="Auto" Width="720">
+                <StackPanel Margin="5" Width="100">
+                    <TextBlock Text="ID Barang" FontWeight="Bold"/>
+                    <TextBox x:Name="txtIDBarang"/>
+                </StackPanel>
+                <StackPanel Margin="5" Width="140">
+                    <TextBlock Text="Tanggal Perawatan" FontWeight="Bold"/>
+                    <DatePicker x:Name="dpTanggalPerawatan"/>
+                </StackPanel>
+                <StackPanel Margin="5" Width="120">
+                    <TextBlock Text="Jenis Perawatan" FontWeight="Bold"/>
+                    <TextBox x:Name="txtJenisPerawatan"/>
+                </StackPanel>
+                <StackPanel Margin="5" Width="120">
+                    <TextBlock Text="Catatan" FontWeight="Bold"/>
+                    <TextBox x:Name="txtCatatan"/>
+                </StackPanel>
+                <StackPanel Margin="5" Width="100">
+                    <TextBlock Text="NIPP" FontWeight="Bold"/>
+                    <TextBox x:Name="txtNIPP"/>
+                </StackPanel>
+            </StackPanel>
+
 
             <DataGrid x:Name="dataGridPerawatan" FontFamily="Plus Jakarta Sans Medium" AutoGenerateColumns="False" IsReadOnly="True"
                       SelectionMode="Single" SelectionUnit="FullRow" Margin="20,75,20,75" SelectionChanged="dataGridPerawatan_SelectionChanged" Background="White" BorderBrush="{x:Null}">
