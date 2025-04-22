@@ -58,7 +58,42 @@ namespace MuseumApp
 
         private void BtnTambah_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txtIDBarang.Text) ||
+                dpTanggalPerawatan.SelectedDate == null ||
+                string.IsNullOrWhiteSpace(txtJenisPerawatan.Text) ||
+                string.IsNullOrWhiteSpace(txtCatatan.Text) ||
+                string.IsNullOrWhiteSpace(txtNIPP.Text))
+            {
+                MessageBox.Show("Harap lengkapi semua data.");
+                return;
+            }
 
+            try
+            {
+                conn.Open();
+                cmd = new SqlCommand("INSERT INTO Perawatan (BarangID, TanggalPerawatan, JenisPerawatan, Catatan, NIPP) VALUES (@barangid, @tanggal, @jenis, @catatan, @nipp)", conn);
+                cmd.Parameters.AddWithValue("@barangid", txtIDBarang.Text);
+                cmd.Parameters.AddWithValue("@tanggal", dpTanggalPerawatan.SelectedDate.Value);
+                cmd.Parameters.AddWithValue("@jenis", txtJenisPerawatan.Text);
+                cmd.Parameters.AddWithValue("@catatan", txtCatatan.Text);
+                cmd.Parameters.AddWithValue("@nipp", txtNIPP.Text);
+                cmd.ExecuteNonQuery();
+                conn.Close();
+
+                MessageBox.Show("Data berhasil ditambahkan.");
+                LoadData();
+
+                // Kosongkan input
+                txtIDBarang.Clear();
+                txtJenisPerawatan.Clear();
+                txtCatatan.Clear();
+                txtNIPP.Clear();
+                dpTanggalPerawatan.SelectedDate = null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal menambah data: " + ex.Message);
+            }
         }
 
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
