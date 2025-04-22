@@ -24,6 +24,10 @@ namespace MuseumApp
     public partial class Kelola_Perawatan : Page
     {
         private string baseConnectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password";
+        SqlCommand cmd;
+        SqlDataAdapter adapter;
+        DataTable dt;
+
         public Kelola_Perawatan()
         {
             InitializeComponent();
