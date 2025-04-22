@@ -31,9 +31,11 @@
 
         <Grid
               Margin="20,20,20,20">
-
             <Border Background="White"
-                    CornerRadius="20,20,20,20"/>
+                    CornerRadius="20,20,20,20">
+                
+            </Border>
+
 
             <TextBlock
                        Text="Kelola Pegawai"
@@ -43,8 +45,40 @@
                        FontFamily="Plus Jakarta Sans Bold"
                        FontSize="28"
                        Foreground="#2D2B70"/>
+            <Border BorderBrush="Black" BorderThickness="1"/>
+            <DataGrid x:Name="dataGridKaryawan" AutoGenerateColumns="False" IsReadOnly="True"
+                  SelectionMode="Single" SelectionUnit="FullRow" Margin="0,60,0,90" SelectionChanged="dataGridKaryawan_SelectionChanged" Background="White" BorderBrush="{x:Null}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="NIPP" Binding="{Binding Id}" Width="200"/>
+                    <DataGridTextColumn Header="Nama Pegawai" Binding="{Binding NamaKaryawan}" Width="200"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <Button Content="Tambah"
+                    FontFamily="Plus Jakarta Sans Bold"
+                    FontSize="16"
+                    Height="36"
+                    Width="136"
+                    Background="#FF2D2B70"
+                    Foreground="White"
+                    Margin="107,352,517,22"/>
 
+            <Button Content="Edit"
+                    FontFamily="Plus Jakarta Sans Bold"
+                    FontSize="16"
+                    Height="36" 
+                    Width="136"
+                    Background="White"
+                    Foreground="#F26924"
+                    Margin="312,352,312,22" BorderBrush="#FF2D2B70"/>
+
+        <Button Content="Hapus"
+                FontFamily="Plus Jakarta Sans Bold"
+                FontSize="16"
+                Height="36"
+                Width="136"
+                Background="#F26924"
+                Foreground="White"
+                Margin="505,352,119,22"/>
         </Grid>
-        <Button Content="Button" Margin="193,174,448,175"/>
     </Grid>
 </Page>
