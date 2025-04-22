@@ -34,5 +34,10 @@ namespace MuseumApp
         {
 
         }
+
+        private void Frame_Navigated_2(object sender, NavigationEventArgs e)
+        {
+
+        }
     }
 }
