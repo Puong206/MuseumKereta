@@ -1,35 +1,88 @@
 ﻿<Page x:Class="MuseumApp.Page1"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:MuseumApp"
-      mc:Ignorable="d" 
-      d:DesignHeight="600" d:DesignWidth="920"
-      Title="Page1">
+     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+     xmlns:local="clr-namespace:MuseumApp"
+     mc:Ignorable="d" 
+     d:DesignHeight="600" d:DesignWidth="920"
+     Title="Page1">
 
-    <Grid Background="White">
-        <Image Source="/Images/cover-2-1-b4c03b57f59f99cfb01ec83c400ae689_600x400.jpg"
-               Stretch="Fill"
-               Width="920"
-               Height="600"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"
-               Opacity="0.75">
-            <Image.Effect>
-                <BlurEffect/>
-            </Image.Effect>
-        </Image>
-        <Rectangle HorizontalAlignment="Center"
-                   Height="500"
-                   Width="800"
-                   VerticalAlignment="Center" Fill="White" Opacity="0.4">
-            <Rectangle.Effect>
-                <BlurEffect/>
-            </Rectangle.Effect>
-        </Rectangle>
+   <Grid Background="White">
+       <Image Source="/Images/cover-2-1-b4c03b57f59f99cfb01ec83c400ae689_600x400.jpg"
+              Stretch="Fill"
+              Width="920"
+              Height="600"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              Opacity="0.75">
+           <Image.Effect>
+               <BlurEffect/>
+           </Image.Effect>
+       </Image>
+       <Rectangle HorizontalAlignment="Center"
+                  Height="500"
+                  Width="800"
+                  VerticalAlignment="Center" Fill="White" Opacity="0.4">
+           <Rectangle.Effect>
+               <BlurEffect/>
+           </Rectangle.Effect>
+       </Rectangle>
 
-    </Grid>
+       <Grid HorizontalAlignment="Left"
+             Width="172"
+             Margin="72,160,0,62"> <!-- Fixed the issue by removing the extra whitespace in the Margin attribute -->
 
+           <Border Background="White"
+                   CornerRadius="20,20,20,20" /> <!-- Fixed the issue by removing the extra whitespace in the CornerRadius attribute -->
+
+           <StackPanel Width="125"
+                       Grid.Row="1"
+                       Margin="0,52,0,0"> <!-- Fixed the issue by removing the extra whitespace in the Margin attribute -->
+
+               <RadioButton Content="Dashboard"
+                            Height="22"
+                            FontSize="14"
+                            FontFamily="Plus Jakarta Sans Semibold"
+                            VerticalAlignment="Center"
+                            Checked="RadioButton_Checked"
+                            Foreground="#FF2D2B70"
+                            />
+
+               <RadioButton Content="Kelola Koleksi"
+                            Height="22"
+                            FontSize="14"
+                            FontFamily="Plus Jakarta Sans Semibold"
+                            VerticalAlignment="Center"
+                            Foreground="#FF2D2B70"
+                            />
+
+               <RadioButton Content="Kelola Barang"
+                            Height="22"
+                            FontSize="14"
+                            FontFamily="Plus Jakarta Sans Semibold"
+                            VerticalAlignment="Center"
+                            Foreground="#FF2D2B70"
+                            />
+               
+               <RadioButton Content="Kelola Pegawai"
+                            Height="22"
+                            FontSize="14"
+                            FontFamily="Plus Jakarta Sans Semibold"
+                            VerticalAlignment="Center"
+                            Foreground="#FF2D2B70"
+                            />
+
+               <RadioButton Content="Kelola Perawatan"
+                            Height="22"
+                            FontSize="14"
+                            FontFamily="Plus Jakarta Sans Semibold"
+                            VerticalAlignment="Center"
+                            />
+           </StackPanel>
+
+       </Grid>
+
+   </Grid>
 
 </Page>
