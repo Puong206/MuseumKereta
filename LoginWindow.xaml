@@ -15,7 +15,7 @@
         <Frame HorizontalAlignment="Center"
                VerticalAlignment="Center"
                Width="364"
-               Background="#FFF0F2F4">
+               Background="#FFF0F2F4" Navigated="Frame_Navigated_2">
             <Frame.Content>
                 <StackPanel Orientation="Vertical"
                            HorizontalAlignment="Center"
