@@ -20,6 +20,7 @@ namespace MuseumApp
     /// </summary>
     public partial class Kelola_Barang : Page
     {
+        private string baseConnectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password";
         public Kelola_Barang()
         {
             InitializeComponent();
@@ -41,6 +42,11 @@ namespace MuseumApp
         }
 
         private void BtnHapus_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnTambah_Click(object sender, RoutedEventArgs e)
         {
 
         }
