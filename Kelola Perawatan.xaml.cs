@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Data;
+using System.Data.SqlClient;
+
 
 namespace MuseumApp
 {
@@ -20,6 +23,7 @@ namespace MuseumApp
     /// </summary>
     public partial class Kelola_Perawatan : Page
     {
+        private string baseConnectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password";
         public Kelola_Perawatan()
         {
             InitializeComponent();
