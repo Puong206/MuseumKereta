@@ -29,13 +29,10 @@
             </Rectangle.Effect>
         </Rectangle>
 
-        <Grid
-              Margin="20,20,20,20">
+        <Grid Margin="20,20,20,20">
             <Border Background="White"
                     CornerRadius="20,20,20,20">
-
             </Border>
-
 
             <TextBlock
                        Text="Kelola Pegawai"
@@ -45,7 +42,6 @@
                        FontFamily="Plus Jakarta Sans Bold"
                        FontSize="28"
                        Foreground="#2D2B70"/>
-            <Border BorderBrush="Black" BorderThickness="1"/>
             <DataGrid x:Name="dataGridPegawai" AutoGenerateColumns="False" IsReadOnly="True"
                   SelectionMode="Single" SelectionUnit="FullRow" Margin="0,60,0,90" SelectionChanged="dataGridPegawai_SelectionChanged" Background="White" BorderBrush="{x:Null}">
                 <DataGrid.Columns>

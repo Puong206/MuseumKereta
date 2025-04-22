@@ -24,5 +24,25 @@ namespace MuseumApp
         {
             InitializeComponent();
         }
+
+        private void dataGridPegawai_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void BtnTambah_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnEdit_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnHapus_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
