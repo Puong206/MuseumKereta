@@ -22,7 +22,7 @@ namespace MuseumApp
     {
         public LoginWindow()
         {
-            InitializeComponent();
+             InitializeComponent();
         }
 
         private void Frame_Navigated(object sender, NavigationEventArgs e)
