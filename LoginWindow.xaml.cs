@@ -37,6 +37,8 @@ namespace MuseumApp
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            string email = EmailTextBox.Text;
+            string password = PasswordBox.Password;
 
         }
     }

@@ -41,7 +41,7 @@
                                Width="200"
                                FontFamily="Plus Jakarta Sans Medium"
                                Foreground="#2D2B70"/>
-                    <PasswordBox Width="200"/>
+                    <PasswordBox x:Name="PasswordBox" Width="200"/>
                     <Button Content="Login"
                             FontFamily="Plus Jakarta Sans Bold"
                             Foreground="#ffffff"
