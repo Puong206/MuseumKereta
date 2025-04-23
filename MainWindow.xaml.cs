@@ -23,13 +23,14 @@ namespace MuseumApp
         {
             InitializeComponent();
             MainContent.Content = new Page1();
+
         }
 
         public void GantiKonten(UserControl control)
         {
             MainContent.Content = control;
         }
-
+            
         internal void GantiKonten(Kelola_Koleksi kelola_Koleksi)
         {
             throw new NotImplementedException();
