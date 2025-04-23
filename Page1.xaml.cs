@@ -31,11 +31,6 @@ namespace MuseumApp
             NavigationService?.Navigate(new Kelola_Koleksi());
         }
 
-        private void ButtonBarang(object sender, RoutedEventArgs e)
-        {
-            NavigationService?.Navigate(new Kelola_Barang());
-        }
-
         private void ButtonPegawai_Checked(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(new Kelola_Pegawai());
@@ -44,6 +39,11 @@ namespace MuseumApp
         private void ButtonPerawatan_Checked(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(new Kelola_Perawatan());
+        }
+
+        private void ButtonBarang_Checked(object sender, RoutedEventArgs e)
+        {
+            NavigationService?.Navigate(new Kelola_Barang());
         }
     }
 }

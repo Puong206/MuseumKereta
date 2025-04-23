@@ -76,6 +76,7 @@ namespace MuseumApp
                     }
             }
             catch(Exception ex)
+            
             {
                 MessageBox.Show("Something went wrong");
             }
@@ -90,6 +91,10 @@ namespace MuseumApp
         private void UsernameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
+        }
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            // Add logic here if needed, or leave empty if no specific action is required.
         }
     }
 }

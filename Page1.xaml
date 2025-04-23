@@ -40,15 +40,6 @@
                        Grid.Row="1"
                        Margin="0,52,0,0">
 
-                <RadioButton Content="Dashboard"
-                            Height="22"
-                            FontSize="14"
-                            FontFamily="Plus Jakarta Sans Semibold"
-                            VerticalAlignment="Center"
-                            Checked="RadioButton_Checked"
-                            Foreground="#FF2D2B70"
-                            />
-
                 <RadioButton x:Name="ButtonKoleksi" Content="Kelola Koleksi"
                             Height="22"
                             FontSize="14"
@@ -62,7 +53,7 @@
                             FontSize="14"
                             FontFamily="Plus Jakarta Sans Semibold"
                             VerticalAlignment="Center"
-                            Foreground="#FF2D2B70" Checked="ButtonBarang"
+                            Foreground="#FF2D2B70" Checked="ButtonBarang_Checked"
                             />
 
                 <RadioButton x:Name="ButtonPegawai" Content="Kelola Pegawai"
