@@ -30,7 +30,7 @@ namespace MuseumApp
 
         private void ButtonKoleksi_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(new Kelola_Koleksi());
+            this.NavigationService.Navigate(new Kelola_Koleksi());
         }
 
         private void ButtonBarang_Click(object sender, RoutedEventArgs e)
