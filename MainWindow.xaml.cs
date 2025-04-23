@@ -25,30 +25,30 @@ namespace MuseumApp
             MainContent.Content = new Page1();
 
         }
-
         public void GantiKonten(UserControl control)
         {
             MainContent.Content = control;
         }
-            
+
         internal void GantiKonten(Kelola_Koleksi kelola_Koleksi)
         {
-            throw new NotImplementedException();
+            GantiKonten((UserControl)kelola_Koleksi);
         }
 
         internal void GantiKonten(Kelola_Barang kelola_Barang)
         {
-            throw new NotImplementedException();
+            GantiKonten((UserControl)kelola_Barang);
         }
 
         internal void GantiKonten(Kelola_Pegawai kelola_Pegawai)
         {
-            throw new NotImplementedException();
+            GantiKonten((UserControl)kelola_Pegawai);
         }
 
         internal void GantiKonten(Kelola_Perawatan kelola_Perawatan)
         {
-            throw new NotImplementedException();
+            GantiKonten((UserControl)kelola_Perawatan);
         }
+
     }
 }
