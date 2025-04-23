@@ -53,7 +53,13 @@ namespace MuseumApp
 
         private void dataGridPerawatan_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            if (dataGridPerawatan.SelectedItem is DataRowView row)
+            {
+                txtIDBarang.Text = row["BarangID"].ToString();
+                dpTanggalPerawatan.SelectedDate = Convert.ToDateTime(row["TanggalPerawatan"]);
+                txtJenisPerawatan.Text = row["JenisPerawatan"].ToString();
+                txtCatatan.Text = row["Catatan"].ToString();
+            }
         }
 
         private void BtnTambah_Click(object sender, RoutedEventArgs e)
@@ -162,6 +168,11 @@ namespace MuseumApp
             {
                 MessageBox.Show("Gagal menghapus data: " + ex.Message);
             }
+        }
+
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService?.Navigate(new Page1());
         }
     }
 }

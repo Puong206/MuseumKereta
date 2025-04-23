@@ -37,11 +37,25 @@
             <TextBlock
                        Text="Kelola Pegawai"
                        HorizontalAlignment="Left"
-                       Margin="72,20,0,0"
+                       Margin="128,20,0,0"
                        VerticalAlignment="Top"
                        FontFamily="Plus Jakarta Sans Bold"
                        FontSize="28"
                        Foreground="#2D2B70"/>
+
+            <Button x:Name="BtnBack" Content="← Kembali"
+        FontFamily="Plus Jakarta Sans Bold"
+        FontSize="14"
+        Height="32"
+        Width="100"
+        Background="Transparent"
+        Foreground="#2D2B70"
+        BorderBrush="#2D2B70"
+        Margin="20,20,0,0"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Top"
+        Click="BtnBack_Click"/>
+
             <StackPanel Orientation="Horizontal" Margin="20,60,20,0">
                 <StackPanel Margin="0,0,20,0">
                     <TextBlock Text="NIPP" FontWeight="Bold"/>

@@ -173,5 +173,10 @@ namespace MuseumApp
             txtNama.Text = "";
             txtNIPP.IsEnabled = true;
         }
+
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService?.Navigate(new Page1());
+        }
     }
 }
