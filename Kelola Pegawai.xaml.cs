@@ -134,38 +134,6 @@ namespace MuseumApp
             }
         }
 
-        private void BtnHapus_Click(object sender, RoutedEventArgs e)
-        {
-            if (!(dataGridPegawai.SelectedItem is DataRowView row)) // Replaced 'is not' with '!(...)'
-            {
-                MessageBox.Show("Pilih pegawai yang ingin dihapus.");
-                return;
-            }
-
-            string nipp = row["NIPP"].ToString();
-
-            var result = MessageBox.Show($"Yakin ingin menghapus pegawai dengan NIPP {nipp}?", "Konfirmasi", MessageBoxButton.YesNo);
-            if (result != MessageBoxResult.Yes) return;
-
-            try
-            {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("DELETE FROM Karyawan WHERE NIPP = @nipp", conn))
-                {
-                    cmd.Parameters.AddWithValue("@nipp", nipp);
-                    cmd.ExecuteNonQuery();
-                }
-                conn.Close();
-
-                MessageBox.Show("Pegawai berhasil dihapus.");
-                ClearForm();
-                LoadData();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Gagal menghapus data: " + ex.Message);
-            }
-        }
 
         private void ClearForm()
         {

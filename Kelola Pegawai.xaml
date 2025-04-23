@@ -70,8 +70,9 @@
             <DataGrid x:Name="dataGridPegawai" FontFamily="Plus Jakarta Sans Medium" Margin="20,75,20,75" AutoGenerateColumns="False" IsReadOnly="True"
                   SelectionMode="Single" SelectionUnit="FullRow" SelectionChanged="dataGridPegawai_SelectionChanged" Background="White" BorderBrush="{x:Null}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="NIPP" Binding="{Binding NIPP}" Width="200"/>
-                    <DataGridTextColumn Header="Nama Pegawai" Binding="{Binding NamaPegawai}" Width="200"/>
+                    <DataGridTextColumn Header="NIPP" Binding="{Binding NIPP}" Width="Auto"/>
+                    <DataGridTextColumn Header="Nama Pegawai" Binding="{Binding NamaPegawai}" />
+                    <DataGridTextColumn Header="Status Karyawan" Binding="{Binding statusKaryawan}" />
                 </DataGrid.Columns>
             </DataGrid>
             <Button x:Name="BtnTambah" Content="Tambah"
@@ -86,20 +87,10 @@
             <Button x:Name="BtnEdit" Content="Edit"
                     FontFamily="Plus Jakarta Sans Bold"
                     FontSize="16"
-                    Height="36" 
-                    Width="136"
+                    Height="36"
                     Background="White"
                     Foreground="#F26924"
-                    Margin="312,352,312,22" BorderBrush="#FF2D2B70" Click="BtnEdit_Click"/>
-
-            <Button x:Name="BtnHapus" Content="Hapus"
-                FontFamily="Plus Jakarta Sans Bold"
-                FontSize="16"
-                Height="36"
-                Width="136"
-                Background="#F26924"
-                Foreground="White"
-                Margin="505,352,119,22" Click="BtnHapus_Click"/>
+                    Margin="502,352,123,22" BorderBrush="#FF2D2B70" Click="BtnEdit_Click"/>
         </Grid>
     </Grid>
 </Page>

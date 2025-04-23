@@ -39,38 +39,38 @@
             <StackPanel Width="140"
                        Grid.Row="1"
                        Margin="0,52,0,0">
+                <Button x:Name="ButtonKoleksi" Content="Kelola Koleksi"
+                        Height="50"
+                        Width="140"
+                        FontSize="14"
+                        FontFamily="Plus Jakarta Sans Semibold"
+                        VerticalAlignment="Center"
+                        Foreground="#FF2D2B70" Click="ButtonKoleksi_Click" BorderBrush="{x:Null}" Background="{x:Null}"/>
 
-                <RadioButton x:Name="ButtonKoleksi" Content="Kelola Koleksi"
-                            Height="22"
-                            FontSize="14"
-                            FontFamily="Plus Jakarta Sans Semibold"
-                            VerticalAlignment="Center"
-                            Foreground="#FF2D2B70" Checked="ButtonKoleksi_Checked"
-                            />
+                <Button x:Name="Button Barang" Content="Kelola Barang"
+                        Height="50"
+                        Width="140"
+                        FontSize="14"
+                        FontFamily="Plus Jakarta Sans Semibold"
+                        VerticalAlignment="Center"
+                        Foreground="#FF2D2B70" Click="ButtonBarang_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
 
-                <RadioButton x:Name="ButtonBarang" Content="Kelola Barang"
-                            Height="22"
-                            FontSize="14"
-                            FontFamily="Plus Jakarta Sans Semibold"
-                            VerticalAlignment="Center"
-                            Foreground="#FF2D2B70" Checked="ButtonBarang_Checked"
-                            />
+                <Button x:Name="ButtonPegawai" Content="Kelola Pegawai"
+                        Height="50"
+                        Width="140"
+                        FontSize="14"
+                        FontFamily="Plus Jakarta Sans Semibold"
+                        VerticalAlignment="Center"
+                        Foreground="#FF2D2B70" Click="ButtonPegawai_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
 
-                <RadioButton x:Name="ButtonPegawai" Content="Kelola Pegawai"
-                            Height="22"
-                            FontSize="14"
-                            FontFamily="Plus Jakarta Sans Semibold"
-                            VerticalAlignment="Center"
-                            Foreground="#FF2D2B70" Checked="ButtonPegawai_Checked"
-                            />
 
-                <RadioButton x:Name="ButtonPerawatan" Content="Kelola Perawatan"
-                            Height="22"
-                            FontSize="14"
-                            FontFamily="Plus Jakarta Sans Semibold"
-                            VerticalAlignment="Center"
-                             Foreground="#FF2D2B70" Checked="ButtonPerawatan_Checked"
-                            />
+                <Button x:Name="ButtonPerawatan" Content="Kelola Perawatan"
+                        Height="50"
+                        Width="140"
+                        FontSize="14"
+                        FontFamily="Plus Jakarta Sans Semibold"
+                        VerticalAlignment="Center"
+                        Foreground="#FF2D2B70" Click="ButtonPerawatan_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
             </StackPanel>
 
         </Grid>
