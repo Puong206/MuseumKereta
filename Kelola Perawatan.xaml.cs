@@ -98,12 +98,70 @@ namespace MuseumApp
 
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
+            if (!(dataGridPerawatan.SelectedItem is DataRowView row))
+            {
+                MessageBox.Show("Pilih data yang akan diedit.");
+                return;
+            }
 
+            int perawatanId = Convert.ToInt32(row["PerawatanID"]);
+
+            try
+            {
+                conn.Open();
+                cmd = new SqlCommand("UPDATE Perawatan SET BarangID = @barangid, TanggalPerawatan = @tanggal, JenisPerawatan = @jenis, Catatan = @catatan WHERE PerawatanID = @id", conn);
+                cmd.Parameters.AddWithValue("@id", perawatanId);
+                cmd.Parameters.AddWithValue("@barangid", txtIDBarang.Text);
+                cmd.Parameters.AddWithValue("@tanggal", dpTanggalPerawatan.SelectedDate.Value);
+                cmd.Parameters.AddWithValue("@jenis", txtJenisPerawatan.Text);
+                cmd.Parameters.AddWithValue("@catatan", txtCatatan.Text);
+                cmd.ExecuteNonQuery();
+                conn.Close();
+
+                MessageBox.Show("Data berhasil diperbarui.");
+                LoadData();
+
+                txtIDBarang.Clear();
+                txtJenisPerawatan.Clear();
+                txtCatatan.Clear();
+                dpTanggalPerawatan.SelectedDate = null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal memperbarui data: " + ex.Message);
+            }
         }
 
         private void BtnHapus_Click(object sender, RoutedEventArgs e)
         {
+            if (!(dataGridPerawatan.SelectedItem is DataRowView row))
+            {
+                MessageBox.Show("Pilih data yang akan dihapus.");
+                return;
+            }
 
+            int perawatanId = Convert.ToInt32(row["PerawatanID"]);
+
+            try
+            {
+                conn.Open();
+                cmd = new SqlCommand("DELETE FROM Perawatan WHERE PerawatanID = @id", conn);
+                cmd.Parameters.AddWithValue("@id", perawatanId);
+                cmd.ExecuteNonQuery();
+                conn.Close();
+
+                MessageBox.Show("Data berhasil dihapus.");
+                LoadData();
+
+                txtIDBarang.Clear();
+                txtJenisPerawatan.Clear();
+                txtCatatan.Clear();
+                dpTanggalPerawatan.SelectedDate = null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal menghapus data: " + ex.Message);
+            }
         }
     }
 }
