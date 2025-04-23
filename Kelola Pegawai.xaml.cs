@@ -20,7 +20,7 @@ namespace MuseumApp
     /// <summary>
     /// Interaction logic for Kelola_Pegawai.xaml
     /// </summary>
-    public partial class Kelola_Pegawai : Page
+    public partial class Kelola_Pegawai : UserControl
     {
         SqlConnection conn = new SqlConnection("Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password");
         SqlDataAdapter adapter;
@@ -144,7 +144,7 @@ namespace MuseumApp
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(new Page1());
+            ((MainWindow)Application.Current.MainWindow).GantiKonten(new Page1());
         }
     }
 }

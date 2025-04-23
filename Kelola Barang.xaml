@@ -1,4 +1,4 @@
-﻿<Page x:Class="MuseumApp.Kelola_Barang"
+﻿<UserControl x:Class="MuseumApp.Kelola_Barang"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:MuseumApp"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Kelola_Barang">
+>
 
     <Grid Background="White">
         <Image Source="/Images/cover-2-1-b4c03b57f59f99cfb01ec83c400ae689_600x400.jpg"
@@ -94,4 +94,4 @@
                     Margin="505,352,119,22" Click="BtnHapus_Click"/>
         </Grid>
     </Grid>
-</Page>
+</UserControl>

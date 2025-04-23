@@ -18,7 +18,7 @@ namespace MuseumApp
     /// <summary>
     /// Interaction logic for Page1.xaml
     /// </summary>
-    public partial class Page1 : Page
+    public partial class Page1 : UserControl
     {
         private string baseconnectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;";
         public Page1()
@@ -26,27 +26,26 @@ namespace MuseumApp
             InitializeComponent();
         }
 
-       
+
 
         private void ButtonKoleksi_Click(object sender, RoutedEventArgs e)
         {
-            Kelola_Koleksi kelola_Koleksi = new Kelola_Koleksi();
-            this.Content = kelola_Koleksi;
+            ((MainWindow)Application.Current.MainWindow).GantiKonten(new Kelola_Koleksi());
         }
 
         private void ButtonBarang_Click(object sender, RoutedEventArgs e)
         {
-            this.NavigationService?.Navigate(new Kelola_Barang());
+            ((MainWindow)Application.Current.MainWindow).GantiKonten(new Kelola_Barang());
         }
 
         private void ButtonPegawai_Click(object sender, RoutedEventArgs e)
         {
-            this.NavigationService?.Navigate(new Kelola_Pegawai());
+            ((MainWindow)Application.Current.MainWindow).GantiKonten(new Kelola_Pegawai());
         }
 
         private void ButtonPerawatan_Click(object sender, RoutedEventArgs e)
         {
-            this.NavigationService?.Navigate(new Kelola_Perawatan());
+            ((MainWindow)Application.Current.MainWindow).GantiKonten(new Kelola_Perawatan());
         }
     }
 }
