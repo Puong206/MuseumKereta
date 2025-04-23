@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace MuseumApp
 {
@@ -18,13 +6,36 @@ namespace MuseumApp
     {
         public string BarangID => IDBarangTextBox.Text;
         public string NamaBarang => NamaBarangTextBox.Text;
-        public string Deskripsi => DeskripsiBarang.Text;
-        public string TahunPembuatan => TahunPembuatanBarang.Text;
-        public string AsalBarang => AsalBarangED.Text;
-        public string KoleksiID => cbKoleksiID.SelectedValue?.ToString();
+        public string Deskripsi => DeskripsiTextBox.Text;
+        public string TahunPembuatan => TahunPembuatanTextBox.Text;
+        public string AsalBarang => AsalBarangTextBox.Text;
+        public string KoleksiID => IDKoleksiTextBox.Text;
         public InputDialogBarang()
         {
             InitializeComponent();
+        }
+
+        public InputDialogBarang(string barangID, string namaBarang, string deskripsi, string koleksiID, string tahun, string asal)
+            : this()
+        {
+            IDBarangTextBox.Text = barangID;
+            txtNamaBarang.Text = namaBarang;
+            DeskripsiTextBox.Text = deskripsi;
+            IDKoleksiTextBox.Text = koleksiID;
+            TahunPembuatanTextBox.Text = tahun;
+            AsalBarangTextBox.Text = asal;
+        }
+
+        private void Simpan_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
+            this.Close();
+        }
+
+        private void Batal_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
+            this.Close();
         }
     }
 }

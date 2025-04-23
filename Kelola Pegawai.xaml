@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="MuseumApp.Kelola_Pegawai"
+﻿<Page x:Class="MuseumApp.Kelola_Pegawai"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -74,22 +74,22 @@
                     <DataGridTextColumn Header="Status Karyawan" Binding="{Binding statusKaryawan}" />
                 </DataGrid.Columns>
             </DataGrid>
-            <Button x:Name="BtnTambah" Content="Tambah"
+            <Button x:Name="BtnTambahPegawai" Content="Tambah"
                     FontFamily="Plus Jakarta Sans Bold"
                     FontSize="16"
                     Height="36"
                     Width="136"
                     Background="#FF2D2B70"
                     Foreground="White"
-                    Margin="107,352,517,22" Click="BtnTambah_Click"/>
+                    Margin="107,352,517,22" Click="BtnTambahPegawai_Click"/>
 
-            <Button x:Name="BtnEdit" Content="Edit"
+            <Button x:Name="BtnEditPegawai" Content="Edit"
                     FontFamily="Plus Jakarta Sans Bold"
                     FontSize="16"
                     Height="36"
                     Background="White"
                     Foreground="#F26924"
-                    Margin="502,352,123,22" BorderBrush="#FF2D2B70" Click="BtnEdit_Click"/>
+                    Margin="502,352,123,22" BorderBrush="#FF2D2B70" Click="BtnEditPegawai_Click"/>
         </Grid>
     </Grid>
-</UserControl>
+</Page>

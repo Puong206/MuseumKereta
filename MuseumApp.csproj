@@ -63,6 +63,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="InputDialogPegawai.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="InputDialogPerawatan.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Kelola Barang.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -92,6 +100,12 @@
     </Compile>
     <Compile Include="InputDialogBarang.xaml.cs">
       <DependentUpon>InputDialogBarang.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="InputDialogPegawai.xaml.cs">
+      <DependentUpon>InputDialogPegawai.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="InputDialogPerawatan.xaml.cs">
+      <DependentUpon>InputDialogPerawatan.xaml</DependentUpon>
     </Compile>
     <Compile Include="Kelola Barang.xaml.cs">
       <DependentUpon>Kelola Barang.xaml</DependentUpon>

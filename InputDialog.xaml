@@ -15,7 +15,7 @@
         <Frame HorizontalAlignment="Center"
            VerticalAlignment="Center"
            Width="364"
-           Background="#FFF0F2F4" Navigated="Frame_Navigated_2">
+           Background="#FFF0F2F4">
             <Frame.Content>
                 <StackPanel Orientation="Vertical"
                        HorizontalAlignment="Center"
@@ -53,19 +53,30 @@
                              VerticalAlignment="Center"
                              Height="40"
                              Width="204"
-                             Background="#FFD9D9D9"
-                             TextChanged="DeskripsiTextBox_TextChanged"/>
-                    <Button x:Name="SimpanKoleksi" Content="Simpan"
-                        FontFamily="Plus Jakarta Sans Bold"
-                        Foreground="#ffffff"
-                        Width="60"
-                        Height="20"
-                        Padding="0,0,0,0"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Margin="0,16,0,2" BorderBrush="{x:Null}"
-                            Background="#FFF26924"
-                            Click="Simpan_Click"/>
+                             Background="#FFD9D9D9"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="Simpan" Content="Simpan"
+                                FontFamily="Plus Jakarta Sans Bold"
+                                Foreground="#ffffff"
+                                Width="60"
+                                Height="20"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Margin="0,16,8,2" BorderBrush="{x:Null}"
+                                Background="#FFF26924"
+                                Click="Simpan_Click"/>
+                        <Button x:Name="Batal" Content="Batal"
+                                FontFamily="Plus Jakarta Sans Bold"
+                                Foreground="#FFF26924"
+                                Width="60"
+                                Height="20"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Margin="0,16,0,2" BorderBrush="{x:Null}"
+                                Background="White"
+                                Click="Batal_Click"/>
+                    </StackPanel>
                 </StackPanel>
             </Frame.Content>
         </Frame>

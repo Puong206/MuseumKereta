@@ -1,30 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MuseumApp
 {
-    /// <summary>
-    /// Interaction logic for Kelola_Pegawai.xaml
-    /// </summary>
-    public partial class Kelola_Pegawai : UserControl
+    public partial class Kelola_Pegawai : Page
     {
-        SqlConnection conn = new SqlConnection("Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password");
-        SqlDataAdapter adapter;
-        DataTable dt;
+        private string connectionString;
+        private SqlConnection conn;
+        private SqlDataAdapter adapter;
+        private DataTable dt;
         public Kelola_Pegawai(string connStr)
         {
             InitializeComponent();
@@ -38,7 +26,7 @@ namespace MuseumApp
             try
             {
                 conn.Open();
-                adapter = new SqlDataAdapter("SELECT NIPP, NamaKaryawan FROM Karyawan", conn);
+                adapter = new SqlDataAdapter("SELECT NIPP, NamaKaryawan, statusKaryawan FROM Karyawan", conn);
                 dt = new DataTable();
                 adapter.Fill(dt);
                 dataGridPegawai.ItemsSource = dt.DefaultView;
@@ -62,77 +50,107 @@ namespace MuseumApp
 
         private void BtnTambah_Click(object sender, RoutedEventArgs e)
         {
-            string NIPP = txtNIPP.Text.Trim();
-            string NamaKaryawan = txtNama.Text.Trim();
-
-            if (NIPP.Length != 5 || !int.TryParse(NIPP, out _))
+            if (dataGridPegawai.SelectedItem is DataRowView row)
             {
-                MessageBox.Show("NIPP harus 5 digit angka.");
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(NamaKaryawan))
-            {
-                MessageBox.Show("Nama tidak boleh kosong.");
-                return;
-            }
-
-            try
-            {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("INSERT INTO Karyawan (NIPP, NamaKaryawan) VALUES (@NIPP, @NamaKaryawan)", conn))
-                {
-                    cmd.Parameters.AddWithValue("@NIPP", NIPP);
-                    cmd.Parameters.AddWithValue("@nama", NamaKaryawan);
-                    cmd.ExecuteNonQuery();
-                }
-                conn.Close();
-
-                MessageBox.Show("Pegawai berhasil ditambahkan.");
-                ClearForm();
-                LoadData();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Gagal menambah data: " + ex.Message);
+                txtNIPP.Text = row["NIPP"].ToString();
+                txtNama.Text = row["NamaKaryawan"].ToString();
+                txtNIPP.IsEnabled = false;
             }
         }
 
-        private void BtnEdit_Click(object sender, RoutedEventArgs e)
+        private void BtnTambahPegawai_Click(object sender, RoutedEventArgs e)
         {
-            if (!(dataGridPegawai.SelectedItem is DataRowView row)) // Replaced 'is not' with '!(...)'
+            var dialog = new InputDialogPegawai();
+            dialog.Owner = Window.GetWindow(this);
+
+            if (dialog.ShowDialog() == true)
+            {
+                string NIPP = dialog.NIPP.Trim();
+                string Nama = dialog.NamaPegawai.Trim();
+                string Status = dialog.StatusKaryawan;
+
+
+                if (NIPP.Length != 5 || !int.TryParse(NIPP, out _))
+                {
+                    MessageBox.Show("NIPP harus 5 digit angka.");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(Nama) || string.IsNullOrWhiteSpace(Status))
+                {
+                    MessageBox.Show("Semua kolom harus diisi.");
+                    return;
+                }
+
+                try
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("INSERT INTO Karyawan (NIPP, NamaKaryawan, statusKaryawan) VALUES (@NIPP, @Nama, @Status)", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@NIPP", NIPP);
+                        cmd.Parameters.AddWithValue("@Nama", Nama);
+                        cmd.Parameters.AddWithValue("@Status", Status);
+                        cmd.ExecuteNonQuery();
+                    }
+                    conn.Close();
+
+                    MessageBox.Show("Pegawai berhasil ditambahkan.");
+                    LoadData();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Gagal menambah data: " + ex.Message);
+                }
+            }
+        }
+
+        private void BtnEditPegawai_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedRow = dataGridPegawai.SelectedItem as DataRowView;
+            if (selectedRow == null)
             {
                 MessageBox.Show("Pilih pegawai yang ingin diedit.");
                 return;
             }
 
-            string NIPP = txtNIPP.Text.Trim();
-            string NamaKaryawan = txtNama.Text.Trim();
+            string currentNIPP = selectedRow["NIPP"].ToString();
+            string currentNama = selectedRow["NamaKaryawan"].ToString();
+            string currentStatus = selectedRow["statusKaryawan"].ToString();
 
-            if (string.IsNullOrWhiteSpace(NamaKaryawan))
-            {
-                MessageBox.Show("Nama tidak boleh kosong.");
-                return;
-            }
+            var dialog = new InputDialogPegawai(currentNIPP, currentNama, currentStatus);
+            dialog.Owner = Window.GetWindow(this);
+            dialog.DisableNIPPInput();
 
-            try
+            if (dialog.ShowDialog() == true)
             {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("UPDATE Karyawan SET NamaKaryawan = @NamaKaryawan WHERE NIPP = @NIPP", conn))
+                string namaBaru = dialog.NamaPegawai.Trim();
+                string statusBaru = dialog.StatusKaryawan;
+
+                if (string.IsNullOrWhiteSpace(namaBaru) || string.IsNullOrWhiteSpace(statusBaru))
                 {
-                    cmd.Parameters.AddWithValue("@NIPP", NIPP);
-                    cmd.Parameters.AddWithValue("@NamaKaryawan", NamaKaryawan);
-                    cmd.ExecuteNonQuery();
+                    MessageBox.Show("Nama dan status tidak boleh kosong.");
+                    return;
                 }
-                conn.Close();
 
-                MessageBox.Show("Pegawai berhasil diperbarui.");
-                ClearForm();
-                LoadData();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Gagal memperbarui data: " + ex.Message);
+                try
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("UPDATE Karyawan SET NamaKaryawan = @Nama, statusKaryawan = @Status WHERE NIPP = @NIPP", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Nama", namaBaru);
+                        cmd.Parameters.AddWithValue("@Status", statusBaru);
+                        cmd.Parameters.AddWithValue("@NIPP", currentNIPP);
+                        cmd.ExecuteNonQuery();
+                    }
+                    conn.Close();
+
+                    MessageBox.Show("Pegawai berhasil diperbarui.");
+                    LoadData();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Gagal memperbarui data: " + ex.Message);
+                }
             }
         }
 
@@ -146,7 +164,7 @@ namespace MuseumApp
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
-            ((MainWindow)Application.Current.MainWindow).GantiKonten(new Page1());
+            NavigationService.Navigate(new Page1(connectionString));
         }
     }
 }

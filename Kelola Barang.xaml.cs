@@ -1,37 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MuseumApp
 {
     public partial class Kelola_Barang : Page
     {
-        private string connectionString;
+        private readonly string connectionString;
         private SqlConnection conn;
-        private SqlCommand cmd;
-        private SqlDataAdapter adapter;
-        private DataTable dt;
-
-        // Dummy controls yang tidak ada di XAML
-        TextBox txtBarangID = new TextBox();
-        TextBox txtNamaBarang = new TextBox();
-        TextBox txtTahunPembuatan = new TextBox();
-        TextBox txtAsalBarang = new TextBox();
-        TextBox txtDeskripsi = new TextBox();
-        ComboBox cbKoleksiID = new ComboBox(); // jika kamu pakai relasi Koleksi
 
         public Kelola_Barang(string connStr)
         {
@@ -45,16 +24,14 @@ namespace MuseumApp
             try
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT * FROM BarangMuseum", conn);
-                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM BarangMuseum", conn);
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);
                 dataGridBarang.ItemsSource = dt.DefaultView;
-                conn.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Gagal memuat data: " + ex.Message);
             }
             finally
             {
@@ -64,24 +41,33 @@ namespace MuseumApp
 
         private void BtnTambah_Click(object sender, RoutedEventArgs e)
         {
-            var inputDialog = new InputDialogBarang();
-            if (inputDialog.ShowDialog() == true)
+            var dialog = new InputDialogBarang();
+            if (dialog.ShowDialog() == true)
             {
                 try
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("INSERT INTO BarangMuseum VALUES (@id, @nama, @deskripsi, @koleksiID, @tahun, @asal)", conn);
-                    cmd.Parameters.AddWithValue("@id", inputDialog.BarangID);
-                    cmd.Parameters.AddWithValue("@nama", inputDialog.NamaBarang);
-                    cmd.Parameters.AddWithValue("@deskripsi", inputDialog.Deskripsi);
-                    cmd.Parameters.AddWithValue("@koleksiID", inputDialog.KoleksiID ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@tahun", inputDialog.TahunPembuatan);
-                    cmd.Parameters.AddWithValue("@asal", inputDialog.AsalBarang);
+                    SqlCommand cmd = new SqlCommand(@"
+                        INSERT INTO BarangMuseum (BarangID, NamaBarang, Deskripsi, KoleksiID, TahunPembuatan, AsalBarang) 
+                        VALUES (@id, @nama, @deskripsi, @koleksiID, @tahun, @asal)", conn);
+                    cmd.Parameters.AddWithValue("@id", dialog.BarangID);
+                    cmd.Parameters.AddWithValue("@nama", dialog.NamaBarang);
+                    cmd.Parameters.AddWithValue("@deskripsi", dialog.Deskripsi);
+                    if (string.IsNullOrWhiteSpace(dialog.KoleksiID))
+                    {
+                        cmd.Parameters.AddWithValue("@koleksiID", DBNull.Value);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@koleksiID", dialog.KoleksiID);
+                    }
+                    cmd.Parameters.AddWithValue("@tahun", dialog.TahunPembuatan);
+                    cmd.Parameters.AddWithValue("@asal", dialog.AsalBarang);
                     cmd.ExecuteNonQuery();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show("Gagal menambah data: " + ex.Message);
                 }
                 finally
                 {
@@ -93,84 +79,83 @@ namespace MuseumApp
 
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
-            if (dataGridBarang.SelectedItem is DataRowView row)
-            {
-                var inputDialog = new InputDialogBarang(
-                    row["BarangID"].ToString(),
-                    row["NamaBarang"].ToString(),
-                    row["Deskripsi"].ToString(),
-                    row["KoleksiID"] == DBNull.Value ? null : row["KoleksiID"].ToString(),
-                    row["TahunPembuatan"].ToString(),
-                    row["AsalBarang"].ToString());
+            DataRowView row = dataGridBarang.SelectedItem as DataRowView;
+            if (row == null) return;
 
-                if (inputDialog.ShowDialog() == true)
+            var dialog = new InputDialogBarang(
+                row["BarangID"].ToString(),
+                row["NamaBarang"].ToString(),
+                row["Deskripsi"].ToString(),
+                row["KoleksiID"] == DBNull.Value ? "" : row["KoleksiID"].ToString(),
+                row["TahunPembuatan"].ToString(),
+                row["AsalBarang"].ToString());
+
+            if (dialog.ShowDialog() == true)
+            {
+                try
                 {
-                    try
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(@"
+                        UPDATE BarangMuseum 
+                        SET NamaBarang = @nama, Deskripsi = @deskripsi, KoleksiID = @koleksiID, 
+                            TahunPembuatan = @tahun, AsalBarang = @asal 
+                        WHERE BarangID = @id", conn);
+                    cmd.Parameters.AddWithValue("@id", dialog.BarangID);
+                    cmd.Parameters.AddWithValue("@nama", dialog.NamaBarang);
+                    cmd.Parameters.AddWithValue("@deskripsi", dialog.Deskripsi);
+                    if (string.IsNullOrWhiteSpace(dialog.KoleksiID))
                     {
-                        conn.Open();
-                        SqlCommand cmd = new SqlCommand("UPDATE BarangMuseum SET NamaBarang=@nama, Deskripsi=@deskripsi, KoleksiID=@koleksiID, TahunPembuatan=@tahun, AsalBarang=@asal WHERE BarangID=@id", conn);
-                        cmd.Parameters.AddWithValue("@id", inputDialog.BarangID);
-                        cmd.Parameters.AddWithValue("@nama", inputDialog.NamaBarang);
-                        cmd.Parameters.AddWithValue("@deskripsi", inputDialog.Deskripsi);
-                        cmd.Parameters.AddWithValue("@koleksiID", inputDialog.KoleksiID ?? (object)DBNull.Value);
-                        cmd.Parameters.AddWithValue("@tahun", inputDialog.TahunPembuatan);
-                        cmd.Parameters.AddWithValue("@asal", inputDialog.AsalBarang);
-                        cmd.ExecuteNonQuery();
+                        cmd.Parameters.AddWithValue("@koleksiID", DBNull.Value);
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        MessageBox.Show(ex.Message);
+                        cmd.Parameters.AddWithValue("@koleksiID", dialog.KoleksiID);
                     }
-                    finally
-                    {
-                        conn.Close();
-                        LoadData();
-                    }
+                    cmd.Parameters.AddWithValue("@tahun", dialog.TahunPembuatan);
+                    cmd.Parameters.AddWithValue("@asal", dialog.AsalBarang);
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Gagal mengubah data: " + ex.Message);
+                }
+                finally
+                {
+                    conn.Close();
+                    LoadData();
                 }
             }
         }
 
         private void BtnHapus_Click(object sender, RoutedEventArgs e)
         {
-            try
+            DataRowView row = dataGridBarang.SelectedItem as DataRowView;
+            if (row == null) return;
+
+            string id = row["BarangID"].ToString();
+            if (MessageBox.Show($"Yakin ingin menghapus BarangID {id}?", "Konfirmasi", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("DELETE FROM BarangMuseum WHERE BarangID=@id", conn);
-                cmd.Parameters.AddWithValue("@id", txtBarangID.Text);
-                cmd.ExecuteNonQuery();
-                conn.Close();
-                LoadData();
-                ClearForm();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                conn.Close();
+                try
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("DELETE FROM BarangMuseum WHERE BarangID = @id", conn);
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Gagal menghapus data: " + ex.Message);
+                }
+                finally
+                {
+                    conn.Close();
+                    LoadData();
+                }
             }
         }
 
         private void dataGridBarang_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (dataGridBarang.SelectedItem != null)
-            {
-                DataRowView row = (DataRowView)dataGridBarang.SelectedItem;
-                txtBarangID.Text = row["BarangID"].ToString();
-                txtNamaBarang.Text = row["NamaBarang"].ToString();
-                txtTahunPembuatan.Text = row["TahunPembuatan"].ToString();
-                txtAsalBarang.Text = row["AsalBarang"].ToString();
-                txtDeskripsi.Text = row["Deskripsi"].ToString();
-                cbKoleksiID.SelectedValue = row["KoleksiID"];
-            }
-        }
-
-        private void ClearForm()
-        {
-            txtBarangID.Text = "";
-            txtNamaBarang.Text = "";
-            txtTahunPembuatan.Text = "";
-            txtAsalBarang.Text = "";
-            txtDeskripsi.Text = "";
-            cbKoleksiID.SelectedIndex = -1;
         }
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
