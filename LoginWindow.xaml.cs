@@ -62,8 +62,9 @@ namespace MuseumApp
                     MessageBox.Show("Login berhasil!");
 
                     // Tampilkan Page1 dalam window baru
-                    Page1 hostWindow = new Page1(connectionString);
-                    hostWindow.Show();
+                    NavigationWindow navWindow = new NavigationWindow();
+                    navWindow.Navigate(new Page1(connectionString));
+                    navWindow.Show();
 
                     this.Close(); // Tutup LoginWindow
                 }
