@@ -25,9 +25,11 @@ namespace MuseumApp
         SqlConnection conn = new SqlConnection("Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password");
         SqlDataAdapter adapter;
         DataTable dt;
-        public Kelola_Pegawai()
+        public Kelola_Pegawai(string connStr)
         {
             InitializeComponent();
+            connectionString = connStr;
+            conn = new SqlConnection(connectionString);
             LoadData();
         }
 

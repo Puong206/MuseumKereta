@@ -28,9 +28,11 @@ namespace MuseumApp
         SqlDataAdapter adapter;
         DataTable dt;
 
-        public Kelola_Perawatan()
+        public Kelola_Perawatan(string connStr)
         {
             InitializeComponent();
+            connectionString = connStr;
+            conn = new SqlConnection(connectionString);
             LoadData();
         }
 

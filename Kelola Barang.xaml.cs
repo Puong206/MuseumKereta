@@ -17,12 +17,13 @@ using System.Windows.Shapes;
 
 namespace MuseumApp
 {
-    /// <summary>
-    /// Interaction logic for Kelola_Barang.xaml
-    /// </summary>
-    public partial class Kelola_Barang : UserControl
+    public partial class Kelola_Barang : Page
     {
-        SqlConnection conn = new SqlConnection("Data Source=OLIPIA\\\\OLIP;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password");
+        private string connectionString;
+        private SqlConnection conn;
+        private SqlCommand cmd;
+        private SqlDataAdapter adapter;
+        private DataTable dt;
 
         // Dummy controls yang tidak ada di XAML
         TextBox txtBarangID = new TextBox();
@@ -32,9 +33,11 @@ namespace MuseumApp
         TextBox txtDeskripsi = new TextBox();
         ComboBox cbKoleksiID = new ComboBox(); // jika kamu pakai relasi Koleksi
 
-        public Kelola_Barang()
+        public Kelola_Barang(string connStr)
         {
             InitializeComponent();
+            connectionString = connStr;
+            conn = new SqlConnection(connectionString);
             LoadData();
         }
         private void LoadData()
@@ -53,53 +56,77 @@ namespace MuseumApp
             {
                 MessageBox.Show(ex.Message);
             }
+            finally
+            {
+                conn.Close();
+            }
         }
 
         private void BtnTambah_Click(object sender, RoutedEventArgs e)
         {
-            try
+            var inputDialog = new InputDialogBarang();
+            if (inputDialog.ShowDialog() == true)
             {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("INSERT INTO BarangMuseum VALUES (@id, @nama, @deskripsi, @koleksiID, @tahun, @asal)", conn);
-                cmd.Parameters.AddWithValue("@id", txtBarangID.Text);
-                cmd.Parameters.AddWithValue("@nama", txtNamaBarang.Text);
-                cmd.Parameters.AddWithValue("@deskripsi", txtDeskripsi.Text);
-                cmd.Parameters.AddWithValue("@koleksiID", cbKoleksiID.SelectedValue ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@tahun", txtTahunPembuatan.Text);
-                cmd.Parameters.AddWithValue("@asal", txtAsalBarang.Text);
-                cmd.ExecuteNonQuery();
-                conn.Close();
-                LoadData();
-                ClearForm();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                conn.Close();
+                try
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("INSERT INTO BarangMuseum VALUES (@id, @nama, @deskripsi, @koleksiID, @tahun, @asal)", conn);
+                    cmd.Parameters.AddWithValue("@id", inputDialog.BarangID);
+                    cmd.Parameters.AddWithValue("@nama", inputDialog.NamaBarang);
+                    cmd.Parameters.AddWithValue("@deskripsi", inputDialog.Deskripsi);
+                    cmd.Parameters.AddWithValue("@koleksiID", inputDialog.KoleksiID ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@tahun", inputDialog.TahunPembuatan);
+                    cmd.Parameters.AddWithValue("@asal", inputDialog.AsalBarang);
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                finally
+                {
+                    conn.Close();
+                    LoadData();
+                }
             }
         }
 
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (dataGridBarang.SelectedItem is DataRowView row)
             {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("UPDATE BarangMuseum SET NamaBarang=@nama, Deskripsi=@deskripsi, KoleksiID=@koleksiID, TahunPembuatan=@tahun, AsalBarang=@asal WHERE BarangID=@id", conn);
-                cmd.Parameters.AddWithValue("@id", txtBarangID.Text);
-                cmd.Parameters.AddWithValue("@nama", txtNamaBarang.Text);
-                cmd.Parameters.AddWithValue("@deskripsi", txtDeskripsi.Text);
-                cmd.Parameters.AddWithValue("@koleksiID", cbKoleksiID.SelectedValue ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@tahun", txtTahunPembuatan.Text);
-                cmd.Parameters.AddWithValue("@asal", txtAsalBarang.Text);
-                cmd.ExecuteNonQuery();
-                conn.Close();
-                LoadData();
-                ClearForm();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                conn.Close();
+                var inputDialog = new InputDialogBarang(
+                    row["BarangID"].ToString(),
+                    row["NamaBarang"].ToString(),
+                    row["Deskripsi"].ToString(),
+                    row["KoleksiID"] == DBNull.Value ? null : row["KoleksiID"].ToString(),
+                    row["TahunPembuatan"].ToString(),
+                    row["AsalBarang"].ToString());
+
+                if (inputDialog.ShowDialog() == true)
+                {
+                    try
+                    {
+                        conn.Open();
+                        SqlCommand cmd = new SqlCommand("UPDATE BarangMuseum SET NamaBarang=@nama, Deskripsi=@deskripsi, KoleksiID=@koleksiID, TahunPembuatan=@tahun, AsalBarang=@asal WHERE BarangID=@id", conn);
+                        cmd.Parameters.AddWithValue("@id", inputDialog.BarangID);
+                        cmd.Parameters.AddWithValue("@nama", inputDialog.NamaBarang);
+                        cmd.Parameters.AddWithValue("@deskripsi", inputDialog.Deskripsi);
+                        cmd.Parameters.AddWithValue("@koleksiID", inputDialog.KoleksiID ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@tahun", inputDialog.TahunPembuatan);
+                        cmd.Parameters.AddWithValue("@asal", inputDialog.AsalBarang);
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                    finally
+                    {
+                        conn.Close();
+                        LoadData();
+                    }
+                }
             }
         }
 
@@ -148,7 +175,7 @@ namespace MuseumApp
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
-            ((MainWindow)Application.Current.MainWindow).GantiKonten(new Page1());
+            NavigationService.Navigate(new Page1(connectionString));
         }
     }
 }

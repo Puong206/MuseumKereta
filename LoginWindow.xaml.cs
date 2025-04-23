@@ -21,7 +21,7 @@ namespace MuseumApp
     /// </summary>
     public partial class LoginWindow : Window
     {
-        private string baseconnectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;";
+        private string baseconnectionString = "Data Source=LAPTOP-DP8JTMS7\\\\PUONG206;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password";
         public LoginWindow()
         {
             InitializeComponent();
@@ -59,37 +59,30 @@ namespace MuseumApp
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    MessageBox.Show("Login Success!");
+                    MessageBox.Show("Login berhasil!");
 
-                    MainWindow mainWindow = new MainWindow();
-                    mainWindow.Show();
-                    this.Close();
-                }
-                    
+                    // Tampilkan Page1 dalam window baru
+                    Page1 hostWindow = new Page1(connectionString);
+                    hostWindow.Show();
 
+                    this.Close(); // Tutup LoginWindow
                 }
-                catch (SqlException ex)
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Number == 18456)
                 {
-                    if (ex.Number == 18456)
-                    {
-                        MessageBox.Show("Login Gagal");
-                    }
-                    else
-                    {
-                        MessageBox.Show("Database error: " + ex.Message, "Error");
-                    }
+                    MessageBox.Show("Login gagal: Username atau password salah.");
+                }
+                else
+                {
+                    MessageBox.Show("Kesalahan database: " + ex.Message);
+                }
             }
-            catch(Exception ex)
-            
+            catch (Exception ex)
             {
-                MessageBox.Show("Something went wrong");
+                MessageBox.Show("Terjadi kesalahan: " + ex.Message);
             }
-            {
-
-            }
-             
-                
-           
         }
 
         private void UsernameTextBox_TextChanged(object sender, TextChangedEventArgs e)
