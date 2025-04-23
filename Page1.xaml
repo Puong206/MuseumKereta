@@ -36,48 +36,40 @@
             <Border Background="White"
                    CornerRadius="20,20,20,20" />
 
-            <StackPanel Width="125"
+            <StackPanel Width="140"
                        Grid.Row="1"
                        Margin="0,52,0,0">
 
-                <RadioButton Content="Dashboard"
+                <RadioButton x:Name="ButtonKoleksi" Content="Kelola Koleksi"
                             Height="22"
                             FontSize="14"
                             FontFamily="Plus Jakarta Sans Semibold"
                             VerticalAlignment="Center"
-                            Checked="RadioButton_Checked"
-                            Foreground="#FF2D2B70"
+                            Foreground="#FF2D2B70" Checked="ButtonKoleksi_Checked"
                             />
 
-                <RadioButton Content="Kelola Koleksi"
+                <RadioButton x:Name="ButtonBarang" Content="Kelola Barang"
                             Height="22"
                             FontSize="14"
                             FontFamily="Plus Jakarta Sans Semibold"
                             VerticalAlignment="Center"
-                            Foreground="#FF2D2B70"
+                            Foreground="#FF2D2B70" Checked="ButtonBarang_Checked"
                             />
 
-                <RadioButton Content="Kelola Barang"
+                <RadioButton x:Name="ButtonPegawai" Content="Kelola Pegawai"
                             Height="22"
                             FontSize="14"
                             FontFamily="Plus Jakarta Sans Semibold"
                             VerticalAlignment="Center"
-                            Foreground="#FF2D2B70" Checked="RadioButton_Checked_1"
+                            Foreground="#FF2D2B70" Checked="ButtonPegawai_Checked"
                             />
 
-                <RadioButton Content="Kelola Pegawai"
+                <RadioButton x:Name="ButtonPerawatan" Content="Kelola Perawatan"
                             Height="22"
                             FontSize="14"
                             FontFamily="Plus Jakarta Sans Semibold"
                             VerticalAlignment="Center"
-                            Foreground="#FF2D2B70"
-                            />
-
-                <RadioButton Content="Kelola Perawatan"
-                            Height="22"
-                            FontSize="14"
-                            FontFamily="Plus Jakarta Sans Semibold"
-                            VerticalAlignment="Center"
+                             Foreground="#FF2D2B70" Checked="ButtonPerawatan_Checked"
                             />
             </StackPanel>
 
