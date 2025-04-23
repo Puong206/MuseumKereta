@@ -60,6 +60,9 @@ namespace MuseumApp
                 {
                     conn.Open();
                     MessageBox.Show("Login Success!");
+
+                    Page1 page1 = new Page1();
+                    this.Content = page1;
                 }
                     
 
