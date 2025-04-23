@@ -18,34 +18,48 @@ namespace MuseumApp
     /// <summary>
     /// Interaction logic for Page1.xaml
     /// </summary>
-    public partial class Page1 : UserControl
+    public partial class Page1 : Page
     {
-        private string baseconnectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;";
+        private string connectionString = "Data Source=OLIPIA\\\\OLIP;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password";
         public Page1()
         {
             InitializeComponent();
         }
 
-
-
         private void ButtonKoleksi_Click(object sender, RoutedEventArgs e)
         {
-            ((MainWindow)Application.Current.MainWindow).GantiKonten(new Kelola_Koleksi());
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            if (mainWindow != null)
+            {
+                mainWindow.GantiHalaman(new Kelola_Koleksi());
+            }
         }
 
         private void ButtonBarang_Click(object sender, RoutedEventArgs e)
         {
-            ((MainWindow)Application.Current.MainWindow).GantiKonten(new Kelola_Barang());
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            if (mainWindow != null)
+            {
+                mainWindow.GantiHalaman(new Kelola_Barang());
+            }
         }
 
         private void ButtonPegawai_Click(object sender, RoutedEventArgs e)
         {
-            ((MainWindow)Application.Current.MainWindow).GantiKonten(new Kelola_Pegawai());
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            if (mainWindow != null)
+            {
+                mainWindow.GantiHalaman(new Kelola_Pegawai());
+            }
         }
 
         private void ButtonPerawatan_Click(object sender, RoutedEventArgs e)
         {
-            ((MainWindow)Application.Current.MainWindow).GantiKonten(new Kelola_Perawatan());
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            if (mainWindow != null)
+            {
+                mainWindow.GantiHalaman(new Kelola_Perawatan());
+            }
         }
     }
 }

@@ -1,39 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MuseumApp
 {
     /// <summary>
     /// Interaction logic for Kelola_Koleksi.xaml
     /// </summary>
-    public partial class Kelola_Koleksi : UserControl
+    public partial class Kelola_Koleksi : Page
     {
-        SqlConnection conn = new SqlConnection("Data Source=OLIPIA\\\\OLIP;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password");
-        SqlCommand cmd;
-        SqlDataAdapter adapter;
-        DataTable dt;
+        private string connectionString;
+        private SqlConnection conn;
+        private SqlCommand cmd;
+        private SqlDataAdapter adapter;
+        private DataTable dt;
 
-        TextBox txtJenisKoleksi = new TextBox();
-        TextBox txtDeskripsi = new TextBox();
-        TextBox hiddenId = new TextBox();
+        private TextBox txtJenisKoleksi = new TextBox();
+        private TextBox txtDeskripsi = new TextBox();
+        private TextBox hiddenId = new TextBox();
         // Dummy controls yang tidak ada di XAML
+
         public Kelola_Koleksi()
         {
             InitializeComponent();
+            connectionString = connectionStr;
+            conn = new SqlConnection(connectionString);
             LoadData();
         }
 
@@ -46,11 +39,14 @@ namespace MuseumApp
                 dt = new DataTable();
                 adapter.Fill(dt);
                 dataGridKoleksi.ItemsSource = dt.DefaultView;
-                conn.Close();
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Gagal memuat data: " + ex.Message);
+            }
+            finally
+            {
+                conn.Close();
             }
         }
 
@@ -66,14 +62,10 @@ namespace MuseumApp
 
         private void BtnTambah_Click(object sender, RoutedEventArgs e)
         {
-            string jenis = txtJenisKoleksi.Text.Trim();
-            string deskripsi = txtDeskripsi.Text.Trim();
+            string jenis = Microsoft.VisualBasic.Interaction.InputBox("Masukkan Jenis Koleksi:", "Tambah Koleksi", "");
+            string deskripsi = Microsoft.VisualBasic.Interaction.InputBox("Masukkan Deskripsi:", "Tambah Koleksi", "");
 
-            if (string.IsNullOrWhiteSpace(jenis))
-            {
-                MessageBox.Show("Jenis Koleksi tidak boleh kosong.");
-                return;
-            }
+            if (string.IsNullOrWhiteSpace(jenis)) return;
 
             try
             {
@@ -82,15 +74,16 @@ namespace MuseumApp
                 cmd.Parameters.AddWithValue("@jenis", jenis);
                 cmd.Parameters.AddWithValue("@deskripsi", deskripsi);
                 cmd.ExecuteNonQuery();
-                conn.Close();
-
                 MessageBox.Show("Koleksi berhasil ditambahkan.");
-                ClearForm();
                 LoadData();
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Gagal menambah data: " + ex.Message);
+            }
+            finally
+            {
+                conn.Close();
             }
         }
 
@@ -102,8 +95,8 @@ namespace MuseumApp
                 return;
             }
 
-            string jenis = txtJenisKoleksi.Text.Trim();
-            string deskripsi = txtDeskripsi.Text.Trim();
+            string jenis = Microsoft.VisualBasic.Interaction.InputBox("Edit Jenis Koleksi:", "Edit Koleksi", txtJenisKoleksi.Text);
+            string deskripsi = Microsoft.VisualBasic.Interaction.InputBox("Edit Deskripsi:", "Edit Koleksi", txtDeskripsi.Text);
             int id = int.Parse(hiddenId.Text);
 
             try
@@ -114,15 +107,16 @@ namespace MuseumApp
                 cmd.Parameters.AddWithValue("@deskripsi", deskripsi);
                 cmd.Parameters.AddWithValue("@id", id);
                 cmd.ExecuteNonQuery();
-                conn.Close();
-
                 MessageBox.Show("Koleksi berhasil diperbarui.");
-                ClearForm();
                 LoadData();
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Gagal memperbarui data: " + ex.Message);
+            }
+            finally
+            {
+                conn.Close();
             }
         }
 
@@ -144,22 +138,17 @@ namespace MuseumApp
                 cmd = new SqlCommand("DELETE FROM Koleksi WHERE KoleksiID = @id", conn);
                 cmd.Parameters.AddWithValue("@id", id);
                 cmd.ExecuteNonQuery();
-                conn.Close();
-
                 MessageBox.Show("Koleksi berhasil dihapus.");
-                ClearForm();
                 LoadData();
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Gagal menghapus data: " + ex.Message);
             }
-        }
-        private void ClearForm()
-        {
-            txtJenisKoleksi.Text = "";
-            txtDeskripsi.Text = "";
-            hiddenId.Text = "";
+            finally
+            {
+                conn.Close();
+            }
         }
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
