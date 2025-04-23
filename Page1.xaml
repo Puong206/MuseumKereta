@@ -47,7 +47,7 @@
                         VerticalAlignment="Center"
                         Foreground="#FF2D2B70" Click="ButtonKoleksi_Click" BorderBrush="{x:Null}" Background="{x:Null}"/>
 
-                <Button x:Name="Button Barang" Content="Kelola Barang"
+                <Button x:Name="ButtonBarang" Content="Kelola Barang"
                         Height="50"
                         Width="140"
                         FontSize="14"
