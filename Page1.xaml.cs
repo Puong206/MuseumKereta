@@ -26,26 +26,53 @@ namespace MuseumApp
             InitializeComponent();
         }
 
-       
-
         private void ButtonKoleksi_Click(object sender, RoutedEventArgs e)
         {
-            this.NavigationService.Navigate(new Kelola_Koleksi());
+            // Memastikan NavigationService tidak null
+            if (NavigationService != null)
+            {
+                NavigationService.Navigate(new Kelola_Koleksi());
+            }
+            else
+            {
+                MessageBox.Show("NavigationService is null!");
+            }
         }
 
         private void ButtonBarang_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(new Kelola_Barang());
+            if (NavigationService != null)
+            {
+                NavigationService.Navigate(new Kelola_Barang());
+            }
+            else
+            {
+                MessageBox.Show("NavigationService is null!");
+            }
         }
 
         private void ButtonPegawai_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(new Kelola_Pegawai());
+            if (NavigationService != null)
+            {
+                NavigationService.Navigate(new Kelola_Pegawai());
+            }
+            else
+            {
+                MessageBox.Show("NavigationService is null!");
+            }
         }
 
         private void ButtonPerawatan_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(new Kelola_Perawatan());
+            if (NavigationService != null)
+            {
+                NavigationService.Navigate(new Kelola_Perawatan());
+            }
+            else
+            {
+                MessageBox.Show("NavigationService is null!");
+            }
         }
     }
 }
