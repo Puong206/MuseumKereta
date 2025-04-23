@@ -26,14 +26,24 @@ namespace MuseumApp
             InitializeComponent();
         }
 
-        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        private void ButtonKoleksi_Checked(object sender, RoutedEventArgs e)
         {
-
+            NavigationService?.Navigate(new Kelola_Koleksi());
         }
 
-        private void RadioButton_Checked_1(object sender, RoutedEventArgs e)
+        private void ButtonBarang(object sender, RoutedEventArgs e)
         {
+            NavigationService?.Navigate(new Kelola_Barang());
+        }
 
+        private void ButtonPegawai_Checked(object sender, RoutedEventArgs e)
+        {
+            NavigationService?.Navigate(new Kelola_Pegawai());
+        }
+
+        private void ButtonPerawatan_Checked(object sender, RoutedEventArgs e)
+        {
+            NavigationService?.Navigate(new Kelola_Perawatan());
         }
     }
 }
