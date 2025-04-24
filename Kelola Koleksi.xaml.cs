@@ -89,11 +89,11 @@ namespace MuseumApp
 
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(hiddenId.Text))
-            {
-                MessageBox.Show("Pilih koleksi yang ingin diedit.");
-                return;
-            }
+            //if (string.IsNullOrEmpty(hiddenId.Text))
+            //{
+                //MessageBox.Show("Pilih koleksi yang ingin diedit.");
+                //return;
+            //}
 
             var dialog = new InputDialog();
             dialog.JenisTextBox.Text = txtJenisKoleksi.Text;

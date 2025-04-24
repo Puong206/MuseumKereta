@@ -19,7 +19,7 @@ namespace MuseumApp
             : this()
         {
             IDBarangTextBox.Text = barangID;
-            txtNamaBarang.Text = namaBarang;
+            NamaBarangTextBox.Text = namaBarang;
             DeskripsiTextBox.Text = deskripsi;
             IDKoleksiTextBox.Text = koleksiID;
             TahunPembuatanTextBox.Text = tahun;
