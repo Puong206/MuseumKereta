@@ -47,12 +47,14 @@ namespace MuseumApp
 
         private void Simpan_Click(object sender, RoutedEventArgs e)
         {
-
+            this.DialogResult = true;
+            this.Close();
         }
 
         private void Batal_Click(object sender, RoutedEventArgs e)
         {
-
+            this.DialogResult = false;
+            this.Close();
         }
 
         private void StatusKaryawanComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
