@@ -66,7 +66,7 @@ namespace MuseumApp
             if (dialog.ShowDialog() == true)
             {
                 string NIPP = dialog.NIPP.Trim();
-                string Nama = dialog.NamaPegawai.Trim();
+                string Nama = dialog.NamaPegawai;
                 string Status = dialog.StatusKaryawan;
 
 
