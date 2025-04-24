@@ -24,15 +24,6 @@ namespace MuseumApp
 
         private void Simpan_Click(object sender, RoutedEventArgs e)
         {
-            JenisKoleksi = JenisTextBox.Text;
-            Deskripsi = DeskripsiTextBox.Text;
-
-            if (string.IsNullOrWhiteSpace(JenisKoleksi))
-            {
-                MessageBox.Show("Jenis koleksi tidak boleh kosong.");
-                return;
-            }
-
             this.DialogResult = true;
             this.Close();
         }
