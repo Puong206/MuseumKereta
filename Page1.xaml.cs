@@ -20,7 +20,7 @@ namespace MuseumApp
     /// </summary>
     public partial class Page1 : Page
     {
-        private string connectionString = "Data Source=LAPTOP-DP8JTMS7\\\\PUONG206;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password";
+        private string connectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password";
         public Page1(string connStr)
         {
             InitializeComponent();
