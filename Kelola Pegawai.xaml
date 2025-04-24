@@ -70,7 +70,7 @@
                   SelectionMode="Single" SelectionUnit="FullRow" SelectionChanged="dataGridPegawai_SelectionChanged" Background="White" BorderBrush="{x:Null}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="NIPP" Binding="{Binding NIPP}" Width="Auto"/>
-                    <DataGridTextColumn Header="Nama Pegawai" Binding="{Binding NamaPegawai}" />
+                    <DataGridTextColumn Header="Nama Pegawai" Binding="{Binding NamaKaryawan}" />
                     <DataGridTextColumn Header="Status Karyawan" Binding="{Binding statusKaryawan}" />
                 </DataGrid.Columns>
             </DataGrid>

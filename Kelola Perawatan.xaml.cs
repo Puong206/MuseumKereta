@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 
 
 namespace MuseumApp
@@ -50,6 +51,18 @@ namespace MuseumApp
             var dialog = new InputDialogPerawatan();
             if (dialog.ShowDialog() == true)
             {
+                if (string.IsNullOrWhiteSpace(dialog.IDBarang) || dialog.IDBarang.Length != 6 || !dialog.IDBarang.All(char.IsDigit))
+                {
+                    MessageBox.Show("BarangID harus terdiri dari tepat 5 digit angka.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(dialog.NIPP) || dialog.NIPP.Length != 5 || !dialog.NIPP.All(char.IsDigit))
+                {
+                    MessageBox.Show("NIPP harus terdiri dari tepat 5 digit angka.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
                 try
                 {
                     conn.Open();

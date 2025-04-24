@@ -66,7 +66,7 @@ namespace MuseumApp
             if (dialog.ShowDialog() == true)
             {
                 string NIPP = dialog.NIPP.Trim();
-                string Nama = dialog.NamaKaryawan.Trim();
+                string Nama = dialog.NamaKaryawan;
                 string Status = dialog.StatusKaryawan;
 
 
@@ -123,7 +123,7 @@ namespace MuseumApp
 
             if (dialog.ShowDialog() == true)
             {
-                string namaBaru = dialog.NamaKaryawan.Trim();
+                string namaBaru = dialog.NamaKaryawan;
                 string statusBaru = dialog.StatusKaryawan;
 
                 if (string.IsNullOrWhiteSpace(namaBaru) || string.IsNullOrWhiteSpace(statusBaru))

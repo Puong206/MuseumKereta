@@ -24,11 +24,11 @@ namespace MuseumApp
         public InputDialogPerawatan(string idBarang = "", DateTime? tanggalPerawatan = null, string jenis = "", string catatan = "", string nipp = "")
         {
             InitializeComponent();
-            txtIDBarang.Text = idBarang;
+            IDBarangTextBox.Text = idBarang;
             dpTanggalPerawatan.SelectedDate = tanggalPerawatan ?? DateTime.Today;
-            txtJenisPerawatan.Text = jenis;
-            txtCatatan.Text = catatan;
-            txtNIPP.Text = nipp;
+            JenisPerawatanTextBox.Text = jenis;
+            CatatanTextBox.Text = catatan;
+            NIPPTextBox.Text = nipp;
         }
 
         private void Simpan_Click(object sender, RoutedEventArgs e)

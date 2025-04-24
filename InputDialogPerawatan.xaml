@@ -90,6 +90,8 @@
                           Width="204"
                           Background="#FFD9D9D9"/>
 
+                    
+
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button x:Name="Simpan" Content="Simpan"
                              FontFamily="Plus Jakarta Sans Bold"
