@@ -14,9 +14,9 @@
             </Image.Effect>
         </Image>
         <Frame HorizontalAlignment="Center"
-    VerticalAlignment="Center"
-    Width="364"
-    Background="#FFF0F2F4">
+               VerticalAlignment="Center"
+               Width="364"
+               Background="#FFF0F2F4">
             <Frame.Content>
                 <StackPanel Orientation="Vertical"
                 HorizontalAlignment="Center"

@@ -31,18 +31,6 @@
                      FontStyle="Normal"
                      Foreground="#2D2B70"
                      LineHeight="20"/>
-                    
-                    <TextBlock x:Name="txtIDPerawatan" Text="ID Perawatan" Margin="0,0,0,2"
-                               RenderTransformOrigin="-0.711,0.67"
-                               Width="203"
-                               FontFamily="Plus Jakarta Sans Medium"
-                               Foreground="#2D2B70"/>
-                    <TextBox x:Name="IDPerawatanTextBox"
-                             HorizontalAlignment="Center"
-                             TextWrapping="Wrap"
-                             VerticalAlignment="Center"
-                             Width="204"
-                             Background="#FFD9D9D9"/>
 
                     <TextBlock x:Name="txtIDBarang" Text="ID Barang" Margin="0,4,0,2"
                                RenderTransformOrigin="-0.711,0.67"
