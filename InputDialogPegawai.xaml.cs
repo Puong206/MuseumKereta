@@ -6,7 +6,7 @@ namespace MuseumApp
     public partial class InputDialogPegawai : Window
     {
         public string NIPP => NIPPTextBox.Text;
-        public string NamaPegawai => NamaPegawaiTextBox.Text;
+        public string NamaKaryawan => NamaPegawaiTextBox.Text;
         public string StatusKaryawan => (StatusKaryawanComboStatus.SelectedItem as ComboBoxItem)?.Content?.ToString();
 
         public InputDialogPegawai(string nipp = "", string nama = "", string status = "")
