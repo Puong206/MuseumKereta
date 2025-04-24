@@ -81,15 +81,16 @@
                     Width="136"
                     Background="#FF2D2B70"
                     Foreground="White"
-                    Margin="107,352,517,22" Click="BtnTambahPegawai_Click"/>
+                    Margin="128,352,496,22" Click="BtnTambahPegawai_Click"/>
 
             <Button x:Name="BtnEditPegawai" Content="Edit"
                     FontFamily="Plus Jakarta Sans Bold"
                     FontSize="16"
                     Height="36"
+                    Width="136"
                     Background="White"
                     Foreground="#F26924"
-                    Margin="502,352,123,22" BorderBrush="#FF2D2B70" Click="BtnEditPegawai_Click"/>
+                    Margin="494,352,130,22" BorderBrush="#FF2D2B70" Click="BtnEditPegawai_Click"/>
         </Grid>
     </Grid>
 </Page>
