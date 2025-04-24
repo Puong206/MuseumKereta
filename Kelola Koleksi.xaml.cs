@@ -104,13 +104,18 @@ namespace MuseumApp
                 try
                 {
                     conn.Open();
-                    cmd = new SqlCommand("UPDATE Koleksi SET JenisKoleksi = @jenis, Deskripsi = @deskripsi WHERE KoleksiID = @id", conn);
-                    cmd.Parameters.AddWithValue("@jenis", dialog.JenisKoleksi);
-                    cmd.Parameters.AddWithValue("@deskripsi", dialog.Deskripsi);
-                    cmd.Parameters.AddWithValue("@id", int.Parse(hiddenId.Text));
-                    cmd.ExecuteNonQuery();
-                    MessageBox.Show("Koleksi berhasil diperbarui.");
-                    LoadData();
+                    string query = ("UPDATE Koleksi SET JenisKoleksi = @jenis, Deskripsi = @deskripsi WHERE KoleksiID = @id");
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@jenis", dialog.JenisKoleksi);
+                        cmd.Parameters.AddWithValue("@deskripsi", dialog.Deskripsi);
+                        cmd.Parameters.AddWithValue("@id", int.Parse(hiddenId.Text));
+                        cmd.ExecuteNonQuery();
+                        MessageBox.Show("Koleksi berhasil diperbarui.");
+                        LoadData();
+                    }
+                    
                 }
                 catch (Exception ex)
                 {
