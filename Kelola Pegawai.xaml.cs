@@ -50,12 +50,7 @@ namespace MuseumApp
 
         private void BtnTambah_Click(object sender, RoutedEventArgs e)
         {
-            if (dataGridPegawai.SelectedItem is DataRowView row)
-            {
-                txtNIPP.Text = row["NIPP"].ToString();
-                txtNama.Text = row["NamaKaryawan"].ToString();
-                txtNIPP.IsEnabled = false;
-            }
+            ClearForm();
         }
 
         private void BtnTambahPegawai_Click(object sender, RoutedEventArgs e)

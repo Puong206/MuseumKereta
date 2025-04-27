@@ -77,7 +77,7 @@
                         FontFamily="Plus Jakarta Sans Medium"
                         Foreground="#2D2B70" SelectionChanged="StatusKaryawanComboBox_SelectionChanged">
                         <ComboBoxItem Content="Aktif" />
-                        <ComboBoxItem Content="Tidak Aktif" />
+                        <ComboBoxItem Content="Non-Aktif" />
                     </ComboBox>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
