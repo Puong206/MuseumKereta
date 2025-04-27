@@ -29,22 +29,22 @@ namespace MuseumApp
 
         private void LoadData()
         {
-            try
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                conn.Open();
-                adapter = new SqlDataAdapter("SELECT KoleksiID, JenisKoleksi, Deskripsi FROM Koleksi", conn);
-                dt = new DataTable();
-                adapter.Fill(dt);
-                dataGridKoleksi.ItemsSource = dt.DefaultView;
+                try
+                {
+                    conn.Open();
+                    adapter = new SqlDataAdapter("SELECT KoleksiID, JenisKoleksi, Deskripsi FROM Koleksi", conn);
+                    dt = new DataTable();
+                    adapter.Fill(dt);
+                    dataGridKoleksi.ItemsSource = dt.DefaultView;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Gagal memuat data: " + ex.Message);
+                }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Gagal memuat data: " + ex.Message);
-            }
-            finally
-            {
-                conn.Close();
-            }
+            
         }
 
         private int selectedId;
@@ -58,6 +58,10 @@ namespace MuseumApp
                 selectedJenis = row["JenisKoleksi"].ToString();
                 selectedDeskripsi = row["Deskripsi"].ToString();
                 selectedId = Convert.ToInt32(row["KoleksiID"]);
+
+                txtJenisKoleksi.Text = selectedJenis;
+                txtDeskripsi.Text = selectedDeskripsi;
+                hiddenId.Text = selectedId.ToString();
             }
         }
 
@@ -66,97 +70,103 @@ namespace MuseumApp
             var dialog = new InputDialog();
             if (dialog.ShowDialog() == true)
             {
-                try
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
-                    cmd = new SqlCommand("INSERT INTO Koleksi (JenisKoleksi, Deskripsi) VALUES (@jenis, @deskripsi)", conn);
-                    cmd.Parameters.AddWithValue("@jenis", dialog.JenisKoleksi);
-                    cmd.Parameters.AddWithValue("@deskripsi", dialog.Deskripsi);
-                    cmd.ExecuteNonQuery();
-                    MessageBox.Show("Koleksi berhasil ditambahkan.");
-                    LoadData();
+                    try
+                    {
+                        conn.Open();
+                        using (SqlCommand cmd = new SqlCommand("INSERT INTO Koleksi (JenisKoleksi, Deskripsi) VALUES (@jenis, @deskripsi)", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@jenis", dialog.JenisKoleksi);
+                            cmd.Parameters.AddWithValue("@deskripsi", dialog.Deskripsi);
+                            cmd.ExecuteNonQuery();
+                            MessageBox.Show("Koleksi berhasil ditambahkan.");
+                        }
+                        
+                        LoadData();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Gagal menambah data: " + ex.Message);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Gagal menambah data: " + ex.Message);
-                }
-                finally
-                {
-                    conn.Close();
-                }
+                
+                
             }
         }
 
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
-            //if (string.IsNullOrEmpty(hiddenId.Text))
-            //{
-                //MessageBox.Show("Pilih koleksi yang ingin diedit.");
-                //return;
-            //}
-
+            if (dataGridKoleksi.SelectedItem == null)
+            {
+                MessageBox.Show("Pilih koleksi yang ingin diedit");
+                return;
+            }
             var dialog = new InputDialog();
             dialog.JenisTextBox.Text = txtJenisKoleksi.Text;
             dialog.DeskripsiTextBox.Text = txtDeskripsi.Text;
 
             if (dialog.ShowDialog() == true)
             {
-                try
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
-                    string query = ("UPDATE Koleksi SET JenisKoleksi = @jenis, Deskripsi = @deskripsi WHERE KoleksiID = @id");
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    try
                     {
-                        cmd.Parameters.AddWithValue("@jenis", dialog.JenisKoleksi);
-                        cmd.Parameters.AddWithValue("@deskripsi", dialog.Deskripsi);
-                        cmd.Parameters.AddWithValue("@id", int.Parse(hiddenId.Text));
-                        cmd.ExecuteNonQuery();
-                        MessageBox.Show("Koleksi berhasil diperbarui.");
+                        conn.Open();
+                        string query = ("UPDATE Koleksi SET JenisKoleksi = @jenis, Deskripsi = @deskripsi WHERE KoleksiID = @id");
+
+                        using (SqlCommand cmd = new SqlCommand(query, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@jenis", dialog.JenisKoleksi);
+                            cmd.Parameters.AddWithValue("@deskripsi", dialog.Deskripsi);
+                            cmd.Parameters.AddWithValue("@id", int.Parse(hiddenId.Text));
+                            cmd.ExecuteNonQuery();
+                            MessageBox.Show("Koleksi berhasil diperbarui.");
+                        }
                         LoadData();
+
                     }
-                    
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Gagal memperbarui data: " + ex.Message);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Gagal memperbarui data: " + ex.Message);
-                }
-                finally
-                {
-                    conn.Close();
-                }
+                
             }
         }
 
         private void BtnHapus_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(hiddenId.Text))
+            if (dataGridKoleksi.SelectedItem == null)
             {
                 MessageBox.Show("Pilih koleksi yang ingin dihapus.");
                 return;
             }
 
-            int id = int.Parse(hiddenId.Text);
-            var result = MessageBox.Show($"Yakin ingin menghapus koleksi dengan ID {id}?", "Konfirmasi", MessageBoxButton.YesNo);
+            var result = MessageBox.Show($"Yakin ingin menghapus koleksi dengan ID {selectedId}?", "Konfirmasi", MessageBoxButton.YesNo);
             if (result != MessageBoxResult.Yes) return;
 
-            try
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                conn.Open();
-                cmd = new SqlCommand("DELETE FROM Koleksi WHERE KoleksiID = @id", conn);
-                cmd.Parameters.AddWithValue("@id", id);
-                cmd.ExecuteNonQuery();
-                MessageBox.Show("Koleksi berhasil dihapus.");
-                LoadData();
+                try
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("DELETE FROM Koleksi WHERE KoleksiID = @id", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", selectedId);
+                        cmd.ExecuteNonQuery();
+                        MessageBox.Show("Koleksi berhasil dihapus.");
+                    }
+                    LoadData();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Gagal menghapus data: " + ex.Message);
+                }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Gagal menghapus data: " + ex.Message);
-            }
-            finally
-            {
-                conn.Close();
-            }
+            
+            
         }
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)

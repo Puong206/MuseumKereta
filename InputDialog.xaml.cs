@@ -24,6 +24,8 @@ namespace MuseumApp
 
         private void Simpan_Click(object sender, RoutedEventArgs e)
         {
+            JenisKoleksi = JenisTextBox.Text;
+            Deskripsi = DeskripsiTextBox.Text;
             this.DialogResult = true;
             this.Close();
         }
