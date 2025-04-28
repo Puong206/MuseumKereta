@@ -51,7 +51,7 @@ namespace MuseumApp
             var dialog = new InputDialogPerawatan();
             if (dialog.ShowDialog() == true)
             {
-                if (string.IsNullOrWhiteSpace(dialog.IDBarang) || dialog.IDBarang.Length != 6 || !dialog.IDBarang.All(char.IsDigit))
+                if (string.IsNullOrWhiteSpace(dialog.IDBarang) || dialog.IDBarang.Length != 5 || !dialog.IDBarang.All(char.IsDigit))
                 {
                     MessageBox.Show("BarangID harus terdiri dari tepat 5 digit angka.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;

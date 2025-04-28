@@ -16,11 +16,11 @@ namespace MuseumApp
 {
     public partial class InputDialogPerawatan : Window
     {
-        public string IDBarang => txtIDBarang.Text;
+        public string IDBarang => IDBarangTextBox.Text;
         public DateTime TanggalPerawatan => (dpTanggalPerawatan.SelectedDate ?? DateTime.Now).Date;
-        public string JenisPerawatan => txtJenisPerawatan.Text;
-        public string Catatan => txtCatatan.Text;
-        public string NIPP => txtNIPP.Text;
+        public string JenisPerawatan => JenisPerawatanTextBox.Text;
+        public string Catatan => CatatanTextBox.Text;
+        public string NIPP => NIPPTextBox.Text;
         public InputDialogPerawatan(string idBarang = "", DateTime? tanggalPerawatan = null, string jenis = "", string catatan = "", string nipp = "")
         {
             InitializeComponent();
@@ -33,6 +33,12 @@ namespace MuseumApp
 
         private void Simpan_Click(object sender, RoutedEventArgs e)
         {
+            if (IDBarang.Length != 5 || !IDBarang.All(char.IsDigit))
+            {
+                MessageBox.Show("ID Barang harus 5 digit");
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(IDBarang) || dpTanggalPerawatan.SelectedDate == null ||
                 string.IsNullOrWhiteSpace(JenisPerawatan) || string.IsNullOrWhiteSpace(Catatan) || string.IsNullOrWhiteSpace(NIPP))
             {
