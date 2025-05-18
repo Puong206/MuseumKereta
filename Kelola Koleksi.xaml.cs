@@ -70,27 +70,30 @@ namespace MuseumApp
             var dialog = new InputDialog();
             if (dialog.ShowDialog() == true)
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                try
                 {
-                    try
+                    using (SqlConnection conn = new SqlConnection(connectionString))
                     {
-                        conn.Open();
                         using (SqlCommand cmd = new SqlCommand("AddKoleksi", conn))
                         {
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@KoleksiID", DBNull.Value);
                             cmd.Parameters.AddWithValue("@JenisKoleksi", dialog.JenisKoleksi);
                             cmd.Parameters.AddWithValue("@Deskripsi", dialog.Deskripsi);
+                            SqlParameter outputIdParam = new SqlParameter("@IDKoleksiIdentity", SqlDbType.Int);
+                            outputIdParam.Direction = ParameterDirection.Output;
+                            cmd.Parameters.Add(outputIdParam);
+
+                            conn.Open();
                             cmd.ExecuteNonQuery();
-                            MessageBox.Show("Koleksi berhasil ditambahkan.");
+                            int generatedID = (int)outputIdParam.Value;
+                            MessageBox.Show("Koleksi berhasil ditambahkan");
                         }
-                        
-                        LoadData();
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Gagal menambah data: " + ex.Message);
-                    }
+
+                    LoadData();
+                } catch (Exception ex)
+                {
+                    MessageBox.Show("Gagal menammbah Koleksi" + ex.Message);
                 }
                 
                 
@@ -105,35 +108,33 @@ namespace MuseumApp
                 return;
             }
             var dialog = new InputDialog();
-            dialog.JenisTextBox.Text = txtJenisKoleksi.Text;
-            dialog.DeskripsiTextBox.Text = txtDeskripsi.Text;
+            dialog.JenisTextBox.Text = selectedJenis;
+            dialog.DeskripsiTextBox.Text = selectedDeskripsi;
 
             if (dialog.ShowDialog() == true)
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                try
                 {
-                    try
+                    using (SqlConnection conn = new SqlConnection(connectionString))
                     {
-                        conn.Open();
-                        string query = ("UPDATE Koleksi SET JenisKoleksi = @jenis, Deskripsi = @deskripsi WHERE KoleksiID = @id");
-
-                        using (SqlCommand cmd = new SqlCommand(query, conn))
+                        using (SqlCommand cmd = new SqlCommand("UpdateKoleksi", conn)) 
                         {
-                            cmd.Parameters.AddWithValue("@jenis", dialog.JenisKoleksi);
-                            cmd.Parameters.AddWithValue("@deskripsi", dialog.Deskripsi);
-                            cmd.Parameters.AddWithValue("@id", int.Parse(hiddenId.Text));
-                            cmd.ExecuteNonQuery();
-                            MessageBox.Show("Koleksi berhasil diperbarui.");
-                        }
-                        LoadData();
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@KoleksiID", selectedId);
+                            cmd.Parameters.AddWithValue("@JenisKoleksi", (object)dialog.JenisKoleksi);
+                            cmd.Parameters.AddWithValue("@Deskripsi", (object)dialog.Deskripsi);
 
+                            conn.Open();
+                            cmd.ExecuteNonQuery();
+                            MessageBox.Show("Koleksi berhasil diperbaharui");
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Gagal memperbarui data: " + ex.Message);
-                    }
+                    LoadData();
                 }
-                
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Gagal memperbaharui Koleksi" + ex.Message);
+                }
             }
         }
 
@@ -147,28 +148,27 @@ namespace MuseumApp
 
             var result = MessageBox.Show($"Yakin ingin menghapus koleksi dengan ID {selectedId}?", "Konfirmasi", MessageBoxButton.YesNo);
             if (result != MessageBoxResult.Yes) return;
-
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            try
             {
-                try
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
-                    using (SqlCommand cmd = new SqlCommand("DELETE FROM Koleksi WHERE KoleksiID = @id", conn))
+                    using (SqlCommand cmd = new SqlCommand("DeleteKoleksi", conn))
                     {
-                        cmd.Parameters.AddWithValue("@id", selectedId);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@KoleksiID", selectedId);
+
+                        conn.Open();
                         cmd.ExecuteNonQuery();
-                        MessageBox.Show("Koleksi berhasil dihapus.");
+                        MessageBox.Show("Koleksi berhasil dihapus");
                     }
-                    LoadData();
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Gagal menghapus data: " + ex.Message);
-                }
+                LoadData();
             }
-            
-            
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal menghapus data: " + ex.Message);
+            }
+
         }
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
