@@ -17,7 +17,6 @@ namespace MuseumApp
         {
             InitializeComponent();
             connectionString = connStr;
-            conn = new SqlConnection(connectionString);
             LoadData();
         }
 
@@ -25,12 +24,22 @@ namespace MuseumApp
         {
             try
             {
-                conn.Open();
-                adapter = new SqlDataAdapter("SELECT NIPP, NamaKaryawan, statusKaryawan FROM Karyawan", conn);
-                dt = new DataTable();
-                adapter.Fill(dt);
-                dataGridPegawai.ItemsSource = dt.DefaultView;
-                conn.Close();
+                using (SqlConnection conn = new SqlConnection(connectionString)) 
+                {
+                    conn.Open();
+
+                    adapter = new SqlDataAdapter("SELECT NIPP, NamaKaryawan, statusKaryawan FROM Karyawan", conn);
+
+                    dt = new DataTable();
+
+                    adapter.Fill(dt);
+
+                    dataGridPegawai.ItemsSource = dt.DefaultView;
+
+                    conn.Close();
+
+                }
+                
             }
             catch (Exception ex)
             {
@@ -48,10 +57,7 @@ namespace MuseumApp
             }
         }
 
-        private void BtnTambah_Click(object sender, RoutedEventArgs e)
-        {
-            ClearForm();
-        }
+        
 
         private void BtnTambahPegawai_Click(object sender, RoutedEventArgs e)
         {
@@ -79,17 +85,20 @@ namespace MuseumApp
 
                 try
                 {
-                    conn.Open();
-                    using (SqlCommand cmd = new SqlCommand("INSERT INTO Karyawan (NIPP, NamaKaryawan, statusKaryawan) VALUES (@NIPP, @Nama, @Status)", conn))
+                    using (SqlConnection conn = new SqlConnection(connectionString))
                     {
-                        cmd.Parameters.AddWithValue("@NIPP", NIPP);
-                        cmd.Parameters.AddWithValue("@Nama", Nama);
-                        cmd.Parameters.AddWithValue("@Status", Status);
-                        cmd.ExecuteNonQuery();
-                    }
-                    conn.Close();
+                        using (SqlCommand cmd = new SqlCommand("AddKaryawan", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@NIPP", NIPP);
+                            cmd.Parameters.AddWithValue("@NamaKaryawan", Nama);
+                            cmd.Parameters.AddWithValue("@statuskaryawan", Status);
 
-                    MessageBox.Show("Pegawai berhasil ditambahkan.");
+                            conn.Open();
+                            cmd.ExecuteNonQuery();
+                            MessageBox.Show("Karyawan berhasil ditambahkan");
+                        }
+                    }
                     LoadData();
                 }
                 catch (Exception ex)
@@ -121,25 +130,34 @@ namespace MuseumApp
                 string namaBaru = dialog.NamaKaryawan;
                 string statusBaru = dialog.StatusKaryawan;
 
-                if (string.IsNullOrWhiteSpace(namaBaru) || string.IsNullOrWhiteSpace(statusBaru))
+                if (string.IsNullOrWhiteSpace(namaBaru))
                 {
-                    MessageBox.Show("Nama dan status tidak boleh kosong.");
+                    MessageBox.Show("Nama Karyawan tidak boleh kosong.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+                
+                if (string.IsNullOrWhiteSpace(statusBaru)) 
+                {
+                    MessageBox.Show("Status Karyawan harus dipilih.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
                 try
                 {
-                    conn.Open();
-                    using (SqlCommand cmd = new SqlCommand("UPDATE Karyawan SET NamaKaryawan = @Nama, statusKaryawan = @Status WHERE NIPP = @NIPP", conn))
+                    using (SqlConnection conn = new SqlConnection(connectionString))
                     {
-                        cmd.Parameters.AddWithValue("@Nama", namaBaru);
-                        cmd.Parameters.AddWithValue("@Status", statusBaru);
-                        cmd.Parameters.AddWithValue("@NIPP", currentNIPP);
-                        cmd.ExecuteNonQuery();
-                    }
-                    conn.Close();
+                        using (SqlCommand cmd = new SqlCommand("UpdateKaryawan", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@NIPP", currentNIPP);
+                            cmd.Parameters.AddWithValue("@NamaKaryawan", (object)namaBaru);
+                            cmd.Parameters.AddWithValue("@statusKaryawan", (object)statusBaru);
 
-                    MessageBox.Show("Pegawai berhasil diperbarui.");
+                            conn.Open();
+                            cmd.ExecuteNonQuery();
+                            MessageBox.Show("Data karyawan berhasil diperbarui");
+                        }
+                    }
                     LoadData();
                 }
                 catch (Exception ex)
@@ -149,13 +167,6 @@ namespace MuseumApp
             }
         }
 
-
-        private void ClearForm()
-        {
-            txtNIPP.Text = "";
-            txtNama.Text = "";
-            txtNIPP.IsEnabled = true;
-        }
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
