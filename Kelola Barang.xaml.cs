@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -46,101 +47,121 @@ namespace MuseumApp
             {
                 try
                 {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand(@"
-                        INSERT INTO BarangMuseum (BarangID, NamaBarang, Deskripsi, KoleksiID, TahunPembuatan, AsalBarang) 
-                        VALUES (@id, @nama, @deskripsi, @koleksiID, @tahun, @asal)", conn);
-                    cmd.Parameters.AddWithValue("@id", dialog.BarangID);
-                    cmd.Parameters.AddWithValue("@nama", dialog.NamaBarang);
-                    cmd.Parameters.AddWithValue("@deskripsi", dialog.Deskripsi);
-                    if (string.IsNullOrWhiteSpace(dialog.KoleksiID))
+                    using (SqlConnection conn = new SqlConnection(connectionString))
                     {
-                        cmd.Parameters.AddWithValue("@koleksiID", DBNull.Value);
+                        using (SqlCommand cmd = new SqlCommand("AddBarang", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@BarangID", dialog.BarangID);
+                            cmd.Parameters.AddWithValue("@NamaBarang", dialog.NamaBarang);
+                            cmd.Parameters.AddWithValue("@Deskripsi", dialog.Deskripsi);
+                            cmd.Parameters.AddWithValue("@KoleksiID", dialog.KoleksiID);
+                            cmd.Parameters.AddWithValue("@TahunPembuatan", dialog.TahunPembuatan);
+                            cmd.Parameters.AddWithValue("@AsalBarang", dialog.AsalBarang);
+                            conn.Open();
+                            cmd.ExecuteNonQuery();
+                            MessageBox.Show("Barang berhasil ditabahkan");
+                        }
                     }
-                    else
-                    {
-                        cmd.Parameters.AddWithValue("@koleksiID", dialog.KoleksiID);
-                    }
-                    cmd.Parameters.AddWithValue("@tahun", dialog.TahunPembuatan);
-                    cmd.Parameters.AddWithValue("@asal", dialog.AsalBarang);
-                    cmd.ExecuteNonQuery();
+                    LoadData();
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Gagal menambah data: " + ex.Message);
                 }
-                finally
-                {
-                    conn.Close();
-                    LoadData();
-                }
+                
             }
         }
 
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
             DataRowView row = dataGridBarang.SelectedItem as DataRowView;
-            if (row == null) return;
+            if (row == null)
+            {
+                MessageBox.Show("Pilih data barang yang akan diedit");
+                return;
+            }
 
             var dialog = new InputDialogBarang(
                 row["BarangID"].ToString(),
                 row["NamaBarang"].ToString(),
                 row["Deskripsi"].ToString(),
-                row["KoleksiID"] == DBNull.Value ? "" : row["KoleksiID"].ToString(),
+                row["KoleksiID"].ToString(),
                 row["TahunPembuatan"].ToString(),
-                row["AsalBarang"].ToString());
+                row["AsalBarang"].ToString()) ;
 
             if (dialog.ShowDialog() == true)
             {
+
+                if (string.IsNullOrWhiteSpace(dialog.TahunPembuatan) || dialog.TahunPembuatan.Length != 4 || !dialog.TahunPembuatan.All(char.IsDigit))
+                {
+                    MessageBox.Show("Tahun Pembuatan harus terdiri dari tepat 4 digit angka.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                int koleksiIdInt;
+                if (string.IsNullOrWhiteSpace(dialog.KoleksiID) || !int.TryParse(dialog.KoleksiID, out koleksiIdInt))
+                {
+                    MessageBox.Show("KoleksiID harus diisi dengan angka yang valid.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
                 try
                 {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand(@"
-                        UPDATE BarangMuseum 
-                        SET NamaBarang = @nama, Deskripsi = @deskripsi, KoleksiID = @koleksiID, 
-                            TahunPembuatan = @tahun, AsalBarang = @asal 
-                        WHERE BarangID = @id", conn);
-                    cmd.Parameters.AddWithValue("@id", dialog.BarangID);
-                    cmd.Parameters.AddWithValue("@nama", dialog.NamaBarang);
-                    cmd.Parameters.AddWithValue("@deskripsi", dialog.Deskripsi);
-                    if (string.IsNullOrWhiteSpace(dialog.KoleksiID))
+                    using (SqlConnection conn = new SqlConnection(connectionString)) 
                     {
-                        cmd.Parameters.AddWithValue("@koleksiID", DBNull.Value);
+                        using (SqlCommand cmd = new SqlCommand("UpdateBarang", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@BarangID", row["BarangID"].ToString());
+                            cmd.Parameters.AddWithValue("@NamaBarang", (object)dialog.NamaBarang);
+                            cmd.Parameters.AddWithValue("@Deskripsi", (object)dialog.Deskripsi);
+                            cmd.Parameters.AddWithValue("@KoleksiID", koleksiIdInt);
+                            cmd.Parameters.AddWithValue("@TahunPembuatan", (object)dialog.TahunPembuatan);
+                            cmd.Parameters.AddWithValue("@AsalBarang", (object)(dialog.AsalBarang));
+
+                            conn.Open();
+                            cmd.ExecuteNonQuery();
+
+                            MessageBox.Show("Data barang berhasil diperbaharui");
+                        }
                     }
-                    else
-                    {
-                        cmd.Parameters.AddWithValue("@koleksiID", dialog.KoleksiID);
-                    }
-                    cmd.Parameters.AddWithValue("@tahun", dialog.TahunPembuatan);
-                    cmd.Parameters.AddWithValue("@asal", dialog.AsalBarang);
-                    cmd.ExecuteNonQuery();
+                    LoadData();
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Gagal mengubah data: " + ex.Message);
                 }
-                finally
-                {
-                    conn.Close();
-                    LoadData();
-                }
+                
             }
         }
 
         private void BtnHapus_Click(object sender, RoutedEventArgs e)
         {
             DataRowView row = dataGridBarang.SelectedItem as DataRowView;
-            if (row == null) return;
+            if (row == null)
+            {
+                MessageBox.Show("Pilih data barang yang akan dihapus.");
+                return;
+            }
+            string barangIdToDelete = row["BarangID"].ToString();
 
-            string id = row["BarangID"].ToString();
-            if (MessageBox.Show($"Yakin ingin menghapus BarangID {id}?", "Konfirmasi", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (MessageBox.Show($"Yakin ingin menghapus BarangID {barangIdToDelete}?", "Konfirmasi", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 try
                 {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand("DELETE FROM BarangMuseum WHERE BarangID = @id", conn);
-                    cmd.Parameters.AddWithValue("@id", id);
-                    cmd.ExecuteNonQuery();
+                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    {
+                        using (SqlCommand cmd = new SqlCommand("DeleteBarang", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@BarangID", barangIdToDelete);
+
+                            conn.Open();
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                    LoadData();
                 }
                 catch (Exception ex)
                 {
