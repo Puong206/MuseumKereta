@@ -75,10 +75,12 @@ namespace MuseumApp
                     try
                     {
                         conn.Open();
-                        using (SqlCommand cmd = new SqlCommand("INSERT INTO Koleksi (JenisKoleksi, Deskripsi) VALUES (@jenis, @deskripsi)", conn))
+                        using (SqlCommand cmd = new SqlCommand("AddKoleksi", conn))
                         {
-                            cmd.Parameters.AddWithValue("@jenis", dialog.JenisKoleksi);
-                            cmd.Parameters.AddWithValue("@deskripsi", dialog.Deskripsi);
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@KoleksiID", DBNull.Value);
+                            cmd.Parameters.AddWithValue("@JenisKoleksi", dialog.JenisKoleksi);
+                            cmd.Parameters.AddWithValue("@Deskripsi", dialog.Deskripsi);
                             cmd.ExecuteNonQuery();
                             MessageBox.Show("Koleksi berhasil ditambahkan.");
                         }

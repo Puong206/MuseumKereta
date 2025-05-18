@@ -106,18 +106,29 @@ namespace MuseumApp
             {
                 try
                 {
-                    conn.Open();
-                    cmd = new SqlCommand("UPDATE Perawatan SET BarangID = @barangid, TanggalPerawatan = @tanggal, JenisPerawatan = @jenis, Catatan = @catatan, NIPP = @nipp WHERE PerawatanID = @id", conn);
-                    cmd.Parameters.AddWithValue("@id", perawatanId);
-                    cmd.Parameters.AddWithValue("@barangid", dialog.IDBarang);
-                    cmd.Parameters.AddWithValue("@tanggal", dialog.TanggalPerawatan);
-                    cmd.Parameters.AddWithValue("@jenis", dialog.JenisPerawatan);
-                    cmd.Parameters.AddWithValue("@catatan", dialog.Catatan);
-                    cmd.Parameters.AddWithValue("@nipp", dialog.NIPP);
-                    cmd.ExecuteNonQuery();
-                    conn.Close();
+                    using (SqlConnection conn = new SqlConnection(connectionString)) 
+                    {
+                        using (SqlCommand cmd = new SqlCommand("AddPerawatan", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@BarangID", (object)dialog.IDBarang); 
+                            cmd.Parameters.AddWithValue("@TanggalPerawatan", dialog.TanggalPerawatan);
+                            cmd.Parameters.AddWithValue("@JenisPerawatan", dialog.JenisPerawatan);
+                            cmd.Parameters.AddWithValue("@Catatan", (object)dialog.Catatan); 
+                            cmd.Parameters.AddWithValue("@NIPP", dialog.NIPP);
 
-                    MessageBox.Show("Data berhasil diperbarui.");
+                            SqlParameter outputIdParam = new SqlParameter("@GeneratedPerawatanID", SqlDbType.Int);
+                            outputIdParam.Direction = ParameterDirection.Output;
+                            cmd.Parameters.Add(outputIdParam);
+
+                            conn.Open();
+                            cmd.ExecuteNonQuery();
+                            int generatedID = (int)outputIdParam.Value;
+
+                            MessageBox.Show("Data berhasil diperbarui.");
+                        }
+                    }
+
+                    
                     LoadData();
                 }
                 catch (Exception ex)

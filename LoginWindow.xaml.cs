@@ -61,12 +61,12 @@ namespace MuseumApp
                     conn.Open();
                     MessageBox.Show("Login berhasil!");
 
-                    // Tampilkan Page1 dalam window baru
+                    
                     NavigationWindow navWindow = new NavigationWindow();
                     navWindow.Navigate(new Page1(connectionString));
                     navWindow.Show();
 
-                    this.Close(); // Tutup LoginWindow
+                    this.Close(); 
                 }
             }
             catch (SqlException ex)
@@ -88,11 +88,11 @@ namespace MuseumApp
 
         private void UsernameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+ 
         }
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
-            // Add logic here if needed, or leave empty if no specific action is required.
+            
         }
     }
 }
