@@ -3,16 +3,24 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Windows;
 using System.Windows.Controls;
+using System.Runtime.Caching;
 
 namespace MuseumApp
 {
     public partial class Kelola_Koleksi : Page
     {
-        private string connectionString;
+        private readonly string connectionString;
         private SqlConnection conn;
         private SqlCommand cmd;
         private SqlDataAdapter adapter;
         private DataTable dt;
+
+        private readonly MemoryCache _cache = MemoryCache.Default;
+        private readonly CacheItemPolicy _policy = new CacheItemPolicy
+        {
+            AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5)
+        };
+        private const string CacheKey = "KoleksiData";
 
         private TextBox txtJenisKoleksi = new TextBox();
         private TextBox txtDeskripsi = new TextBox();
@@ -23,28 +31,59 @@ namespace MuseumApp
         {
             InitializeComponent();
             connectionString = connStr;
-            conn = new SqlConnection(connectionString);
+            EnsureIndexes();
             LoadData();
+        }
+
+        private void EnsureIndexes()
+        {
+            
+                using (SqlConnection conn = new SqlConnection(connectionString)) 
+                {
+                    conn.Open();
+
+                var indexScript = @"
+                    IF OBJECT_ID('dbo.Koleksi', 'U') IS NOT NULL
+                    BEGIN
+                    IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_JenisKoleksi' AND object_id = OBJECT_ID('dbo.Koleksi'))
+                        CREATE NONCLUSTERED INDEX idx_JenisKoleksi ON dbo.Koleksi(JenisKoleksi);
+                    END";
+                    using (SqlCommand cmd = new SqlCommand(indexScript, conn)) 
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            
         }
 
         private void LoadData()
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            DataTable dt = _cache.Get(CacheKey) as DataTable;
+            if (dt == null)
             {
                 try
                 {
-                    conn.Open();
-                    adapter = new SqlDataAdapter("SELECT KoleksiID, JenisKoleksi, Deskripsi FROM Koleksi", conn);
-                    dt = new DataTable();
-                    adapter.Fill(dt);
-                    dataGridKoleksi.ItemsSource = dt.DefaultView;
+                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    {
+
+                        conn.Open();
+                        adapter = new SqlDataAdapter("SELECT KoleksiID, JenisKoleksi, Deskripsi FROM Koleksi", conn);
+                        dt = new DataTable();
+                        adapter.Fill(dt);
+                        dataGridKoleksi.ItemsSource = dt.DefaultView;
+                        _cache.Set(CacheKey, dt, _policy);
+                    }
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Gagal memuat data: " + ex.Message);
                 }
+                
             }
-            
+            else
+            {
+                dataGridKoleksi.ItemsSource = dt.DefaultView;
+            }
         }
 
         private int selectedId;
@@ -72,6 +111,11 @@ namespace MuseumApp
             {
                 try
                 {
+                    if (string.IsNullOrWhiteSpace(dialog.JenisKoleksi) || string.IsNullOrWhiteSpace(dialog.Deskripsi))
+                    {
+                        MessageBox.Show("Jenis Koleksi dan Deskripsi harus diisi!", "Peringatan", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
                     using (SqlConnection conn = new SqlConnection(connectionString))
                     {
                         using (SqlCommand cmd = new SqlCommand("AddKoleksi", conn))
@@ -87,6 +131,7 @@ namespace MuseumApp
                             cmd.ExecuteNonQuery();
                             int generatedID = (int)outputIdParam.Value;
                             MessageBox.Show("Koleksi berhasil ditambahkan");
+                            _cache.Remove(CacheKey);
                         }
                     }
 
@@ -107,34 +152,60 @@ namespace MuseumApp
                 MessageBox.Show("Pilih koleksi yang ingin diedit");
                 return;
             }
+
+            if (selectedId <= 0)
+            {
+                MessageBox.Show("ID Koleksi tidak valid", "kesalahan", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             var dialog = new InputDialog();
-            dialog.JenisTextBox.Text = selectedJenis;
-            dialog.DeskripsiTextBox.Text = selectedDeskripsi;
+            if (dialog.JenisTextBox != null) dialog.JenisTextBox.Text = selectedJenis;
+            if (dialog.DeskripsiTextBox != null) dialog.DeskripsiTextBox.Text = selectedDeskripsi;
 
             if (dialog.ShowDialog() == true)
             {
                 try
                 {
+                    if (string.IsNullOrWhiteSpace(dialog.JenisKoleksi) || string.IsNullOrWhiteSpace(dialog.Deskripsi))
+                    {
+                        MessageBox.Show("Jenis Koleksi dan Deskripsi harus diisi!", "Peringatan", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
                     using (SqlConnection conn = new SqlConnection(connectionString))
                     {
                         using (SqlCommand cmd = new SqlCommand("UpdateKoleksi", conn)) 
                         {
                             cmd.CommandType = CommandType.StoredProcedure;
                             cmd.Parameters.AddWithValue("@KoleksiID", selectedId);
-                            cmd.Parameters.AddWithValue("@JenisKoleksi", (object)dialog.JenisKoleksi);
-                            cmd.Parameters.AddWithValue("@Deskripsi", (object)dialog.Deskripsi);
+                            cmd.Parameters.AddWithValue("@JenisKoleksi", dialog.JenisKoleksi.Trim());
+                            cmd.Parameters.AddWithValue("@Deskripsi", dialog.Deskripsi.Trim());
 
                             conn.Open();
                             cmd.ExecuteNonQuery();
                             MessageBox.Show("Koleksi berhasil diperbaharui");
+                            _cache.Remove(CacheKey); 
                         }
                     }
                     LoadData();
                 }
-                catch (Exception ex)
+                catch (SqlException sqlEx)
                 {
-                    MessageBox.Show("Gagal memperbaharui Koleksi" + ex.Message);
+                    if (sqlEx.Number == 50001)
+                    {
+                        MessageBox.Show("Data koleksi tidak ditemukan", "Kesalahan Update", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Gagal memperbaharui Koleksi" + sqlEx.Message, "Kesalahan Database", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
+                catch (Exception ex) 
+                {
+                    MessageBox.Show("Terjadi kesalahan tak terduga saat memperbaharui Koleksi: " + ex.Message, "Kesalahan Umum", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+
             }
         }
 
@@ -143,6 +214,12 @@ namespace MuseumApp
             if (dataGridKoleksi.SelectedItem == null)
             {
                 MessageBox.Show("Pilih koleksi yang ingin dihapus.");
+                return;
+            }
+
+            if (selectedId <= 0)
+            {
+                MessageBox.Show("ID koleksi tidak valid. Silakan pilih baris yang benar.", "Kesalahan ID", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -160,15 +237,26 @@ namespace MuseumApp
                         conn.Open();
                         cmd.ExecuteNonQuery();
                         MessageBox.Show("Koleksi berhasil dihapus");
+                        _cache.Remove(CacheKey); 
                     }
                 }
                 LoadData();
             }
-            catch (Exception ex)
+            catch (SqlException sqlEx)
             {
-                MessageBox.Show("Gagal menghapus data: " + ex.Message);
+                if (sqlEx.Number == 50002)
+                {
+                    MessageBox.Show("Data koleksi tidak ditemukan.", "Kesalahan Hapus", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else
+                {
+                    MessageBox.Show("Gagal menghapus data: " + sqlEx.Message, "Kesalahan Database", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
-
+            catch (Exception ex) 
+            {
+                MessageBox.Show("Terjadi kesalahan tak terduga saat menghapus data: " + ex.Message, "Kesalahan Umum", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
@@ -176,4 +264,4 @@ namespace MuseumApp
             NavigationService.Navigate(new Page1(connectionString));
         }
     }
-}
+} 
