@@ -1,9 +1,14 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace MuseumApp
 {
-    public partial class InputDialogBarang : Window
+    public partial class InputDialogBarang : UserControl
     {
+        public event EventHandler SaveClicked;
+        public event EventHandler CancelClicked;
+
         public string BarangID => IDBarangTextBox.Text;
         public string NamaBarang => NamaBarangTextBox.Text;
         public string Deskripsi => DeskripsiTextBox.Text;
@@ -28,14 +33,12 @@ namespace MuseumApp
 
         private void Simpan_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = true;
-            this.Close();
+            SaveClicked?.Invoke(this, EventArgs.Empty);
         }
 
         private void Batal_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = false;
-            this.Close();
+            CancelClicked?.Invoke(this, EventArgs.Empty);
         }
     }
 }

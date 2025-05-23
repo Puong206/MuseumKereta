@@ -5,93 +5,118 @@
      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
      xmlns:local="clr-namespace:MuseumApp"
      mc:Ignorable="d" 
-     d:DesignHeight="600" d:DesignWidth="920">
+     d:DesignHeight="600" d:DesignWidth="920"
+     Title="Dashboard Utama">
 
-    <Grid Background="White">
-        
+    <Page.Resources>
+        <Style x:Key="SidebarButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="Margin" Value="5,5,5,5"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontFamily" Value="Plus Jakarta Sans Semibold"/>
+            <Setter Property="Foreground" Value="#FF2D2B70"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="5"
+                                Padding="10,0,0,0">
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF2D2B70"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#FF2D2B70"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"
+                              MinWidth="200"
+                              MaxWidth="280">
+            </ColumnDefinition>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
         <Image Source="/Images/cover-2-1-b4c03b57f59f99cfb01ec83c400ae689_600x400.jpg"
-              Stretch="Fill"
-              Width="920"
-              Height="600"
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center"
-              Opacity="0.75">
+              Stretch="UniformToFill" Opacity="0.75"
+              Grid.Row="0" Grid.RowSpan="2"
+              Grid.Column="0" Grid.ColumnSpan="2">
             <Image.Effect>
-                <BlurEffect/>
+                <BlurEffect Radius="7"/>
             </Image.Effect>
         </Image>
-        <Rectangle HorizontalAlignment="Center"
-                  Height="500"
-                  Width="800"
-                  VerticalAlignment="Center" Fill="White" Opacity="0.4">
-            <Rectangle.Effect>
-                <BlurEffect/>
-            </Rectangle.Effect>
-        </Rectangle>
 
-        <Grid HorizontalAlignment="Left"
-             Width="172"
-             Margin="72,160,0,62">
-
-            <Border Background="White"
-                   CornerRadius="20,20,20,20" />
-
-            <StackPanel Width="140"
-                       Grid.Row="1"
-                       Margin="0,52,0,0">
-                <Button x:Name="ButtonKoleksi" Content="Kelola Koleksi"
-                        Height="50"
-                        Width="140"
-                        FontSize="14"
-                        FontFamily="Plus Jakarta Sans Semibold"
-                        VerticalAlignment="Center"
-                        Foreground="#FF2D2B70" Click="ButtonKoleksi_Click" BorderBrush="{x:Null}" Background="{x:Null}"/>
-
-                <Button x:Name="ButtonBarang" Content="Kelola Barang"
-                        Height="50"
-                        Width="140"
-                        FontSize="14"
-                        FontFamily="Plus Jakarta Sans Semibold"
-                        VerticalAlignment="Center"
-                        Foreground="#FF2D2B70" Click="ButtonBarang_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
-
-                <Button x:Name="ButtonPegawai" Content="Kelola Pegawai"
-                        Height="50"
-                        Width="140"
-                        FontSize="14"
-                        FontFamily="Plus Jakarta Sans Semibold"
-                        VerticalAlignment="Center"
-                        Foreground="#FF2D2B70" Click="ButtonPegawai_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
-
-
-                <Button x:Name="ButtonPerawatan" Content="Kelola Perawatan"
-                        Height="50"
-                        Width="140"
-                        FontSize="14"
-                        FontFamily="Plus Jakarta Sans Semibold"
-                        VerticalAlignment="Center"
-                        Foreground="#FF2D2B70" Click="ButtonPerawatan_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
-            </StackPanel>
-
-        </Grid>
-
-        <Border Background="White"
-                Height="85"
-                Margin="72,60,72,451"
-                CornerRadius="20,20,20,20">
-            <TextBlock TextWrapping="Wrap"
-                       Text="Pendataan Museum Kereta Api"
+        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                Background="#CCFFFFFF" MinHeight="70"
+                Margin="15,15,15,15"
+                CornerRadius="10">
+            <Border.Effect>
+                <DropShadowEffect Opacity="0.2" BlurRadius="5" ShadowDepth="1"/>
+            </Border.Effect>
+            <TextBlock Text="Pendataan Museum Kereta Api"
+                       TextWrapping="Wrap"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontFamily="Plus Jakarta Sans Bold"
-                       FontSize="40"
-                       FontStyle="Normal"
+                       FontSize="30"
                        Foreground="#2D2B70"
-                       LineHeight="20"/>
+                       Padding="20,10,20,10"/>
         </Border>
 
+        <Border Grid.Row="1" Grid.Column="0"
+                Background="#B3FFFFFF" Margin="15,5,5,15"
+                CornerRadius="10">
+            <Border.Effect>
+                <DropShadowEffect Opacity="0.2" BlurRadius="5" ShadowDepth="1"/>
+            </Border.Effect>
+            <StackPanel VerticalAlignment="Top" Margin="10,20,10,10">
+                <Button x:Name="ButtonKoleksi" Content="Kelola Koleksi"
+                        Style="{StaticResource SidebarButtonStyle}"
+                        Click="ButtonKoleksi_Click"/>
+                <Button x:Name="ButtonBarang" Content="Kelola Barang"
+                        Style="{StaticResource SidebarButtonStyle}"
+                        Click="ButtonBarang_Click"/>
+                <Button x:Name="ButtonPegawai" Content="Kelola Pegawai"
+                        Style="{StaticResource SidebarButtonStyle}"
+                        Click="ButtonPegawai_Click"/>
+                <Button x:Name="ButtonPerawatan" Content="Kelola Perawatan"
+                        Style="{StaticResource SidebarButtonStyle}"
+                        Click="ButtonPerawatan_Click"/>
+            </StackPanel>
+        </Border>
 
-
+        <Border Grid.Row="1" Grid.Column="1"
+                Background="#99FFFFFF" Margin="5,5,15,15"
+                CornerRadius="10">
+            <Border.Effect>
+                <DropShadowEffect Opacity="0.1" BlurRadius="5" ShadowDepth="1"/>
+            </Border.Effect>
+            <Frame x:Name="MainContentFrame"
+                   NavigationUIVisibility="Hidden"
+                   JournalOwnership="UsesParentJournal"/>
+        </Border>
     </Grid>
-
 </Page>
