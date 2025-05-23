@@ -54,7 +54,9 @@
                     Click="BtnBack_Click"/>
 
 
-            <DataGrid x:Name="dataGridKoleksi" FontFamily="Plus Jakarta Sans Medium" AutoGenerateColumns="False" IsReadOnly="True"
+            <DataGrid x:Name="dataGridKoleksi" FontFamily="Plus Jakarta Sans Medium"
+                      AutoGenerateColumns="False"
+                      CanUserSortColumns="True"  IsReadOnly="True"
                       SelectionMode="Single" SelectionUnit="FullRow" Margin="20,75,20,75" SelectionChanged="dataGridKoleksi_SelectionChanged" Background="White" BorderBrush="{x:Null}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID Koleksi" Binding="{Binding KoleksiID}" Width="Auto"/>
