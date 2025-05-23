@@ -25,7 +25,7 @@ namespace MuseumApp
         private TextBox txtJenisKoleksi = new TextBox();
         private TextBox txtDeskripsi = new TextBox();
         private TextBox hiddenId = new TextBox();
-        // Dummy controls yang tidak ada di XAML
+        
 
         public Kelola_Koleksi(string connStr)
         {
