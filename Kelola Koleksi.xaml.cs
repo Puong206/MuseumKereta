@@ -94,13 +94,32 @@ namespace MuseumApp
         {
             if (dataGridKoleksi.SelectedItem is DataRowView row)
             {
-                selectedJenis = row["JenisKoleksi"].ToString();
-                selectedDeskripsi = row["Deskripsi"].ToString();
-                selectedId = Convert.ToInt32(row["KoleksiID"]);
+                //selectedJenis = row["JenisKoleksi"].ToString();
+                //selectedDeskripsi = row["Deskripsi"].ToString();
+                //selectedId = Convert.ToInt32(row["KoleksiID"]);
 
-                txtJenisKoleksi.Text = selectedJenis;
-                txtDeskripsi.Text = selectedDeskripsi;
-                hiddenId.Text = selectedId.ToString();
+                //txtJenisKoleksi.Text = selectedJenis;
+                //txtDeskripsi.Text = selectedDeskripsi;
+                //hiddenId.Text = selectedId.ToString();
+                if (BtnEdit != null)
+                {
+                    BtnEdit.IsEnabled = true;
+                }
+                if (BtnHapus != null)
+                {
+                    BtnHapus.IsEnabled = true;
+                }
+            }
+            else
+            {
+                if (BtnEdit != null)
+                {
+                    BtnEdit.IsEnabled = false;
+                }
+                if (BtnHapus != null)
+                {
+                    BtnHapus.IsEnabled = false;
+                }
             }
         }
 
