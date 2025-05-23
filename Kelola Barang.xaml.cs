@@ -177,6 +177,28 @@ namespace MuseumApp
 
         private void dataGridBarang_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (dataGridBarang.SelectedItem is DataRowView)
+            {
+                if (BtnEdit != null)
+                {
+                    BtnEdit.IsEnabled = true;
+                }
+                if (BtnHapus != null)
+                {
+                    BtnHapus.IsEnabled = true;
+                }
+            }
+            else
+            {
+                if (BtnEdit != null)
+                {
+                    BtnEdit.IsEnabled = false;
+                }
+                if (BtnHapus != null)
+                {
+                    BtnHapus.IsEnabled = false;
+                }
+            }
         }
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
