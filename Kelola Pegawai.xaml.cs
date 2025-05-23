@@ -54,6 +54,22 @@ namespace MuseumApp
                 txtNIPP.Text = row["NIPP"].ToString();
                 txtNama.Text = row["NamaKaryawan"].ToString();
                 txtNIPP.IsEnabled = false;
+
+                if (BtnEditPegawai != null)
+                {
+                    BtnEditPegawai.IsEnabled = true;
+                }
+            }
+            else
+            {
+                txtNIPP.Text = "";
+                txtNama.Text = "";
+                txtNIPP.IsEnabled = false;
+
+                if (BtnEditPegawai != null)
+                {
+                    BtnEditPegawai.IsEnabled = false;
+                }
             }
         }
 
