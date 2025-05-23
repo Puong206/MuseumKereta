@@ -66,7 +66,8 @@
                 </StackPanel>
             </StackPanel>
 
-            <DataGrid x:Name="dataGridPegawai" FontFamily="Plus Jakarta Sans Medium" Margin="20,75,20,75" AutoGenerateColumns="False" IsReadOnly="True"
+            <DataGrid x:Name="dataGridPegawai" FontFamily="Plus Jakarta Sans Medium" Margin="20,75,20,75" AutoGenerateColumns="False"
+                      CanUserSortColumns="True" IsReadOnly="True"
                   SelectionMode="Single" SelectionUnit="FullRow" SelectionChanged="dataGridPegawai_SelectionChanged" Background="White" BorderBrush="{x:Null}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="NIPP" Binding="{Binding NIPP}" Width="Auto"/>

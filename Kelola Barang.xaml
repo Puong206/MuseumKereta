@@ -55,7 +55,9 @@
         VerticalAlignment="Top"
         Click="BtnBack_Click"/>
 
-            <DataGrid x:Name="dataGridBarang" FontFamily="Plus Jakarta Sans Medium" AutoGenerateColumns="False" IsReadOnly="True"
+            <DataGrid x:Name="dataGridBarang" FontFamily="Plus Jakarta Sans Medium"
+                      AutoGenerateColumns="False"
+                      CanUserSortColumns="True" IsReadOnly="True"
                       SelectionMode="Single" SelectionUnit="FullRow" Margin="20,75,20,75" SelectionChanged="dataGridBarang_SelectionChanged" Background="White" BorderBrush="{x:Null}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID Barang" Binding="{Binding BarangID}" Width="Auto"/>

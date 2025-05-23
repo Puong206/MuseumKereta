@@ -44,6 +44,28 @@ namespace MuseumApp
 
         private void dataGridPerawatan_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (dataGridPerawatan.SelectedItem is DataRowView selectedRow)
+            {
+                if (BtnEdit !=null)
+                {
+                    BtnEdit.IsEnabled = true;
+                }
+                if (BtnHapus != null)
+                {
+                    BtnHapus.IsEnabled = true;
+                }
+            }
+            else
+            {
+                if (BtnEdit != null)
+                {
+                    BtnEdit.IsEnabled = false;
+                }
+                if (BtnHapus != null)
+                {
+                    BtnHapus.IsEnabled = false;
+                }
+            }
         }
 
         private void BtnTambah_Click(object sender, RoutedEventArgs e)
