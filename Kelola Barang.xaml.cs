@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -12,32 +13,78 @@ namespace MuseumApp
     {
         private readonly string connectionString;
         private SqlConnection conn;
+        private SqlCommand cmd;
+        private SqlDataAdapter adapter;
+        private DataTable dt;
+
+        private readonly MemoryCache _cache = MemoryCache.Default;
+        private readonly CacheItemPolicy _policy = new CacheItemPolicy
+        {
+            AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5)
+        };
+
+        private const string CacheKey = "BarangData";
 
         public Kelola_Barang(string connStr)
         {
             InitializeComponent();
             connectionString = connStr;
-            conn = new SqlConnection(connectionString);
+            EnsureIndexes();
             LoadData();
+           
         }
-        private void LoadData()
+
+        private void EnsureIndexes()
         {
-            try
+            using (SqlConnection conn = new SqlConnection(connectionString)) 
             {
                 conn.Open();
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM BarangMuseum", conn);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
+
+                var indexScript = @"
+                    IF OBJECT_ID('dbo.BarangMuseum', 'U') IS NOT NULL
+                BEGIN
+                    IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_Barang_KoleksiID' AND object_id = OBJECT_ID('dbo.BarangMuseum'))
+                        CREATE NONCLUSTERED INDEX idx_Barang_KoleksiID ON dbo.BarangMuseum(KoleksiID);
+                END
+                ";
+                using (SqlCommand cmd = new SqlCommand(indexScript, conn)) 
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        private void LoadData()
+        {
+            DataTable dt = _cache.Get(CacheKey) as DataTable;
+            if (dt != null) 
+            {
                 dataGridBarang.ItemsSource = dt.DefaultView;
+
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show("Gagal memuat data: " + ex.Message);
+                try
+                {
+                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    {
+
+                        conn.Open();
+                        SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM BarangMuseum", conn);
+                        DataTable newDt = new DataTable();
+                        adapter.Fill(newDt);
+                        dataGridBarang.ItemsSource = newDt.DefaultView;
+                        _cache.Set(CacheKey, newDt, _policy);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Gagal memuat data: " + ex.Message);
+                }
             }
-            finally
-            {
-                conn.Close();
-            }
+
+
         }
 
         private void BtnTambah_Click(object sender, RoutedEventArgs e)
@@ -47,6 +94,25 @@ namespace MuseumApp
             {
                 try
                 {
+                    if (string.IsNullOrWhiteSpace(dialog.BarangID) || string.IsNullOrWhiteSpace(dialog.NamaBarang) || string.IsNullOrWhiteSpace(dialog.Deskripsi) || string.IsNullOrWhiteSpace(dialog.KoleksiID) || string.IsNullOrWhiteSpace(dialog.TahunPembuatan) || string.IsNullOrWhiteSpace(dialog.AsalBarang))
+                    {
+                        MessageBox.Show("Jenis Koleksi dan Deskripsi harus diisi!", "Peringatan", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+
+                    int KoleksiIdInt;
+                    if (!int.TryParse(dialog.KoleksiID, out KoleksiIdInt))
+                    {
+                        MessageBox.Show("KoleksiID harus berupa angka yang valid", "Validasi gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+
+                    if (dialog.TahunPembuatan.Length != 4 || !dialog.TahunPembuatan.All(char.IsDigit))
+                    {
+                        MessageBox.Show("Tahun Pembuatan harus terdiri dari tepat 4 digit angka.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+
                     using (SqlConnection conn = new SqlConnection(connectionString))
                     {
                         using (SqlCommand cmd = new SqlCommand("AddBarang", conn))
@@ -61,6 +127,7 @@ namespace MuseumApp
                             conn.Open();
                             cmd.ExecuteNonQuery();
                             MessageBox.Show("Barang berhasil ditabahkan");
+                            _cache.Remove(CacheKey);
                         }
                     }
                     LoadData();
@@ -75,10 +142,17 @@ namespace MuseumApp
 
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
+            
             DataRowView row = dataGridBarang.SelectedItem as DataRowView;
             if (row == null)
             {
                 MessageBox.Show("Pilih data barang yang akan diedit");
+                return;
+            }
+            string asalBarangID = row["BarangID"]?.ToString();
+            if (string.IsNullOrWhiteSpace(asalBarangID))
+            {
+                MessageBox.Show("BarangID data yang dipilih tidak valid", "Kesalahan Data", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -93,7 +167,17 @@ namespace MuseumApp
             if (dialog.ShowDialog() == true)
             {
 
-                if (string.IsNullOrWhiteSpace(dialog.TahunPembuatan) || dialog.TahunPembuatan.Length != 4 || !dialog.TahunPembuatan.All(char.IsDigit))
+                if (string.IsNullOrWhiteSpace(dialog.NamaBarang) || string.IsNullOrWhiteSpace(dialog.Deskripsi) ||
+                    string.IsNullOrWhiteSpace(dialog.KoleksiID) || string.IsNullOrWhiteSpace(dialog.TahunPembuatan) ||
+                    string.IsNullOrWhiteSpace(dialog.AsalBarang))
+                {
+                    MessageBox.Show("Semua kolom harus diisi!", "Peringatan", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+
+
+                if (dialog.TahunPembuatan.Length != 4 || !dialog.TahunPembuatan.All(char.IsDigit))
                 {
                     MessageBox.Show("Tahun Pembuatan harus terdiri dari tepat 4 digit angka.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
@@ -124,15 +208,27 @@ namespace MuseumApp
                             cmd.ExecuteNonQuery();
 
                             MessageBox.Show("Data barang berhasil diperbaharui");
+                            _cache.Remove(CacheKey);
                         }
                     }
                     LoadData();
                 }
+                catch (SqlException SqlEx)
+                {
+                    if (SqlEx.Number == 50003)
+                    {
+                        MessageBox.Show("Data barang tidak ditemukan. Mungkin sudah dihapus atau ID tidak valid", "Kesalahan Update", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Gagal menambah data" + SqlEx.Message, "Kesalahan database", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Gagal mengubah data: " + ex.Message);
+                    MessageBox.Show("Terjadi kesalahan tak terduga saat mengubah data: " + ex.Message, "Kesalahan Umum", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-                
+
             }
         }
 
@@ -145,6 +241,12 @@ namespace MuseumApp
                 return;
             }
             string barangIdToDelete = row["BarangID"].ToString();
+
+            if (string.IsNullOrWhiteSpace(barangIdToDelete))
+            {
+                MessageBox.Show("BarangID dari data yang dipilih tidak valid.", "Kesalahan Data", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
             if (MessageBox.Show($"Yakin ingin menghapus BarangID {barangIdToDelete}?", "Konfirmasi", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
@@ -161,22 +263,31 @@ namespace MuseumApp
                             cmd.ExecuteNonQuery();
                         }
                     }
+                    MessageBox.Show("Barang berhasil dihapus!");
+                    _cache.Remove(CacheKey);
                     LoadData();
+                }
+                catch (SqlException sqlEx)
+                {
+                    if (sqlEx.Number == 50004)
+                    {
+                        MessageBox.Show("Data barang tidak ditemukan. Mungkin sudah dihapus atau ID tidak valid.", "Kesalahan Hapus", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Gagal menghapus data: " + sqlEx.Message, "Kesalahan Database", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Gagal menghapus data: " + ex.Message);
-                }
-                finally
-                {
-                    conn.Close();
-                    LoadData();
+                    MessageBox.Show("Terjadi kesalahan tak terduga saat menghapus data: " + ex.Message, "Kesalahan Umum", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
 
         private void dataGridBarang_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+
         }
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
