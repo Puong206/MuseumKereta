@@ -5,43 +5,61 @@
        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
        xmlns:local="clr-namespace:MuseumApp"
        mc:Ignorable="d"
-       Height="600" Width="920">
+       Height="600" Width="920"
+       MinWidth="400" MinHeight="500">
     <Grid x:Name="Login_Form">
         <Image Margin="0,0,0,0" Source="/Images/cover-2-1-b4c03b57f59f99cfb01ec83c400ae689_600x400.jpg" Stretch="Fill" Opacity="0.6">
             <Image.Effect>
-                <BlurEffect/>
+                <BlurEffect Radius="5"/>
             </Image.Effect>
         </Image>
         <Frame HorizontalAlignment="Center"
                VerticalAlignment="Center"
-               Width="364"
-               Background="#FFF0F2F4" Navigated="Frame_Navigated_2">
+               MinWidth="320"
+               MinHeight="450"
+               Margin="20"
+               Background="#FFF0F2F4"
+               Navigated="Frame_Navigated_2">
+            <Frame.Effect>
+                <DropShadowEffect ShadowDepth="2" BlurRadius="10" Color="#FFCCCCCC" Opacity="0.5"/>
+            </Frame.Effect>
             <Frame.Content>
                 <StackPanel Orientation="Vertical"
-                           HorizontalAlignment="Center"
+                           HorizontalAlignment="Stretch"
                            VerticalAlignment="Center"
-                           Margin="34,20,34,20">
+                           Margin="30,25,30,25">
                     <TextBlock Text="Pendataan Museum Kereta Api"
                                 HorizontalAlignment="Center"
-                                Margin="0,0,0,16"
-                                VerticalAlignment="Top"
+                                TextAlignment="Center"
+                                TextWrapping="Wrap"
+                                Margin="0,0,0,25"
                                 FontFamily="Plus Jakarta Sans Bold"
                                 FontSize="20"
                                 FontStyle="Normal"
-                                Foreground="#2D2B70"
-                                LineHeight="20"/>
-                    <TextBlock Text="Username" Margin="0,0,0,2"
-                               RenderTransformOrigin="-0.711,0.67"
-                               Width="203"
+                                Foreground="#2D2B70"/>
+                    <TextBlock Text="Username"
+                               Margin="0,0,0,5"
+                               Width="204"
                                FontFamily="Plus Jakarta Sans Medium"
                                Foreground="#2D2B70"/>
-                    <TextBox x:Name="UsernameTextBox" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center" Width="204" Background="#FFD9D9D9" TextChanged="UsernameTextBox_TextChanged"/>
+                    <TextBox x:Name="UsernameTextBox"
+                             HorizontalAlignment="Stretch"
+                             VerticalContentAlignment="Center"
+                             TextWrapping="Wrap"
+                             VerticalAlignment="Center"
+                             Width="204"
+                             Background="#FFD9D9D9"
+                             TextChanged="UsernameTextBox_TextChanged"/>
                     <TextBlock Text="Password" Margin="0,4,0,2"
                                RenderTransformOrigin="-0.711,0.67"
                                Width="200"
                                FontFamily="Plus Jakarta Sans Medium"
                                Foreground="#2D2B70"/>
-                    <PasswordBox x:Name="passwordTextBox" Width="200"/>
+                    <PasswordBox x:Name="passwordTextBox"
+                                 HorizontalAlignment="Stretch"
+                                 VerticalContentAlignment="Center"
+                                 Width="204"
+                                 Background="#FFCCCCCC"/>
                     <Button Content="Login"
                             FontFamily="Plus Jakarta Sans Bold"
                             Foreground="#ffffff"
@@ -50,7 +68,9 @@
                             Padding="0,0,0,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Margin="0,16,0,2" BorderBrush="{x:Null}" Background="#FFF26924" Click="Button_Click"/>
+                            Margin="0,16,0,2" BorderBrush="{x:Null}"
+                            Background="#FFF26924"
+                            Click="Button_Click"/>
                 </StackPanel>
             </Frame.Content>
         </Frame>
