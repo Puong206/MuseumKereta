@@ -115,7 +115,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="ID Barang:" Style="{StaticResource DialogLabelStyle}" Margin="0,0,10,10"/>
-                <TextBox x:Name="IDBarangTextBox" Grid.Row="0" Grid.Column="1" Style="{StaticResource DialogTextBoxStyle}" Margin="0,0,0,10"/>
+                <TextBox x:Name="IDBarangTextBox" Grid.Row="0" Grid.Column="1" Style="{StaticResource DialogTextBoxStyle}" Margin="0,0,0,10" TextChanged="IDBarangTextBox_TextChanged"/>
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Nama Barang:" Style="{StaticResource DialogLabelStyle}" Margin="0,0,10,10"/>
                 <TextBox x:Name="NamaBarangTextBox" Grid.Row="1" Grid.Column="1" Style="{StaticResource DialogTextBoxStyle}" Margin="0,0,0,10"/>

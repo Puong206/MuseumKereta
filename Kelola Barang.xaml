@@ -212,5 +212,14 @@
                 </StackPanel>
             </Grid>
         </Border>
+
+        <Grid x:Name="PopupOverlayGrid" Background="#AA000000" Visibility="Collapsed">
+            <local:InputDialogBarang x:Name="BarangInputFormControl"
+                                     HorizontalAlignment="Center" VerticalAlignment="Center"
+                                     SaveClicked="BarangInputFormControl_SaveClicked"
+                                     CancelClicked="BarangInputFormControl_CancelClicked"
+            />
+        </Grid>
+        
     </Grid>
 </Page>
