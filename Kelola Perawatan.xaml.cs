@@ -337,5 +337,10 @@ namespace MuseumApp
         {
             NavigationService.Navigate(new Page1(connectionString));
         }
+
+        private void BtnAnalisis_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
