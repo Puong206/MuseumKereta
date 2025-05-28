@@ -1,17 +1,18 @@
-﻿<UserControl x:Class="MuseumApp.InputDialogBarang"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MuseumApp"
-             mc:Ignorable="d" 
-             d:DesignHeight="480" d:DesignWidth="450"
-             MinWidth="380" MaxWidth="500"
-             Background="#FDFDFD" Padding="25,20,25,25">
-    <UserControl.Effect>
-        <DropShadowEffect ShadowDepth="1" BlurRadius="8" Color="#D0D0D0" Opacity="0.4"/>
-    </UserControl.Effect>
-    <UserControl.Resources>
+﻿<Window x:Class="MuseumApp.InputDialogBarang"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MuseumApp"
+        mc:Ignorable="d"
+        Width="520" Height="Auto" 
+        SizeToContent="Height"     
+        WindowStartupLocation="CenterScreen"
+        Title="Input Data Barang"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        Background="#F0F2F5">
+    <Window.Resources>
         <Style x:Key="DialogLabelStyle" TargetType="TextBlock">
             <Setter Property="FontFamily" Value="Plus Jakarta Sans Medium"/>
             <Setter Property="Foreground" Value="#2D2B70"/>
@@ -91,55 +92,71 @@
             <Setter Property="Background" Value="#FFE0E0E0"/>
             <Setter Property="Foreground" Value="#2D2B70"/>
         </Style>
-    </UserControl.Resources>
+    </Window.Resources>
 
-    <StackPanel Orientation="Vertical">
-        <TextBlock Text="Detail Barang" 
-                   HorizontalAlignment="Center"
-                   Margin="0,0,0,25"
-                   FontFamily="Plus Jakarta Sans Bold" FontSize="22" Foreground="#2D2B70"/>
+    <Grid x:Name="Input_DialogBarang">
+        <Image Source="/Images/cover-2-1-b4c03b57f59f99cfb01ec83c400ae689_600x400.jpg"
+               Stretch="Fill" Opacity="0.15" >
+            <Image.Effect>
+                <BlurEffect Radius="2"/>
+            </Image.Effect>
+        </Image>
 
-        <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="350">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                Background="#FDFDFD" CornerRadius="6"
+                Margin="15" Padding="25,20,25,25">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="0" BlurRadius="15" Color="#D0D0D0" Opacity="0.3"/>
+            </Border.Effect>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="ID Barang:" Style="{StaticResource DialogLabelStyle}" Margin="0,0,10,10"/>
-                <TextBox x:Name="IDBarangTextBox" Grid.Row="0" Grid.Column="1" Style="{StaticResource DialogTextBoxStyle}" Margin="0,0,0,10" TextChanged="IDBarangTextBox_TextChanged"/>
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Input Detail Barang" 
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,25"
+                           FontFamily="Plus Jakarta Sans Bold" FontSize="22" Foreground="#2D2B70"/>
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Nama Barang:" Style="{StaticResource DialogLabelStyle}" Margin="0,0,10,10"/>
-                <TextBox x:Name="NamaBarangTextBox" Grid.Row="1" Grid.Column="1" Style="{StaticResource DialogTextBoxStyle}" Margin="0,0,0,10"/>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="ID Koleksi:" Style="{StaticResource DialogLabelStyle}" Margin="0,0,10,10"/>
-                <TextBox x:Name="IDKoleksiTextBox" Grid.Row="2" Grid.Column="1" Style="{StaticResource DialogTextBoxStyle}" Margin="0,0,0,10"/>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="ID Barang:" Style="{StaticResource DialogLabelStyle}" Margin="0,0,10,10"/>
+                        <TextBox x:Name="IDBarangTextBox" Grid.Row="0" Grid.Column="1" Style="{StaticResource DialogTextBoxStyle}" Margin="0,0,0,10"/>
 
-                <TextBlock Grid.Row="3" Grid.Column="0" Text="Tahun Pembuatan:" Style="{StaticResource DialogLabelStyle}" Margin="0,0,10,10"/>
-                <TextBox x:Name="TahunPembuatanTextBox" Grid.Row="3" Grid.Column="1" Style="{StaticResource DialogTextBoxStyle}" Margin="0,0,0,10"/>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Nama Barang:" Style="{StaticResource DialogLabelStyle}" Margin="0,0,10,10"/>
+                        <TextBox x:Name="NamaBarangTextBox" Grid.Row="1" Grid.Column="1" Style="{StaticResource DialogTextBoxStyle}" Margin="0,0,0,10"/>
 
-                <TextBlock Grid.Row="4" Grid.Column="0" Text="Asal Barang:" Style="{StaticResource DialogLabelStyle}" Margin="0,0,10,10"/>
-                <TextBox x:Name="AsalBarangTextBox" Grid.Row="4" Grid.Column="1" Style="{StaticResource DialogTextBoxStyle}" Margin="0,0,0,10"/>
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="ID Koleksi:" Style="{StaticResource DialogLabelStyle}" Margin="0,0,10,10"/>
+                        <TextBox x:Name="IDKoleksiTextBox" Grid.Row="2" Grid.Column="1" Style="{StaticResource DialogTextBoxStyle}" Margin="0,0,0,10"/>
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Tahun Pembuatan:" Style="{StaticResource DialogLabelStyle}" Margin="0,0,10,10"/>
+                        <TextBox x:Name="TahunPembuatanTextBox" Grid.Row="3" Grid.Column="1" Style="{StaticResource DialogTextBoxStyle}" Margin="0,0,0,10"/>
 
-                <TextBlock Grid.Row="5" Grid.Column="0" Text="Deskripsi:" Style="{StaticResource DialogLabelStyle}" VerticalAlignment="Top" Margin="0,5,10,10"/>
-                <TextBox x:Name="DeskripsiTextBox" Grid.Row="5" Grid.Column="1" Style="{StaticResource DialogTextBoxStyle}" 
-                         MinHeight="80" TextWrapping="Wrap" AcceptsReturn="True" 
-                         VerticalScrollBarVisibility="Auto" Margin="0,0,0,15"
-                         VerticalContentAlignment="Top" Padding="8,5"/>
-            </Grid>
-        </ScrollViewer>
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Asal Barang:" Style="{StaticResource DialogLabelStyle}" Margin="0,0,10,10"/>
+                        <TextBox x:Name="AsalBarangTextBox" Grid.Row="4" Grid.Column="1" Style="{StaticResource DialogTextBoxStyle}" Margin="0,0,0,10"/>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,25,0,0">
-            <Button x:Name="SimpanButton" Content="Simpan" Style="{StaticResource PrimaryDialogButtonStyle}" Click="SimpanButton_Click"/>
-            <Button x:Name="BatalButton" Content="Batal" Style="{StaticResource SecondaryDialogButtonStyle}" Click="BatalButton_Click"/>
-        </StackPanel>
-    </StackPanel>
-</UserControl>
+                        <TextBlock Grid.Row="5" Grid.Column="0" Text="Deskripsi:" Style="{StaticResource DialogLabelStyle}" VerticalAlignment="Top" Margin="0,5,10,10"/>
+                        <TextBox x:Name="DeskripsiTextBox" Grid.Row="5" Grid.Column="1" Style="{StaticResource DialogTextBoxStyle}" 
+                                 MinHeight="80" TextWrapping="Wrap" AcceptsReturn="True" 
+                                 VerticalScrollBarVisibility="Auto" Margin="0,0,0,15"
+                                 VerticalContentAlignment="Top" Padding="8,5"/>
+                    </Grid>
+                </ScrollViewer>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,25,0,0">
+                    <Button x:Name="Simpan" Content="Simpan" Style="{StaticResource PrimaryDialogButtonStyle}" Click="Simpan_Click"/>
+                    <Button x:Name="Batal" Content="Batal" Style="{StaticResource SecondaryDialogButtonStyle}" Click="Batal_Click" IsCancel="True"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

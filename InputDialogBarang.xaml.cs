@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace MuseumApp
 {
-    public partial class InputDialogBarang : UserControl
+    public partial class InputDialogBarang : Window
     {
         public event EventHandler SaveClicked;
         public event EventHandler CancelClicked;
@@ -59,12 +59,12 @@ namespace MuseumApp
             IDBarangTextBox.IsEnabled = false;
         }
 
-        private void SimpanButton_Click(object sender, RoutedEventArgs e)
+        private void Simpan_Click(object sender, RoutedEventArgs e)
         {
             SaveClicked?.Invoke(this, EventArgs.Empty);
         }
 
-        private void BatalButton_Click(object sender, RoutedEventArgs e)
+        private void Batal_Click(object sender, RoutedEventArgs e)
         {
             CancelClicked?.Invoke(this, EventArgs.Empty);
         }
