@@ -5,40 +5,86 @@ using System.Windows.Navigation;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.Caching;
 
 
 namespace MuseumApp
 {
     public partial class Kelola_Perawatan : Page
     {
+        private readonly string connectionString;
+        private readonly MemoryCache _cache = MemoryCache.Default;
+        private readonly CacheItemPolicy _policy = new CacheItemPolicy()
+        {
+            AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5)
+        };
+        private const string CacheKey = "PerawatanData";
+        private int selectedPerawatanId;
         SqlConnection conn;
         SqlCommand cmd;
         SqlDataAdapter adapter;
         DataTable dt;
-        string connectionString;
+        
 
         public Kelola_Perawatan(string connStr)
         {
             InitializeComponent();
             connectionString = connStr;
             conn = new SqlConnection(connectionString);
+            EnsureIndexes();
             LoadData();
+        }
+
+        private void EnsureIndexes()
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString)) 
+            {
+                conn.Open();
+                var indexScript = @"
+                IF OBJECT('dbo.Perawatan', 'U') IS NOT NULL
+                BEGIN
+                    IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_TanggalPerawatan' AND object_id = OBJECT_ID('dbo.Perawatan'))
+                        CREATE NONCLUSTERED INDEX idx_TanggalPerawatan ON dbo.Perawatan(TanggalPerawatan);
+                END";
+                using (SqlCommand cmd = new SqlCommand(indexScript, conn)) 
+                {
+                    cmd.ExecuteNonQuery();  
+                }
+
+            }
         }
 
         private void LoadData()
         {
-            try
+            DataTable dt = _cache.Get(CacheKey) as DataTable;
+
+            if (dt == null)
             {
-                conn.Open();
-                adapter = new SqlDataAdapter("SELECT * FROM Perawatan", conn);
-                dt = new DataTable();
-                adapter.Fill(dt);
-                dataGridPerawatan.ItemsSource = dt.DefaultView;
-                conn.Close();
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    try
+                    {
+                        using (SqlCommand cmd = conn.CreateCommand())
+                        {
+                            conn.Open();
+                            adapter = new SqlDataAdapter("SELECT * FROM Perawatan", conn);
+                            dt = new DataTable();
+                            adapter.Fill(dt);
+                            dataGridPerawatan.ItemsSource = dt.DefaultView;
+                            _cache.Set(CacheKey, dt, _policy);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Gagal memuat data: " + ex.Message);
+                    }
+                }
+                
+                
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show("Gagal memuat data: " + ex.Message);
+                dataGridPerawatan.ItemsSource = dt.DefaultView;
             }
         }
 
@@ -46,6 +92,15 @@ namespace MuseumApp
         {
             if (dataGridPerawatan.SelectedItem is DataRowView selectedRow)
             {
+                if (int.TryParse(selectedRow["PerawatanID"]?.ToString(), out int id))
+                {
+                    selectedPerawatanId = id;
+                }
+                else
+                {
+                    MessageBox.Show("Kesalahan", "error data", MessageBoxButton.OK, MessageBoxImage.Error);
+                    selectedPerawatanId = 0;
+                }
                 if (BtnEdit !=null)
                 {
                     BtnEdit.IsEnabled = true;
@@ -85,6 +140,18 @@ namespace MuseumApp
                     return;
                 }
 
+                if (dialog.TanggalPerawatan == default(DateTime))
+                {
+                    MessageBox.Show("Tanggal Perawatan harus diisi.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(dialog.JenisPerawatan))
+                {
+                    MessageBox.Show("Jenis Perawatan harus diisi.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
                 try
                 {
                     using (SqlConnection conn = new SqlConnection(connectionString))
@@ -107,15 +174,31 @@ namespace MuseumApp
                             int generatedID = (int)outputIdParam.Value;
 
                             MessageBox.Show("Data berhasil diperbarui.");
+                            _cache.Remove(CacheKey);
                         }
                     }
 
 
                     LoadData();
                 }
+                catch (SqlException sqlEx) 
+                {
+                    if (sqlEx.Number == 50009) 
+                    {
+                        MessageBox.Show("BarangID tidak ditemukan di database. Pastikan BarangID valid.", "Kesalahan Tambah", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else if (sqlEx.Number == 50010) 
+                    {
+                        MessageBox.Show("NIPP tidak ditemukan di database. Pastikan NIPP karyawan valid.", "Kesalahan Tambah", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Gagal menambah data: " + sqlEx.Message, "Kesalahan Database", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Gagal menambah data: " + ex.Message);
+                    MessageBox.Show("Terjadi kesalahan tak terduga saat menambah data: " + ex.Message, "Kesalahan Umum", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -125,6 +208,12 @@ namespace MuseumApp
             if (!(dataGridPerawatan.SelectedItem is DataRowView row))
             {
                 MessageBox.Show("Pilih data yang akan diedit.");
+                return;
+            }
+
+            if (selectedPerawatanId <= 0)
+            {
+                MessageBox.Show("ID perawatan tidak valid", "kesalahan ID", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -156,16 +245,36 @@ namespace MuseumApp
 
                             conn.Open();
                             cmd.ExecuteNonQuery();
-                            
+                            MessageBox.Show("Data berhasil diperbarui.");
+                            _cache.Remove(CacheKey);
                         }
                     }
 
-                    MessageBox.Show("Data berhasil diperbarui.");
+                    
                     LoadData();
                 }
-                catch (Exception ex)
+                catch (SqlException sqlEx)
                 {
-                    MessageBox.Show("Gagal memperbarui data: " + ex.Message);
+                    if (sqlEx.Number == 50011)
+                    {
+                        MessageBox.Show("BarangID tidak ditemukan di database. Pastikan BarangID valid.", "Kesalahan Update", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else if (sqlEx.Number == 50012)
+                    {
+                        MessageBox.Show("NIPP tidak ditemukan di database. Pastikan NIPP karyawan valid.", "Kesalahan Update", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else if (sqlEx.Number == 50013)
+                    {
+                        MessageBox.Show("Data perawatan tidak ditemukan. Mungkin sudah dihapus atau ID tidak valid.", "Kesalahan Update", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Gagal memperbarui data: " + sqlEx.Message, "Kesalahan Database", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                catch (Exception ex) 
+                {
+                    MessageBox.Show("Terjadi kesalahan tak terduga saat memperbarui data: " + ex.Message, "Kesalahan Umum", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -178,7 +287,13 @@ namespace MuseumApp
                 return;
             }
 
-            int perawatanId = Convert.ToInt32(row["PerawatanID"]);
+            if (selectedPerawatanId <= 0)
+            {
+                MessageBox.Show("ID perawatan tidak valid. Silakan pilih baris yang benar.", "Kesalahan ID", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            
 
             if (MessageBox.Show("Yakin ingin menghapus data ini?", "Konfirmasi", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
@@ -189,18 +304,31 @@ namespace MuseumApp
                         using (SqlCommand cmd = new SqlCommand("DeletePerawatan", conn))
                         {
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@PerawatanID", perawatanId);
+                            cmd.Parameters.AddWithValue("@PerawatanID", selectedPerawatanId);
                             conn.Open();
                             cmd.ExecuteNonQuery();
+                            MessageBox.Show("Data berhasil dihapus.");
+                            _cache.Remove(CacheKey);
                         }
                     }
 
-                    MessageBox.Show("Data berhasil dihapus.");
+                    
                     LoadData();
                 }
-                catch (Exception ex)
+                catch (SqlException sqlEx)
                 {
-                    MessageBox.Show("Gagal menghapus data: " + ex.Message);
+                    if (sqlEx.Number == 50006)
+                    {
+                        MessageBox.Show("Data perawatan tidak ditemukan. Mungkin sudah dihapus atau ID tidak valid.", "Kesalahan Hapus", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Gagal menghapus data: " + sqlEx.Message, "Kesalahan Database", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                catch (Exception ex) 
+                {
+                    MessageBox.Show("Terjadi kesalahan tak terduga saat menghapus data: " + ex.Message, "Kesalahan Umum", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
