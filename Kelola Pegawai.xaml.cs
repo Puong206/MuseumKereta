@@ -25,6 +25,7 @@ namespace MuseumApp
         {
             InitializeComponent();
             connectionString = connStr;
+            EnsureIndexes();
             LoadData();
         }
 
@@ -223,7 +224,7 @@ namespace MuseumApp
                 }
                 catch (SqlException sqlEx)
                 {
-                    if (sqlEx.Number == 50003) 
+                    if (sqlEx.Number == 50007) 
                     {
                         MessageBox.Show("Data pegawai tidak ditemukan: " + sqlEx.Message);
                     }

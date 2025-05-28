@@ -215,7 +215,7 @@ namespace MuseumApp
                 }
                 catch (SqlException SqlEx)
                 {
-                    if (SqlEx.Number == 50003)
+                    if (SqlEx.Number == 50005)
                     {
                         MessageBox.Show("Data barang tidak ditemukan. Mungkin sudah dihapus atau ID tidak valid", "Kesalahan Update", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
@@ -269,7 +269,7 @@ namespace MuseumApp
                 }
                 catch (SqlException sqlEx)
                 {
-                    if (sqlEx.Number == 50004)
+                    if (sqlEx.Number == 50006)
                     {
                         MessageBox.Show("Data barang tidak ditemukan. Mungkin sudah dihapus atau ID tidak valid.", "Kesalahan Hapus", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
