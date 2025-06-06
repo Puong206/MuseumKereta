@@ -42,7 +42,7 @@ namespace MuseumApp
             {
                 conn.Open();
                 var indexScript = @"
-                IF OBJECT('dbo.Perawatan', 'U') IS NOT NULL
+                IF OBJECT_ID('dbo.Perawatan', 'U') IS NOT NULL
                 BEGIN
                     IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_TanggalPerawatan' AND object_id = OBJECT_ID('dbo.Perawatan'))
                         CREATE NONCLUSTERED INDEX idx_TanggalPerawatan ON dbo.Perawatan(TanggalPerawatan);
@@ -174,7 +174,7 @@ namespace MuseumApp
                             cmd.ExecuteNonQuery();
                             int generatedID = (int)outputIdParam.Value;
 
-                            MessageBox.Show("Data berhasil diperbarui.");
+                            MessageBox.Show("Data berhasil ditambah.");
                             _cache.Remove(CacheKey);
                         }
                     }
