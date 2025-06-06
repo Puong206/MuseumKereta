@@ -6,67 +6,54 @@ namespace MuseumApp
 {
     public partial class InputDialogBarang : Window
     {
-        public event EventHandler SaveClicked;
-        public event EventHandler CancelClicked;
+        public string BarangID { get; private set; }
+        public string NamaBarang { get; private set; }
+        public string Deskripsi { get; private set; }
+        public string TahunPembuatan { get; private set; }
+        public string AsalBarang { get; private set; }
+        public string KoleksiID { get; private set; }
 
-        public string BarangID => IDBarangTextBox.Text;
-        public string NamaBarang => NamaBarangTextBox.Text;
-        public string Deskripsi => DeskripsiTextBox.Text;
-        public string TahunPembuatan => TahunPembuatanTextBox.Text;
-        public string AsalBarang => AsalBarangTextBox.Text;
-        public string KoleksiID => IDKoleksiTextBox.Text;
+        
+
+      
 
         public InputDialogBarang()
         {
             InitializeComponent();
+            IDBarangTextBox.Focus();
         }
 
         public InputDialogBarang(string barangID, string namaBarang, string deskripsi, string koleksiID, string tahun, string asal)
-            : this()
         {
-            LoadDataForEdit(barangID, namaBarang, deskripsi, koleksiID, tahun, asal);
-        }
-
-        public void LoadDataForEdit(string barangID, string namaBarang, string deskripsi, string koleksiID, string tahun, string asal)
-        {
+            InitializeComponent();
             IDBarangTextBox.Text = barangID;
             NamaBarangTextBox.Text = namaBarang;
             DeskripsiTextBox.Text = deskripsi;
             IDKoleksiTextBox.Text = koleksiID;
             TahunPembuatanTextBox.Text = tahun;
             AsalBarangTextBox.Text = asal;
+
             IDBarangTextBox.IsEnabled = false;
+            NamaBarangTextBox.Focus();
         }
 
-        public void ClearForm()
-        {
-            IDBarangTextBox.Text = string.Empty;
-            NamaBarangTextBox.Text = string.Empty;
-            DeskripsiTextBox.Text = string.Empty;
-            IDKoleksiTextBox.Text = string.Empty;
-            TahunPembuatanTextBox.Text = string.Empty;
-            AsalBarangTextBox.Text = string.Empty;
-            IDBarangTextBox.IsEnabled = true;
-        }
 
-        public void EnableBarangIDInput()
-        {
-            IDBarangTextBox.IsEnabled = true;
-        }
-
-        public void DisableBarangIDInput()
-        {
-            IDBarangTextBox.IsEnabled = false;
-        }
 
         private void Simpan_Click(object sender, RoutedEventArgs e)
         {
-            SaveClicked?.Invoke(this, EventArgs.Empty);
+            this.BarangID = IDBarangTextBox.Text;
+            this.NamaBarang = NamaBarangTextBox.Text;
+            this.Deskripsi = DeskripsiTextBox.Text;
+            this.KoleksiID = IDKoleksiTextBox.Text;
+            this.TahunPembuatan = TahunPembuatanTextBox.Text;
+            this.AsalBarang = AsalBarangTextBox.Text;
+
+            this.DialogResult = true;
         }
 
         private void Batal_Click(object sender, RoutedEventArgs e)
         {
-            CancelClicked?.Invoke(this, EventArgs.Empty);
+            this.DialogResult = false;
         }
     }
 }

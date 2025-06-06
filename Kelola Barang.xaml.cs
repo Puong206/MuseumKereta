@@ -24,6 +24,8 @@ namespace MuseumApp
         };
 
         private const string CacheKey = "BarangData";
+        private string selectedBarangId;
+
 
         public Kelola_Barang(string connStr)
         {
@@ -36,22 +38,30 @@ namespace MuseumApp
 
         private void EnsureIndexes()
         {
-            using (SqlConnection conn = new SqlConnection(connectionString)) 
+            try
             {
-                conn.Open();
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
 
-                var indexScript = @"
+                    var indexScript = @"
                     IF OBJECT_ID('dbo.BarangMuseum', 'U') IS NOT NULL
                 BEGIN
                     IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_Barang_KoleksiID' AND object_id = OBJECT_ID('dbo.BarangMuseum'))
                         CREATE NONCLUSTERED INDEX idx_Barang_KoleksiID ON dbo.BarangMuseum(KoleksiID);
                 END
                 ";
-                using (SqlCommand cmd = new SqlCommand(indexScript, conn)) 
-                {
-                    cmd.ExecuteNonQuery();
+                    using (SqlCommand cmd = new SqlCommand(indexScript, conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal memastikan indeks: " + ex.Message, "Error Indeks", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            
         }
 
         private void LoadData()
@@ -197,7 +207,7 @@ namespace MuseumApp
                         using (SqlCommand cmd = new SqlCommand("UpdateBarang", conn))
                         {
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@BarangID", row["BarangID"].ToString());
+                            cmd.Parameters.AddWithValue("@BarangID", selectedBarangId);
                             cmd.Parameters.AddWithValue("@NamaBarang", (object)dialog.NamaBarang);
                             cmd.Parameters.AddWithValue("@Deskripsi", (object)dialog.Deskripsi);
                             cmd.Parameters.AddWithValue("@KoleksiID", koleksiIdInt);
@@ -240,15 +250,15 @@ namespace MuseumApp
                 MessageBox.Show("Pilih data barang yang akan dihapus.");
                 return;
             }
-            string barangIdToDelete = row["BarangID"].ToString();
+            
 
-            if (string.IsNullOrWhiteSpace(barangIdToDelete))
+            if (string.IsNullOrWhiteSpace(selectedBarangId))
             {
                 MessageBox.Show("BarangID dari data yang dipilih tidak valid.", "Kesalahan Data", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            if (MessageBox.Show($"Yakin ingin menghapus BarangID {barangIdToDelete}?", "Konfirmasi", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (MessageBox.Show($"Yakin ingin menghapus BarangID {selectedBarangId}?", "Konfirmasi", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 try
                 {
@@ -257,7 +267,7 @@ namespace MuseumApp
                         using (SqlCommand cmd = new SqlCommand("DeleteBarang", conn))
                         {
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@BarangID", barangIdToDelete);
+                            cmd.Parameters.AddWithValue("@BarangID", selectedBarangId);
 
                             conn.Open();
                             cmd.ExecuteNonQuery();
@@ -287,7 +297,19 @@ namespace MuseumApp
 
         private void dataGridBarang_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            if (dataGridBarang.SelectedItem is DataRowView selectedRow)
+            {
+                selectedBarangId = selectedRow["BarangID"]?.ToString();
+                bool isItemSelected = !string.IsNullOrEmpty(selectedBarangId);
+                if (BtnEdit != null) BtnEdit.IsEnabled = isItemSelected;
+                if (BtnHapus != null) BtnHapus.IsEnabled = isItemSelected;
+            }
+            else
+            {
+                selectedBarangId = null;
+                if (BtnEdit != null) BtnEdit.IsEnabled = false;
+                if (BtnHapus != null) BtnHapus.IsEnabled = false;   
+            }
         }
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)

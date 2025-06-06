@@ -4,6 +4,7 @@ using System.Data;
 using System.Windows;
 using System.Windows.Controls;
 using System.Runtime.Caching;
+using System.Text;
 
 namespace MuseumApp
 {
@@ -13,7 +14,6 @@ namespace MuseumApp
         private SqlConnection conn;
         private SqlCommand cmd;
         private SqlDataAdapter adapter;
-        private DataTable dt;
 
         private readonly MemoryCache _cache = MemoryCache.Default;
         private readonly CacheItemPolicy _policy = new CacheItemPolicy
@@ -283,9 +283,52 @@ namespace MuseumApp
             NavigationService.Navigate(new Page1(connectionString));
         }
 
+        private void AnalyzeQuery (string sqlQuery)
+        {
+            StringBuilder statisticsResult = new StringBuilder();
+
+            using (var conn = new SqlConnection(connectionString)) 
+            {
+                conn.InfoMessage += (s, e) =>
+                {
+                    statisticsResult.AppendLine(e.Message);
+                };
+
+                try
+                {
+                    conn.Open();
+                    var wrappedQuery = $@"
+                    SET STATISTICS IO ON;
+                    SET STATISTICS TIME ON;
+                    {sqlQuery};
+                    SET STATISTICS IO OFF;
+                    SET STATISTICS TIME OFF;";
+                    using (var cmd = new SqlCommand(wrappedQuery, conn)) 
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("error saat enganalisis query" + ex.Message, "error analisis",MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+            }
+
+            if (statisticsResult.Length > 0)
+            {
+                MessageBox.Show(statisticsResult.ToString(), "STATISTICS INFO", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("tidak ada informasi statistik yang diterima", "STATISTICS INFO", MessageBoxButton.OK, MessageBoxImage.Warning );
+            }
+        }
+
         private void BtnAnalisis_Click(object sender, RoutedEventArgs e)
         {
-
+            string queryToAnalyze = "SELECT KoleksiID, JenisKoleksi, Deskripsi FROM Koleksi";
+            AnalyzeQuery(queryToAnalyze);
         }
     }
 } 
