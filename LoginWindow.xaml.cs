@@ -16,12 +16,9 @@ using System.Windows.Shapes;
 
 namespace MuseumApp
 {
-    /// <summary>
-    /// Interaction logic for LoginnWindow.xaml
-    /// </summary>
     public partial class LoginWindow : Window
     {
-        private string baseconnectionString = "Data Source=LAPTOP-DP8JTMS7\\PUONG206;Initial Catalog=MuseumKeretaApi;";
+        private string baseconnectionString = "Data Source=LAPTOP-DP8JTMS7\\PUONG206;Initial Catalog=MuseumKeretaApi;Integrated Security=True;";
         public LoginWindow()
         {
             InitializeComponent();

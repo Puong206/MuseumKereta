@@ -50,6 +50,25 @@ namespace MuseumApp
             Kelola_Perawatan kelolaPerawatan = new Kelola_Perawatan(connectionString);
             this.NavigationService.Navigate(kelolaPerawatan);
         }
+
+        private void ButtonLogout_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Apakah Anda yakin ingin logout?", "Konfirmasi Logout", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                Window parentWindow = Window.GetWindow(this);
+
+                LoginWindow loginWindow= new LoginWindow();
+
+                loginWindow.Show();
+
+                if (parentWindow != null)
+                {
+                    parentWindow.Close();
+                }
+            }
         }
+    }
     }
 
