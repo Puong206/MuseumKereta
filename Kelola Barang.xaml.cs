@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.Caching;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -24,6 +25,8 @@ namespace MuseumApp
         };
 
         private const string CacheKey = "BarangData";
+        private string selectedBarangId;
+
 
         public Kelola_Barang(string connStr)
         {
@@ -36,22 +39,30 @@ namespace MuseumApp
 
         private void EnsureIndexes()
         {
-            using (SqlConnection conn = new SqlConnection(connectionString)) 
+            try
             {
-                conn.Open();
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
 
-                var indexScript = @"
+                    var indexScript = @"
                     IF OBJECT_ID('dbo.BarangMuseum', 'U') IS NOT NULL
                 BEGIN
                     IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_Barang_KoleksiID' AND object_id = OBJECT_ID('dbo.BarangMuseum'))
                         CREATE NONCLUSTERED INDEX idx_Barang_KoleksiID ON dbo.BarangMuseum(KoleksiID);
                 END
                 ";
-                using (SqlCommand cmd = new SqlCommand(indexScript, conn)) 
-                {
-                    cmd.ExecuteNonQuery();
+                    using (SqlCommand cmd = new SqlCommand(indexScript, conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal memastikan indeks: " + ex.Message, "Error Indeks", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            
         }
 
         private void LoadData()
@@ -115,13 +126,13 @@ namespace MuseumApp
 
                     using (SqlConnection conn = new SqlConnection(connectionString))
                     {
-                        using (SqlCommand cmd = new SqlCommand("AddBarang", conn))
+                        using (SqlCommand cmd = new SqlCommand("Addbarang", conn))
                         {
                             cmd.CommandType = CommandType.StoredProcedure;
                             cmd.Parameters.AddWithValue("@BarangID", dialog.BarangID);
                             cmd.Parameters.AddWithValue("@NamaBarang", dialog.NamaBarang);
                             cmd.Parameters.AddWithValue("@Deskripsi", dialog.Deskripsi);
-                            cmd.Parameters.AddWithValue("@KoleksiID", dialog.KoleksiID);
+                            cmd.Parameters.AddWithValue("@KoleksiID", KoleksiIdInt);
                             cmd.Parameters.AddWithValue("@TahunPembuatan", dialog.TahunPembuatan);
                             cmd.Parameters.AddWithValue("@AsalBarang", dialog.AsalBarang);
                             conn.Open();
@@ -197,7 +208,7 @@ namespace MuseumApp
                         using (SqlCommand cmd = new SqlCommand("UpdateBarang", conn))
                         {
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@BarangID", row["BarangID"].ToString());
+                            cmd.Parameters.AddWithValue("@BarangID", selectedBarangId);
                             cmd.Parameters.AddWithValue("@NamaBarang", (object)dialog.NamaBarang);
                             cmd.Parameters.AddWithValue("@Deskripsi", (object)dialog.Deskripsi);
                             cmd.Parameters.AddWithValue("@KoleksiID", koleksiIdInt);
@@ -240,15 +251,15 @@ namespace MuseumApp
                 MessageBox.Show("Pilih data barang yang akan dihapus.");
                 return;
             }
-            string barangIdToDelete = row["BarangID"].ToString();
+            
 
-            if (string.IsNullOrWhiteSpace(barangIdToDelete))
+            if (string.IsNullOrWhiteSpace(selectedBarangId))
             {
                 MessageBox.Show("BarangID dari data yang dipilih tidak valid.", "Kesalahan Data", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            if (MessageBox.Show($"Yakin ingin menghapus BarangID {barangIdToDelete}?", "Konfirmasi", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (MessageBox.Show($"Yakin ingin menghapus BarangID {selectedBarangId}?", "Konfirmasi", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 try
                 {
@@ -257,7 +268,7 @@ namespace MuseumApp
                         using (SqlCommand cmd = new SqlCommand("DeleteBarang", conn))
                         {
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@BarangID", barangIdToDelete);
+                            cmd.Parameters.AddWithValue("@BarangID", selectedBarangId);
 
                             conn.Open();
                             cmd.ExecuteNonQuery();
@@ -287,7 +298,19 @@ namespace MuseumApp
 
         private void dataGridBarang_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            if (dataGridBarang.SelectedItem is DataRowView selectedRow)
+            {
+                selectedBarangId = selectedRow["BarangID"]?.ToString();
+                bool isItemSelected = !string.IsNullOrEmpty(selectedBarangId);
+                if (BtnEdit != null) BtnEdit.IsEnabled = isItemSelected;
+                if (BtnHapus != null) BtnHapus.IsEnabled = isItemSelected;
+            }
+            else
+            {
+                selectedBarangId = null;
+                if (BtnEdit != null) BtnEdit.IsEnabled = false;
+                if (BtnHapus != null) BtnHapus.IsEnabled = false;   
+            }
         }
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
@@ -297,7 +320,33 @@ namespace MuseumApp
 
         private void BtnAnalisis_Click(object sender, RoutedEventArgs e)
         {
-
+            AnalyzeQuery("SELECT * FROM BarangMuseum");
         }
+
+        private void AnalyzeQuery(string query)
+        {
+            StringBuilder statisticsResult = new StringBuilder();
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.InfoMessage += (s, e) => statisticsResult.AppendLine(e.Message);
+                try
+                {
+                    conn.Open();
+                    var wrappedQuery = $@"SET STATISTICS IO ON; SET STATISTICS TIME ON; {query}; SET STATISTICS IO OFF; SET STATISTICS TIME OFF;";
+                    using (var cmd = new SqlCommand(wrappedQuery, conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error saat menganalisis kueri: " + ex.Message, "Error Analisis", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+            }
+            if (statisticsResult.Length > 0) MessageBox.Show(statisticsResult.ToString(), "STATISTICS INFO", MessageBoxButton.OK, MessageBoxImage.Information);
+            else MessageBox.Show("Tidak ada informasi statistik yang diterima.", "STATISTICS INFO", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
     }
 }

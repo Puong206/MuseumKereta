@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.Caching;
+using System.Text;
 
 
 namespace MuseumApp
@@ -41,7 +42,7 @@ namespace MuseumApp
             {
                 conn.Open();
                 var indexScript = @"
-                IF OBJECT('dbo.Perawatan', 'U') IS NOT NULL
+                IF OBJECT_ID('dbo.Perawatan', 'U') IS NOT NULL
                 BEGIN
                     IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_TanggalPerawatan' AND object_id = OBJECT_ID('dbo.Perawatan'))
                         CREATE NONCLUSTERED INDEX idx_TanggalPerawatan ON dbo.Perawatan(TanggalPerawatan);
@@ -173,7 +174,7 @@ namespace MuseumApp
                             cmd.ExecuteNonQuery();
                             int generatedID = (int)outputIdParam.Value;
 
-                            MessageBox.Show("Data berhasil diperbarui.");
+                            MessageBox.Show("Data berhasil ditambah.");
                             _cache.Remove(CacheKey);
                         }
                     }
@@ -338,9 +339,55 @@ namespace MuseumApp
             NavigationService.Navigate(new Page1(connectionString));
         }
 
+        private void AnalyzeQuery(string sqlQuery)
+        {
+            StringBuilder statisticsResult = new StringBuilder();
+
+            using (var conn = new SqlConnection(connectionString)) 
+            {
+                conn.InfoMessage += (s, e) =>
+                {
+                    statisticsResult.AppendLine(e.Message);
+                };
+
+                try
+                {
+                    conn.Open();
+                    var wrappedQuery =$@"
+                    SET STATISTICS IO ON;
+                    SET STATISTICS TIME ON;
+                    {sqlQuery};
+                    SET STATISTICS IO OFF;
+                    SET STATISTICS TIME OFF;";
+
+                    using (var cmd = new SqlCommand(wrappedQuery, conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("error saat menganalisis query" + ex.Message, "error analisis", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+
+            }
+
+            if (statisticsResult.Length > 0)
+            {
+                MessageBox.Show(statisticsResult.ToString(), "STATISTICS INFO", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("tidak ada informasi statistik yang diterima", "STATISTICS INFO", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
         private void BtnAnalisis_Click(object sender, RoutedEventArgs e)
         {
-
+            string queryToAnalyze = "SELECT * FROM Perawatan";
+            AnalyzeQuery(queryToAnalyze);
         }
     }
 }

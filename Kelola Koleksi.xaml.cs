@@ -4,6 +4,7 @@ using System.Data;
 using System.Windows;
 using System.Windows.Controls;
 using System.Runtime.Caching;
+using System.Text;
 
 namespace MuseumApp
 {
@@ -13,7 +14,6 @@ namespace MuseumApp
         private SqlConnection conn;
         private SqlCommand cmd;
         private SqlDataAdapter adapter;
-        private DataTable dt;
 
         private readonly MemoryCache _cache = MemoryCache.Default;
         private readonly CacheItemPolicy _policy = new CacheItemPolicy
@@ -94,32 +94,21 @@ namespace MuseumApp
         {
             if (dataGridKoleksi.SelectedItem is DataRowView row)
             {
-                //selectedJenis = row["JenisKoleksi"].ToString();
-                //selectedDeskripsi = row["Deskripsi"].ToString();
-                //selectedId = Convert.ToInt32(row["KoleksiID"]);
+                selectedJenis = row["JenisKoleksi"].ToString();
+                selectedDeskripsi = row["Deskripsi"].ToString();
+                int.TryParse(row["KoleksiID"]?.ToString(), out selectedId);
 
-                //txtJenisKoleksi.Text = selectedJenis;
-                //txtDeskripsi.Text = selectedDeskripsi;
-                //hiddenId.Text = selectedId.ToString();
-                if (BtnEdit != null)
-                {
-                    BtnEdit.IsEnabled = true;
-                }
-                if (BtnHapus != null)
-                {
-                    BtnHapus.IsEnabled = true;
-                }
+                bool isItemSelected = selectedId > 0;
+                if (BtnEdit != null) BtnEdit.IsEnabled = isItemSelected;
+                if (BtnHapus != null) BtnHapus.IsEnabled = isItemSelected;
+
+                
             }
             else
             {
-                if (BtnEdit != null)
-                {
-                    BtnEdit.IsEnabled = false;
-                }
-                if (BtnHapus != null)
-                {
-                    BtnHapus.IsEnabled = false;
-                }
+                selectedId = 0;
+                if (BtnEdit != null) BtnEdit.IsEnabled = false;
+                if (BtnHapus != null) BtnHapus.IsEnabled = false;
             }
         }
 
@@ -283,9 +272,52 @@ namespace MuseumApp
             NavigationService.Navigate(new Page1(connectionString));
         }
 
+        private void AnalyzeQuery (string sqlQuery)
+        {
+            StringBuilder statisticsResult = new StringBuilder();
+
+            using (var conn = new SqlConnection(connectionString)) 
+            {
+                conn.InfoMessage += (s, e) =>
+                {
+                    statisticsResult.AppendLine(e.Message);
+                };
+
+                try
+                {
+                    conn.Open();
+                    var wrappedQuery = $@"
+                    SET STATISTICS IO ON;
+                    SET STATISTICS TIME ON;
+                    {sqlQuery};
+                    SET STATISTICS IO OFF;
+                    SET STATISTICS TIME OFF;";
+                    using (var cmd = new SqlCommand(wrappedQuery, conn)) 
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("error saat enganalisis query" + ex.Message, "error analisis",MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+            }
+
+            if (statisticsResult.Length > 0)
+            {
+                MessageBox.Show(statisticsResult.ToString(), "STATISTICS INFO", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("tidak ada informasi statistik yang diterima", "STATISTICS INFO", MessageBoxButton.OK, MessageBoxImage.Warning );
+            }
+        }
+
         private void BtnAnalisis_Click(object sender, RoutedEventArgs e)
         {
-
+            string queryToAnalyze = "SELECT KoleksiID, JenisKoleksi, Deskripsi FROM Koleksi";
+            AnalyzeQuery(queryToAnalyze);
         }
     }
 } 

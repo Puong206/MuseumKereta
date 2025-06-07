@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Runtime.Caching;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -247,9 +248,53 @@ namespace MuseumApp
             NavigationService.Navigate(new Page1(connectionString));
         }
 
+        private void AnalyzeQuery(string sqlQuery)
+        {
+            StringBuilder statisticResult = new StringBuilder();   
+
+            using (var  conn = new SqlConnection(connectionString)) 
+            {
+                conn.InfoMessage += (s, e) =>
+                {
+                    statisticResult.AppendLine(e.Message);
+                };
+
+                try
+                {
+                    conn.Open();
+                    var wrappedQuery = $@"
+                    SET STATISTICS IO ON;
+                    SET STATISTICS TIME ON;
+                    {sqlQuery};
+                    SET STATISTICS IO OFF;
+                    SET STATISTICS TIME OFF;";
+
+                    using (var cmd = new SqlCommand(wrappedQuery, conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex) 
+                {
+                    MessageBox.Show("error saat menganalisis query: " + ex.Message, "error analisis", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                if (statisticResult.Length > 0 ) 
+                {
+                    MessageBox.Show(statisticResult.ToString(), "STATISTICS INFO", MessageBoxButton.OK, MessageBoxImage.Information);                   
+                }
+                else
+                {
+                    MessageBox.Show("tidak ada informasi statistik yang diterima", "STATISTICS INFO", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+        }
+
         private void BtnAnalisis_Click(object sender, RoutedEventArgs e)
         {
-
+            string queryToAnalyze = "SELECT NIPP, NamaKaryawan, statusKaryawan FROM Karyawan";
+            AnalyzeQuery(queryToAnalyze);
         }
     }
 }
