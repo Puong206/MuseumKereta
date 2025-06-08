@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DataSetBarang" targetNamespace="http://tempuri.org/DataSetBarang.xsd" xmlns:mstns="http://tempuri.org/DataSetBarang.xsd" xmlns="http://tempuri.org/DataSetBarang.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="MuseumKeretaApiConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="MuseumKeretaApiConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.MuseumApp.Properties.Settings.GlobalReference.Default.MuseumKeretaApiConnectionString" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="BarangMuseumTableAdapter" GeneratorDataComponentClassName="BarangMuseumTableAdapter" Name="BarangMuseum" UserDataComponentName="BarangMuseumTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="MuseumKeretaApiConnectionString (Settings)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT b.BarangID, b.NamaBarang, b.Deskripsi, b.TahunPembuatan, b.AsalBarang, k.JenisKoleksi
+FROM     BarangMuseum AS b INNER JOIN
+                  Koleksi AS k ON b.KoleksiID = k.KoleksiID
+ORDER BY b.NamaBarang</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="BarangID" DataSetColumn="BarangID" />
+              <Mapping SourceColumn="NamaBarang" DataSetColumn="NamaBarang" />
+              <Mapping SourceColumn="Deskripsi" DataSetColumn="Deskripsi" />
+              <Mapping SourceColumn="TahunPembuatan" DataSetColumn="TahunPembuatan" />
+              <Mapping SourceColumn="AsalBarang" DataSetColumn="AsalBarang" />
+              <Mapping SourceColumn="JenisKoleksi" DataSetColumn="JenisKoleksi" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+        </Tables>
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DataSetBarang" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_UserDSName="DataSetBarang" msprop:Generator_DataSetName="DataSetBarang">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="BarangMuseum" msprop:Generator_RowEvHandlerName="BarangMuseumRowChangeEventHandler" msprop:Generator_RowDeletedName="BarangMuseumRowDeleted" msprop:Generator_RowDeletingName="BarangMuseumRowDeleting" msprop:Generator_RowEvArgName="BarangMuseumRowChangeEvent" msprop:Generator_TablePropName="BarangMuseum" msprop:Generator_RowChangedName="BarangMuseumRowChanged" msprop:Generator_RowChangingName="BarangMuseumRowChanging" msprop:Generator_TableClassName="BarangMuseumDataTable" msprop:Generator_RowClassName="BarangMuseumRow" msprop:Generator_TableVarName="tableBarangMuseum" msprop:Generator_UserTableName="BarangMuseum">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="BarangID" msprop:Generator_ColumnPropNameInRow="BarangID" msprop:Generator_ColumnPropNameInTable="BarangIDColumn" msprop:Generator_ColumnVarNameInTable="columnBarangID" msprop:Generator_UserColumnName="BarangID">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="5" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="NamaBarang" msprop:Generator_ColumnPropNameInRow="NamaBarang" msprop:Generator_ColumnPropNameInTable="NamaBarangColumn" msprop:Generator_ColumnVarNameInTable="columnNamaBarang" msprop:Generator_UserColumnName="NamaBarang" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="100" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Deskripsi" msprop:Generator_ColumnPropNameInRow="Deskripsi" msprop:Generator_ColumnPropNameInTable="DeskripsiColumn" msprop:Generator_ColumnVarNameInTable="columnDeskripsi" msprop:Generator_UserColumnName="Deskripsi" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="TahunPembuatan" msprop:Generator_ColumnPropNameInRow="TahunPembuatan" msprop:Generator_ColumnPropNameInTable="TahunPembuatanColumn" msprop:Generator_ColumnVarNameInTable="columnTahunPembuatan" msprop:Generator_UserColumnName="TahunPembuatan" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="4" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="AsalBarang" msprop:Generator_ColumnPropNameInRow="AsalBarang" msprop:Generator_ColumnPropNameInTable="AsalBarangColumn" msprop:Generator_ColumnVarNameInTable="columnAsalBarang" msprop:Generator_UserColumnName="AsalBarang" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="JenisKoleksi" msprop:Generator_ColumnPropNameInRow="JenisKoleksi" msprop:Generator_ColumnPropNameInTable="JenisKoleksiColumn" msprop:Generator_ColumnVarNameInTable="columnJenisKoleksi" msprop:Generator_UserColumnName="JenisKoleksi" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="100" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:BarangMuseum" />
+      <xs:field xpath="mstns:BarangID" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>

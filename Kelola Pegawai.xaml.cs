@@ -295,6 +295,7 @@ namespace MuseumApp
         {
             string queryToAnalyze = "SELECT NIPP, NamaKaryawan, statusKaryawan FROM Karyawan";
             AnalyzeQuery(queryToAnalyze);
+
         }
     }
 }

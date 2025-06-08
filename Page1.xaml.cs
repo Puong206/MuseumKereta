@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -72,8 +73,55 @@ namespace MuseumApp
 
         private void ButtonReportExport_Click(object sender, RoutedEventArgs e)
         {
-           
-            NavigationService.Navigate(new ReportExport());
+            var button = sender as Button;
+            if (button != null && button.ContextMenu != null)
+            {
+                button.ContextMenu.PlacementTarget = button;
+                button.ContextMenu.Placement = PlacementMode.Bottom;
+                button.ContextMenu.IsOpen = true;
+            }
+        }
+
+        private void LaporanBarang_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Kelola_Pegawai kelolaPegawai = new Kelola_Pegawai(connectionString);
+                this.NavigationService.Navigate(kelolaPegawai);
+                // Buat instance dari Window LaporanBarang
+                var reportWindow = new LaporanBarang(this.connectionString);
+
+                // (Opsional tapi direkomendasikan) Set window utama sebagai pemilik window laporan
+                reportWindow.Owner = Window.GetWindow(this);
+
+                // Tampilkan window laporan.
+                // Gunakan .Show() agar tidak memblokir window utama,
+                // atau .ShowDialog() jika Anda ingin window utama tidak bisa diakses sampai window laporan ditutup.
+                reportWindow.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Gagal membuka jendela laporan: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void LaporanPerawatan_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: Implementasikan logika untuk membuat laporan data perawatan di sini
+            // Anda bisa mengikuti pola yang sama seperti LaporanBarang_Click
+            MessageBox.Show("Fitur Laporan Perawatan belum diimplementasikan.", "Informasi", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void LaporanPegawai_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: Implementasikan logika untuk membuat laporan data pegawai di sini
+            MessageBox.Show("Fitur Laporan Pegawai belum diimplementasikan.", "Informasi", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void LaporanKoleksi_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: Implementasikan logika untuk membuat laporan data koleksi di sini
+            MessageBox.Show("Fitur Laporan Koleksi belum diimplementasikan.", "Informasi", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
     }

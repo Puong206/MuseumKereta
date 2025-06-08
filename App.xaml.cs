@@ -5,7 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-
+using Microsoft.SqlServer.Types;
 namespace MuseumApp
 {
     /// <summary>
@@ -16,7 +16,7 @@ namespace MuseumApp
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
+            //SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
         }
     }
 }
