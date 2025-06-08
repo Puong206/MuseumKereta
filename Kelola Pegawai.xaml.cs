@@ -19,9 +19,9 @@ namespace MuseumApp
         };
         private const string CacheKey = "KaryawanData";
         private string selectedNIPP;
-        private SqlConnection conn;
+        //private SqlConnection conn;
         private SqlDataAdapter adapter;
-        private DataTable dt;
+        //private DataTable dt;
         public Kelola_Pegawai(string connStr)
         {
             InitializeComponent();

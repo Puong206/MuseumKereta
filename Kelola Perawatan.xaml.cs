@@ -21,8 +21,8 @@ namespace MuseumApp
         };
         private const string CacheKey = "PerawatanData";
         private int selectedPerawatanId;
-        SqlConnection conn;
-        SqlCommand cmd;
+        //SqlConnection conn;
+        //SqlCommand cmd;
         SqlDataAdapter adapter;
         DataTable dt;
         
@@ -31,7 +31,6 @@ namespace MuseumApp
         {
             InitializeComponent();
             connectionString = connStr;
-            conn = new SqlConnection(connectionString);
             EnsureIndexes();
             LoadData();
         }

@@ -11,8 +11,8 @@ namespace MuseumApp
     public partial class Kelola_Koleksi : Page
     {
         private readonly string connectionString;
-        private SqlConnection conn;
-        private SqlCommand cmd;
+        //private SqlConnection conn;
+        //private SqlCommand cmd;
         private SqlDataAdapter adapter;
 
         private readonly MemoryCache _cache = MemoryCache.Default;
