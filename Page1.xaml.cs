@@ -69,6 +69,12 @@ namespace MuseumApp
                 }
             }
         }
+
+        private void ButtonReportExport_Click(object sender, RoutedEventArgs e)
+        {
+           
+            NavigationService.Navigate(new ReportExport());
+        }
     }
     }
 

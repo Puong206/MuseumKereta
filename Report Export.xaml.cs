@@ -12,17 +12,43 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Reporting.WinForms;
+
+
 
 namespace MuseumApp
 {
     /// <summary>
     /// Interaction logic for Report_Export.xaml
     /// </summary>
-    public partial class Report_Export : Page
+    public partial class ReportExport : Page
     {
-        public Report_Export()
+        //private readonly string connectionString;
+        public ReportExport()
         {
             InitializeComponent();
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            
+            ReportViewer.ProcessingMode = ProcessingMode.Local;
+
+            
+            LoadBarangReport();
+        }
+
+        private void LoadBarangReport()
+        {
+
+        }
+
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
+        {
+            if (NavigationService.CanGoBack)
+            {
+                NavigationService.GoBack();
+            }
         }
     }
 }

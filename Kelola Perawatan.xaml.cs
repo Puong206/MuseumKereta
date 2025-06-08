@@ -24,7 +24,7 @@ namespace MuseumApp
         //SqlConnection conn;
         //SqlCommand cmd;
         SqlDataAdapter adapter;
-        DataTable dt;
+        //DataTable dt;
         
 
         public Kelola_Perawatan(string connStr)
