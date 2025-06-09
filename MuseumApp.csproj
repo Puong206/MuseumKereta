@@ -135,6 +135,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DataSetBarang.xsd</DependentUpon>
     </Compile>
+    <Compile Include="DataSetKoleksi.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSetKoleksi.xsd</DependentUpon>
+    </Compile>
     <Compile Include="InputDialog.xaml.cs">
       <DependentUpon>InputDialog.xaml</DependentUpon>
     </Compile>
@@ -192,6 +197,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <EmbeddedResource Include="BarangReport.rdlc" />
+    <EmbeddedResource Include="KoleksiReport.rdlc" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -220,6 +226,17 @@
     </None>
     <None Include="DataSetBarang.xss">
       <DependentUpon>DataSetBarang.xsd</DependentUpon>
+    </None>
+    <None Include="DataSetKoleksi.xsc">
+      <DependentUpon>DataSetKoleksi.xsd</DependentUpon>
+    </None>
+    <None Include="DataSetKoleksi.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSetKoleksi.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="DataSetKoleksi.xss">
+      <DependentUpon>DataSetKoleksi.xsd</DependentUpon>
     </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
