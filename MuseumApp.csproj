@@ -122,6 +122,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="LaporanPegawai.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LaporanPerawatan.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="LoginWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -169,6 +177,12 @@
     </Compile>
     <Compile Include="LaporanKoleksi.xaml.cs">
       <DependentUpon>LaporanKoleksi.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LaporanPegawai.xaml.cs">
+      <DependentUpon>LaporanPegawai.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LaporanPerawatan.xaml.cs">
+      <DependentUpon>LaporanPerawatan.xaml</DependentUpon>
     </Compile>
     <Compile Include="LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
