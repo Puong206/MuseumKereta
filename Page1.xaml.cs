@@ -86,8 +86,6 @@ namespace MuseumApp
         {
             try
             {
-                Kelola_Pegawai kelolaPegawai = new Kelola_Pegawai(connectionString);
-                this.NavigationService.Navigate(kelolaPegawai);
                 // Buat instance dari Window LaporanBarang
                 var reportWindow = new LaporanBarang(this.connectionString);
 
