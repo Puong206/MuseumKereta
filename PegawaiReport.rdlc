@@ -15,7 +15,7 @@
                       <Paragraph>
                         <TextRuns>
                           <TextRun>
-                            <Value>ID Koleksi</Value>
+                            <Value>NIPP</Value>
                             <Style />
                           </TextRun>
                         </TextRuns>
@@ -42,7 +42,7 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>2.5cm</Width>
+              <Width>4.25683cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>2.5cm</Width>
@@ -54,21 +54,21 @@
               <TablixCells>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="JenisKoleksi">
+                    <Textbox Name="NamaKaryawan">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!JenisKoleksi.Value</Value>
+                              <Value>=Fields!NamaKaryawan.Value</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
                           <Style />
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>JenisKoleksi</rd:DefaultName>
+                      <rd:DefaultName>NamaKaryawan</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -84,21 +84,21 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Deskripsi">
+                    <Textbox Name="statusKaryawan">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!Deskripsi.Value</Value>
+                              <Value>=Fields!statusKaryawan.Value</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
                           <Style />
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Deskripsi</rd:DefaultName>
+                      <rd:DefaultName>statusKaryawan</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -134,7 +134,7 @@
                       <Paragraph>
                         <TextRuns>
                           <TextRun>
-                            <Value>Jenis Koleksi</Value>
+                            <Value>Nama Pegawai</Value>
                             <Style />
                           </TextRun>
                         </TextRuns>
@@ -167,7 +167,7 @@
                       <Paragraph>
                         <TextRuns>
                           <TextRun>
-                            <Value>Deskripsi</Value>
+                            <Value>Status</Value>
                             <Style />
                           </TextRun>
                         </TextRuns>
@@ -194,34 +194,34 @@
         <TablixRowHierarchy>
           <TablixMembers>
             <TablixMember>
-              <Group Name="KoleksiID">
+              <Group Name="NIPP">
                 <GroupExpressions>
-                  <GroupExpression>=Fields!KoleksiID.Value</GroupExpression>
+                  <GroupExpression>=Fields!NIPP.Value</GroupExpression>
                 </GroupExpressions>
               </Group>
               <SortExpressions>
                 <SortExpression>
-                  <Value>=Fields!KoleksiID.Value</Value>
+                  <Value>=Fields!NIPP.Value</Value>
                 </SortExpression>
               </SortExpressions>
               <TablixHeader>
                 <Size>2.5cm</Size>
                 <CellContents>
-                  <Textbox Name="KoleksiID">
+                  <Textbox Name="NIPP">
                     <CanGrow>true</CanGrow>
                     <KeepTogether>true</KeepTogether>
                     <Paragraphs>
                       <Paragraph>
                         <TextRuns>
                           <TextRun>
-                            <Value>=Fields!KoleksiID.Value</Value>
+                            <Value>=Fields!NIPP.Value</Value>
                             <Style />
                           </TextRun>
                         </TextRuns>
                         <Style />
                       </Paragraph>
                     </Paragraphs>
-                    <rd:DefaultName>KoleksiID</rd:DefaultName>
+                    <rd:DefaultName>NIPP</rd:DefaultName>
                     <Style>
                       <Border>
                         <Color>LightGrey</Color>
@@ -238,11 +238,11 @@
             </TablixMember>
           </TablixMembers>
         </TablixRowHierarchy>
-        <DataSetName>DataSetKoleksi</DataSetName>
-        <Top>1.32503cm</Top>
-        <Left>4.09787cm</Left>
+        <DataSetName>DataSetPegawai</DataSetName>
+        <Top>1.8542cm</Top>
+        <Left>2.95487cm</Left>
         <Height>1.2cm</Height>
-        <Width>7.5cm</Width>
+        <Width>9.25683cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -266,44 +266,44 @@
   </Page>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
-    <DataSource Name="DataSetKoleksi">
+    <DataSource Name="DataSetPegawai">
       <ConnectionProperties>
         <DataProvider>System.Data.DataSet</DataProvider>
         <ConnectString>/* Local Connection */</ConnectString>
       </ConnectionProperties>
-      <rd:DataSourceID>0d57447e-d589-40d2-9b0f-f2d6919db2fd</rd:DataSourceID>
+      <rd:DataSourceID>b6a483a7-5bfb-4ad4-9464-8e1f0968cbbc</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="DataSetKoleksi">
+    <DataSet Name="DataSetPegawai">
       <Query>
-        <DataSourceName>DataSetKoleksi</DataSourceName>
+        <DataSourceName>DataSetPegawai</DataSourceName>
         <CommandText>/* Local Query */</CommandText>
       </Query>
       <Fields>
-        <Field Name="KoleksiID">
-          <DataField>KoleksiID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="JenisKoleksi">
-          <DataField>JenisKoleksi</DataField>
+        <Field Name="NIPP">
+          <DataField>NIPP</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="Deskripsi">
-          <DataField>Deskripsi</DataField>
+        <Field Name="NamaKaryawan">
+          <DataField>NamaKaryawan</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="statusKaryawan">
+          <DataField>statusKaryawan</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
       <rd:DataSetInfo>
-        <rd:DataSetName>DataSetKoleksi</rd:DataSetName>
-        <rd:SchemaPath>A:\Kuliah\Semester 4\PABD\Project\MuseumApp\DataSetKoleksi.xsd</rd:SchemaPath>
-        <rd:TableName>Koleksi</rd:TableName>
+        <rd:DataSetName>DataSetPegawai</rd:DataSetName>
+        <rd:SchemaPath>A:\Kuliah\Semester 4\PABD\Project\MuseumApp\DataSetPegawai.xsd</rd:SchemaPath>
+        <rd:TableName>Karyawan</rd:TableName>
         <rd:TableAdapterFillMethod>Fill</rd:TableAdapterFillMethod>
         <rd:TableAdapterGetDataMethod>GetData</rd:TableAdapterGetDataMethod>
-        <rd:TableAdapterName>KoleksiTableAdapter</rd:TableAdapterName>
+        <rd:TableAdapterName>KaryawanTableAdapter</rd:TableAdapterName>
       </rd:DataSetInfo>
     </DataSet>
   </DataSets>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
-  <rd:ReportID>8a2c00e5-63b0-4c25-8aca-8ce2b73118a4</rd:ReportID>
+  <rd:ReportID>417bcdb2-a45c-43c6-9b90-d35f1cc5148a</rd:ReportID>
 </Report>
