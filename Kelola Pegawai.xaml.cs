@@ -1,4 +1,9 @@
-﻿using System;
+﻿using System.IO;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using Microsoft.Win32;
+
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Runtime.Caching;
@@ -296,6 +301,89 @@ namespace MuseumApp
             string queryToAnalyze = "SELECT NIPP, NamaKaryawan, statusKaryawan FROM Karyawan";
             AnalyzeQuery(queryToAnalyze);
 
+        }
+
+        private void BtnImportExcelPegawai_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Excel Files (*.xlsx)|*.xlsx",
+                Title = "Pilih File Excel untuk Impor Data Pegawai"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                ReadExcelAndShowPreview(openFileDialog.FileName);
+            }
+        }
+
+        private void PreviewData(string filePath)
+        {
+            DataTable dataTable = new DataTable();
+
+            try
+            {
+                using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    IWorkbook workbook = new XSSFWorkbook(fs);
+                    ISheet sheet = workbook.GetSheetAt(0);
+
+                    IRow headerRow = sheet.GetRow(0);
+                    if (headerRow == null) throw new Exception("File Excel tidak memiliki baris header.");
+
+                    foreach (ICell headerCell in headerRow.Cells)
+                    {
+                        dataTable.Columns.Add(headerCell.ToString().Trim());
+                    }
+
+
+                    string[] requiredColumns = { "NIPP", "NamaKaryawan", "statusKaryawan" };
+                    foreach (string colName in requiredColumns)
+                    {
+                        if (!dataTable.Columns.Contains(colName))
+                        {
+                            throw new Exception($"File Excel harus memiliki kolom '{colName}'.");
+                        }
+                    }
+
+                    for (int i = 1; i <= sheet.LastRowNum; i++)
+                    {
+                        IRow excelRow = sheet.GetRow(i);
+                        if (excelRow == null) continue;
+
+                        DataRow newRow = dataTable.NewRow();
+                        bool rowHasData = false;
+                        for (int j = 0; j < dataTable.Columns.Count; j++)
+                        {
+                            ICell cell = excelRow.GetCell(j);
+                            string cellValue = cell?.ToString() ?? string.Empty;
+                            newRow[j] = cellValue;
+                            if (!string.IsNullOrWhiteSpace(cellValue)) rowHasData = true;
+                        }
+
+                        if (rowHasData) dataTable.Rows.Add(newRow);
+                    }
+                }
+
+                if (dataTable.Rows.Count > 0)
+                {
+                    // Panggil PreviewWindow yang fleksibel dengan tipe data Pegawai
+                    PreviewWindow preview = new PreviewWindow(dataTable, TipeDataImport.Pegawai, this.connectionString);
+                    if (preview.ShowDialog() == true)
+                    {
+                        _cache.Remove(CacheKey);
+                        LoadData();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Tidak ada data yang dapat dibaca dari file Excel.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan saat memproses file Excel: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
