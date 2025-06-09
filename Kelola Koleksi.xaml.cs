@@ -1,18 +1,25 @@
-﻿using System;
+﻿using System.IO;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using Microsoft.Win32;
+
+using System;
 using System.Data.SqlClient;
 using System.Data;
 using System.Windows;
 using System.Windows.Controls;
 using System.Runtime.Caching;
 using System.Text;
+using System.Collections.Generic;
+
+
 
 namespace MuseumApp
 {
     public partial class Kelola_Koleksi : Page
     {
         private readonly string connectionString;
-        //private SqlConnection conn;
-        //private SqlCommand cmd;
+        
         private SqlDataAdapter adapter;
 
         private readonly MemoryCache _cache = MemoryCache.Default;
@@ -42,7 +49,7 @@ namespace MuseumApp
                 {
                     conn.Open();
 
-                var indexScript = @"
+                    var indexScript = @"
                     IF OBJECT_ID('dbo.Koleksi', 'U') IS NOT NULL
                     BEGIN
                     IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_JenisKoleksi' AND object_id = OBJECT_ID('dbo.Koleksi'))
@@ -319,5 +326,103 @@ namespace MuseumApp
             string queryToAnalyze = "SELECT KoleksiID, JenisKoleksi, Deskripsi FROM Koleksi";
             AnalyzeQuery(queryToAnalyze);
         }
+
+        private void BtnImportExcel_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Excel Files (*.xlsx)|*.xlsx",
+                Title = "Pilih File Excel untuk Impor Data Koleksi"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                ReadExcelAndShowPreview(openFileDialog.FileName);
+            }
+        }
+
+        private void PreviewData(string filePath)
+        {
+            DataTable dataTable = new DataTable();
+            try
+            {
+                using(FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    IWorkbook workbook = new XSSFWorkbook(fs);
+                    ISheet sheet = workbook.GetSheetAt(0);
+                    if (sheet == null)
+                    {
+                        MessageBox.Show("File Excel tidak memiliki sheet.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    IRow headerRow = sheet.GetRow(0);
+                    if (headerRow == null)
+                    {
+                        MessageBox.Show("File Excel tidak memiliki baris header.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    foreach (ICell headerCell in headerRow.Cells)
+                    {
+                        dataTable.Columns.Add(headerCell.ToString().Trim());
+                    }
+
+                    if (!dataTable.Columns.Contains("JenisKoleksi") || !dataTable.Columns.Contains("Deskripsi"))
+                    {
+                        MessageBox.Show("File Excel harus memiliki kolom 'JenisKoleksi' dan 'Deskripsi'.", "Struktur Kolom Salah", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    for (int i = 1; i <= sheet.LastRowNum; i++)
+                    {
+                        IRow excelRow = sheet.GetRow(i);
+                        if (excelRow == null) continue;
+
+                        DataRow newRow = dataTable.NewRow();
+                        bool rowHasData = false;
+                        for (int j = 0; j < dataTable.Columns.Count; j++)
+                        {
+                            ICell cell = excelRow.GetCell(j);
+                            string cellValue = cell?.ToString() ?? string.Empty;
+                            newRow[j] = cellValue;
+                            if (!string.IsNullOrWhiteSpace(cellValue)) rowHasData = true;
+                        }
+
+                        if (rowHasData) dataTable.Rows.Add(newRow);
+                    }
+
+
+                }
+
+                if (dataTable.Rows.Count > 0)
+                {
+                    // Panggil PreviewWindow yang fleksibel dengan tipe data Koleksi
+                    PreviewWindow preview = new PreviewWindow(dataTable, TipeDataImport.Koleksi, this.connectionString);
+                    if (preview.ShowDialog() == true)
+                    {
+                        // Jika impor sukses (atau sebagian sukses), refresh data di grid utama
+                        _cache.Remove(CacheKey);
+                        LoadData();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Tidak ada data yang dapat dibaca dari file Excel.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+
+            }
+            catch (IOException ioEx)
+            {
+                MessageBox.Show("Gagal membaca file (mungkin sedang dibuka aplikasi lain): " + ioEx.Message, "Error File", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+            catch (Exception ex) 
+            {
+                MessageBox.Show("Terjadi kesalahan saat memproses file Excel: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            }
+        }
+
     }
 } 

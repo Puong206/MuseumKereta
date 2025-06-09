@@ -1,4 +1,9 @@
-﻿﻿using System;
+﻿using System.IO;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using Microsoft.Win32;
+
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -13,10 +18,7 @@ namespace MuseumApp
     public partial class Kelola_Barang : Page
     {
         private readonly string connectionString;
-        //private SqlConnection conn;
-        //private SqlCommand cmd;
-        //private SqlDataAdapter adapter;
-        //private DataTable dt;
+        
 
         private readonly MemoryCache _cache = MemoryCache.Default;
         private readonly CacheItemPolicy _policy = new CacheItemPolicy
@@ -346,6 +348,92 @@ namespace MuseumApp
             }
             if (statisticsResult.Length > 0) MessageBox.Show(statisticsResult.ToString(), "STATISTICS INFO", MessageBoxButton.OK, MessageBoxImage.Information);
             else MessageBox.Show("Tidak ada informasi statistik yang diterima.", "STATISTICS INFO", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
+        private void BtnImportExcelBarang_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Excel Files (*.xlsx)|*.xlsx",
+                Title = "Pilih File Excel untuk Impor Data Barang"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                ReadExcelAndShowPreview(openFileDialog.FileName);
+            }
+        }
+
+        private void PreviewData(string filePath)
+        {
+            DataTable dataTable = new DataTable();
+            try
+            {
+                using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    IWorkbook workbook = new XSSFWorkbook(fs);
+                    ISheet sheet = workbook.GetSheetAt(0);
+
+                    IRow headerRow = sheet.GetRow(0);
+                    if (headerRow == null) throw new Exception("File Excel tidak memiliki baris header.");
+
+                    foreach (ICell headerCell in headerRow.Cells)
+                    {
+                        dataTable.Columns.Add(headerCell.ToString().Trim());
+                    }
+
+                    string[] requiredColumns = { "BarangID", "NamaBarang", "KoleksiID", "TahunPembuatan" };
+                    foreach (string colName in requiredColumns)
+                    {
+                        if (!dataTable.Columns.Contains(colName))
+                        {
+                            throw new Exception($"File Excel harus memiliki kolom '{colName}'.");
+                        }
+                    }
+
+                    for (int i = 1; i <= sheet.LastRowNum; i++)
+                    {
+                        IRow excelRow = sheet.GetRow(i);
+                        if (excelRow == null) continue;
+
+                        DataRow newRow = dataTable.NewRow();
+                        bool rowHasData = false;
+                        foreach (DataColumn col in dataTable.Columns)
+                        {
+                            int colIndex = headerRow.Cells.FindIndex(c => c.ToString().Trim() == col.ColumnName);
+                            if (colIndex != -1)
+                            {
+                                ICell cell = excelRow.GetCell(colIndex);
+                                string cellValue = cell?.ToString() ?? string.Empty;
+                                newRow[col.ColumnName] = cellValue;
+                                if (!string.IsNullOrWhiteSpace(cellValue)) rowHasData = true;
+                            }
+                        }
+
+                        if (rowHasData) dataTable.Rows.Add(newRow);
+
+                    }
+                }
+                if (dataTable.Rows.Count > 0)
+                {
+                    // Panggil PreviewWindow yang fleksibel dengan tipe data Barang
+                    PreviewWindow preview = new PreviewWindow(dataTable, TipeDataImport.Barang, this.connectionString);
+                    if (preview.ShowDialog() == true)
+                    {
+                        _cache.Remove(CacheKey);
+                        LoadData();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Tidak ada data yang dapat dibaca dari file Excel.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show("Terjadi kesalahan saat memproses file Excel: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
     }
