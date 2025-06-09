@@ -148,6 +148,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DataSetKoleksi.xsd</DependentUpon>
     </Compile>
+    <Compile Include="DataSetPegawai.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSetPegawai.xsd</DependentUpon>
+    </Compile>
     <Compile Include="InputDialog.xaml.cs">
       <DependentUpon>InputDialog.xaml</DependentUpon>
     </Compile>
@@ -212,6 +217,7 @@
     </Compile>
     <EmbeddedResource Include="BarangReport.rdlc" />
     <EmbeddedResource Include="KoleksiReport.rdlc" />
+    <EmbeddedResource Include="PegawaiReport.rdlc" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -251,6 +257,17 @@
     </None>
     <None Include="DataSetKoleksi.xss">
       <DependentUpon>DataSetKoleksi.xsd</DependentUpon>
+    </None>
+    <None Include="DataSetPegawai.xsc">
+      <DependentUpon>DataSetPegawai.xsd</DependentUpon>
+    </None>
+    <None Include="DataSetPegawai.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSetPegawai.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="DataSetPegawai.xss">
+      <DependentUpon>DataSetPegawai.xsd</DependentUpon>
     </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
