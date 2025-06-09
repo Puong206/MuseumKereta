@@ -327,6 +327,20 @@ namespace MuseumApp
             AnalyzeQuery(queryToAnalyze);
         }
 
+        private void BtnImportExcel_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Excel Files (*.xlsx)|*.xlsx",
+                Title = "Pilih File Excel untuk Impor Data Koleksi"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                ReadExcelAndShowPreview(openFileDialog.FileName);
+            }
+        }
+
         private void PreviewData(string filePath)
         {
             DataTable dataTable = new DataTable();

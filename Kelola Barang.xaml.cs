@@ -1,4 +1,9 @@
-﻿﻿using System;
+﻿using System.IO;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using Microsoft.Win32;
+
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -13,10 +18,7 @@ namespace MuseumApp
     public partial class Kelola_Barang : Page
     {
         private readonly string connectionString;
-        //private SqlConnection conn;
-        //private SqlCommand cmd;
-        //private SqlDataAdapter adapter;
-        //private DataTable dt;
+        
 
         private readonly MemoryCache _cache = MemoryCache.Default;
         private readonly CacheItemPolicy _policy = new CacheItemPolicy
