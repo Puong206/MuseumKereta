@@ -58,7 +58,7 @@ namespace MuseumApp
 
                 ReportViewer.LocalReport.DataSources.Clear();
                 ReportViewer.LocalReport.DataSources.Add(rds);
-                ReportViewer.LocalReport.ReportPath = @"A:\Kuliah\Semester 4\PABD\Project\MuseumApp\PerawatanReport.rdlc";
+                ReportViewer.LocalReport.ReportPath = @"C:\Project PABD\PerawatanReport.rdlc";
                 ReportViewer.RefreshReport();
             }
             catch (Exception ex)

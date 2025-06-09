@@ -40,7 +40,7 @@ namespace MuseumApp
                 ReportViewer.LocalReport.DataSources.Clear();
                 ReportViewer.LocalReport.DataSources.Add(rds);
 
-                ReportViewer.LocalReport.ReportPath = @"A:\Kuliah\Semester 4\PABD\Project\MuseumApp\KoleksiReport.rdlc";
+                ReportViewer.LocalReport.ReportPath = @"C:\Project PABD\KoleksiReport.rdlc";
                 ReportViewer.RefreshReport();
             }
             catch (Exception ex)

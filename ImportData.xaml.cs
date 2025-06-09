@@ -143,7 +143,7 @@ namespace MuseumApp
                                 if (ImportRowBarang(row, conn, transaction)) successCount++;
                                 else failedCount++;
                                 break;
-                            case "Pegawai (Karyawan)":
+                            case "Pegawai":
                                 if (ImportRowPegawai(row, conn, transaction)) successCount++;
                                 else failedCount++;
                                 break;
@@ -193,6 +193,8 @@ namespace MuseumApp
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@JenisKoleksi", jenis);
                     cmd.Parameters.AddWithValue("@Deskripsi", deskripsi);
+                    var p = cmd.Parameters.Add("@IDKoleksiIdentity", SqlDbType.Int);
+                    p.Direction = ParameterDirection.Output;
                     cmd.ExecuteNonQuery();
                     return true;
                 }
@@ -241,7 +243,7 @@ namespace MuseumApp
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@NIPP", nipp);
                     cmd.Parameters.AddWithValue("@NamaKaryawan", row["NamaKaryawan"]);
-                    cmd.Parameters.AddWithValue("@StatusKaryawan", row["StatusKaryawan"]);
+                    cmd.Parameters.AddWithValue("@statuskaryawan", row["statuskaryawan"]);
                     cmd.ExecuteNonQuery();
                     return true;
                 }
@@ -258,13 +260,15 @@ namespace MuseumApp
                 using (SqlCommand cmd = new SqlCommand("AddPerawatan", conn, transaction))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@BarangID", row["BarangID"] == DBNull.Value || string.IsNullOrEmpty(row["BarangID"].ToString()) ? (object)DBNull.Value : row["BarangID"]);
+                    cmd.Parameters.AddWithValue("@BarangID", row["BarangID"]);
                     cmd.Parameters.AddWithValue("@TanggalPerawatan", DateTime.Parse(row["TanggalPerawatan"].ToString()));
                     cmd.Parameters.AddWithValue("@JenisPerawatan", row["JenisPerawatan"]);
                     cmd.Parameters.AddWithValue("@Catatan", row["Catatan"]);
                     cmd.Parameters.AddWithValue("@NIPP", row["NIPP"]);
+                    var p = cmd.Parameters.Add("@PerawatanIDIdentity", SqlDbType.Int);
+                    p.Direction = ParameterDirection.Output;
                     cmd.ExecuteNonQuery();
-                    return false;
+                    return true;
                 }
             }
             catch { return false; }
@@ -272,10 +276,7 @@ namespace MuseumApp
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
-            if (NavigationService.CanGoBack)
-            {
-                NavigationService.GoBack();
-            }
+            (Window.GetWindow(this) as MainWindow)?.NavigateHome();
         }
     }
 }
