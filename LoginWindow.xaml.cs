@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MuseumApp
 {
@@ -22,26 +13,7 @@ namespace MuseumApp
         public LoginWindow()
         {
             InitializeComponent();
-        }
-
-        private void Frame_Navigated(object sender, NavigationEventArgs e)
-        {
-
-        }
-
-        private void Frame_Navigated_1(object sender, NavigationEventArgs e)
-        {
-
-        }
-
-        private void Frame_Navigated_2(object sender, NavigationEventArgs e)
-        {
-
-        }
-
-        private void EmailTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
+            UsernameTextBox.Focus();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -49,45 +21,66 @@ namespace MuseumApp
             string username = UsernameTextBox.Text;
             string password = passwordTextBox.Password;
 
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            {
+                MessageBox.Show("Username dan password harus diisi.", "Peringatan", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             try
             {
+                // Bangun connection string lengkap dengan kredensial pengguna
+                // PENTING: Pendekatan ini hanya untuk SQL Server Authentication.
+                // Jika Anda menggunakan Integrated Security (Windows Auth), logika login akan berbeda.
                 string connectionString = baseconnectionString + $"User ID={username};Password={password}";
 
+                // Coba buka koneksi untuk memvalidasi login
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    
-                    NavigationWindow navWindow = new NavigationWindow();
-                    navWindow.Navigate(new Page1(connectionString));
-                    navWindow.Show();
-
-                    this.Close(); 
+                    MainWindow mainWindow = new MainWindow(connectionString);
+                    mainWindow.Show();
+                    this.Close();
                 }
+                
             }
             catch (SqlException ex)
             {
+                // Error 18456 secara spesifik adalah "Login failed for user..."
                 if (ex.Number == 18456)
                 {
-                    MessageBox.Show("Login gagal: Username atau password salah.");
+                    MessageBox.Show("Login gagal: Username atau password salah.", "Login Gagal", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 else
                 {
-                    MessageBox.Show("Kesalahan database: " + ex.Message);
+                    MessageBox.Show("Kesalahan database: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Terjadi kesalahan: " + ex.Message);
+                MessageBox.Show("Terjadi kesalahan: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private void UsernameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
- 
+            if (e.Key == Key.Escape)
+            {
+                MessageBoxResult result = MessageBox.Show(
+                    "Apakah Anda yakin ingin keluar dari aplikasi?",
+                    "Konfirmasi Keluar",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    Application.Current.Shutdown();
+                }
+            }
         }
-        private void RadioButton_Checked(object sender, RoutedEventArgs e)
-        {
-            
-        }
+
+        // Metode-metode kosong ini bisa dihapus jika tidak digunakan
+        private void UsernameTextBox_TextChanged(object sender, TextChangedEventArgs e) { }
+        private void Frame_Navigated_2(object sender, NavigationEventArgs e) { }
     }
 }

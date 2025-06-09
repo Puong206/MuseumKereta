@@ -16,7 +16,6 @@ namespace MuseumApp
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            //SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
         }
     }
 }

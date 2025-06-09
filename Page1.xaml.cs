@@ -21,36 +21,40 @@ namespace MuseumApp
     /// </summary>
     public partial class Page1 : Page
     {
-        private string connectionString = "Data Source=LAPTOP-DP8JTMS7\\PUONG206;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password";
+        private readonly string connectionString;
         public Page1(string connStr)
         {
             InitializeComponent();
             connectionString = connStr;
+            Loaded += Page1_Loaded;
+        }
+
+        private void Page1_Loaded(object sender, RoutedEventArgs e)
+        {
+
         }
 
         private void ButtonKoleksi_Click(object sender, RoutedEventArgs e)
         {
-            Kelola_Koleksi kelolaKoleksi = new Kelola_Koleksi(connectionString);
-            this.NavigationService.Navigate(kelolaKoleksi);
+            MainContentFrame.Navigate(new Kelola_Koleksi(connectionString));
         }
 
         private void ButtonBarang_Click(object sender, RoutedEventArgs e)
         {
-            Kelola_Barang kelolaBarang = new Kelola_Barang(connectionString);
-            this.NavigationService.Navigate(kelolaBarang);
+            MainContentFrame.Navigate(new Kelola_Barang(connectionString));
         }
 
         private void ButtonPegawai_Click(object sender, RoutedEventArgs e)
         {
-            Kelola_Pegawai kelolaPegawai = new Kelola_Pegawai(connectionString);
-            this.NavigationService.Navigate(kelolaPegawai);
+            MainContentFrame.Navigate(new Kelola_Pegawai(connectionString));
         }
 
         private void ButtonPerawatan_Click(object sender, RoutedEventArgs e)
         {
-            Kelola_Perawatan kelolaPerawatan = new Kelola_Perawatan(connectionString);
-            this.NavigationService.Navigate(kelolaPerawatan);
+            MainContentFrame.Navigate(new Kelola_Perawatan(connectionString));
         }
+
+        
 
         private void ButtonLogout_Click(object sender, RoutedEventArgs e)
         {
@@ -59,15 +63,9 @@ namespace MuseumApp
             if (result == MessageBoxResult.Yes)
             {
                 Window parentWindow = Window.GetWindow(this);
-
-                LoginWindow loginWindow= new LoginWindow();
-
+                LoginWindow loginWindow = new LoginWindow();
                 loginWindow.Show();
-
-                if (parentWindow != null)
-                {
-                    parentWindow.Close();
-                }
+                parentWindow?.Close();
             }
         }
 
@@ -142,6 +140,11 @@ namespace MuseumApp
             // atau .ShowDialog() jika Anda ingin window utama tidak bisa diakses sampai window laporan ditutup.
             reportWindow.Show();
         }
+
+        private void ButtonImportData_Click(object sender, RoutedEventArgs e)
+        {
+            MainContentFrame.Navigate(new ImportData(connectionString));
+        }
     }
-    }
+}
 
