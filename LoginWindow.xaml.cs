@@ -18,7 +18,7 @@ namespace MuseumApp
 {
     public partial class LoginWindow : Window
     {
-        private string baseconnectionString = "Data Source=LAPTOP-DP8JTMS7\\PUONG206;Initial Catalog=MuseumKeretaApi;Integrated Security=True;";
+        private string baseconnectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;Integrated Security=True;";
         public LoginWindow()
         {
             InitializeComponent();
