@@ -118,6 +118,10 @@
     <Page Include="LaporanBarang.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="LaporanKoleksi.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="LoginWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -157,6 +161,9 @@
     </Compile>
     <Compile Include="LaporanBarang.xaml.cs">
       <DependentUpon>LaporanBarang.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LaporanKoleksi.xaml.cs">
+      <DependentUpon>LaporanKoleksi.xaml</DependentUpon>
     </Compile>
     <Compile Include="LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
