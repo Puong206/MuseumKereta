@@ -49,7 +49,7 @@ namespace MuseumApp
             }
         }
 
-        private void BtnTutup_Click(object sender, RoutedEventArgs e)
+        private void BtnKembali_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }

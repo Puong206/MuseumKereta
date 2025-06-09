@@ -18,7 +18,7 @@ namespace MuseumApp
 {
     public partial class LoginWindow : Window
     {
-        private string baseconnectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;Integrated Security=True;";
+        private string baseconnectionString = "Data Source=LAPTOP-DP8JTMS7\\PUONG206;Initial Catalog=MuseumKeretaApi;Integrated Security=True;";
         public LoginWindow()
         {
             InitializeComponent();
@@ -56,8 +56,6 @@ namespace MuseumApp
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    MessageBox.Show("Login berhasil!");
-
                     
                     NavigationWindow navWindow = new NavigationWindow();
                     navWindow.Navigate(new Page1(connectionString));

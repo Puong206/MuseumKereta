@@ -21,7 +21,7 @@ namespace MuseumApp
     /// </summary>
     public partial class Page1 : Page
     {
-        private string connectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password";
+        private string connectionString = "Data Source=LAPTOP-DP8JTMS7\\PUONG206;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password";
         public Page1(string connStr)
         {
             InitializeComponent();
@@ -105,21 +105,42 @@ namespace MuseumApp
 
         private void LaporanPerawatan_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Implementasikan logika untuk membuat laporan data perawatan di sini
-            // Anda bisa mengikuti pola yang sama seperti LaporanBarang_Click
-            MessageBox.Show("Fitur Laporan Perawatan belum diimplementasikan.", "Informasi", MessageBoxButton.OK, MessageBoxImage.Information);
+            var reportWindow = new LaporanPerawatan(this.connectionString);
+
+            // (Opsional tapi direkomendasikan) Set window utama sebagai pemilik window laporan
+            reportWindow.Owner = Window.GetWindow(this);
+
+            // Tampilkan window laporan.
+            // Gunakan .Show() agar tidak memblokir window utama,
+            // atau .ShowDialog() jika Anda ingin window utama tidak bisa diakses sampai window laporan ditutup.
+            reportWindow.Show();
+            
         }
 
         private void LaporanPegawai_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Implementasikan logika untuk membuat laporan data pegawai di sini
-            MessageBox.Show("Fitur Laporan Pegawai belum diimplementasikan.", "Informasi", MessageBoxButton.OK, MessageBoxImage.Information);
+            var reportWindow = new LaporanPegawai(this.connectionString);
+
+            // (Opsional tapi direkomendasikan) Set window utama sebagai pemilik window laporan
+            reportWindow.Owner = Window.GetWindow(this);
+
+            // Tampilkan window laporan.
+            // Gunakan .Show() agar tidak memblokir window utama,
+            // atau .ShowDialog() jika Anda ingin window utama tidak bisa diakses sampai window laporan ditutup.
+            reportWindow.Show();
         }
 
         private void LaporanKoleksi_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Implementasikan logika untuk membuat laporan data koleksi di sini
-            MessageBox.Show("Fitur Laporan Koleksi belum diimplementasikan.", "Informasi", MessageBoxButton.OK, MessageBoxImage.Information);
+            var reportWindow = new LaporanKoleksi(this.connectionString);
+
+            // (Opsional tapi direkomendasikan) Set window utama sebagai pemilik window laporan
+            reportWindow.Owner = Window.GetWindow(this);
+
+            // Tampilkan window laporan.
+            // Gunakan .Show() agar tidak memblokir window utama,
+            // atau .ShowDialog() jika Anda ingin window utama tidak bisa diakses sampai window laporan ditutup.
+            reportWindow.Show();
         }
     }
     }

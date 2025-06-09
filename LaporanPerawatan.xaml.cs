@@ -29,10 +29,22 @@ namespace MuseumApp
             try
             {
                 string query = @"SELECT
-                                    b.
-                                    b.
-                                    b
-                                FR";
+                    p.PerawatanID,
+                    p.TanggalPerawatan,
+                    b.BarangID,
+                    b.NamaBarang, 
+                    kar.NIPP,
+                    kar.NamaKaryawan,
+                    p.JenisPerawatan,
+                    p.Catatan
+                FROM
+                    Perawatan AS p
+                LEFT JOIN
+                    BarangMuseum AS b ON p.BarangID = b.BarangID -- LEFT JOIN agar perawatan tanpa barang tetap muncul
+                LEFT JOIN
+                    Karyawan AS kar ON p.NIPP = kar.NIPP -- LEFT JOIN untuk keamanan jika NIPP bisa NULL
+                ORDER BY
+                    p.TanggalPerawatan DESC;";
 
                 DataTable dt = new DataTable();
 
@@ -42,11 +54,11 @@ namespace MuseumApp
                     da.Fill(dt);
                 }
 
-                ReportDataSource rds = new ReportDataSource("DataSetBarang", dt);
+                ReportDataSource rds = new ReportDataSource("DataSetPerawatan", dt);
 
                 ReportViewer.LocalReport.DataSources.Clear();
                 ReportViewer.LocalReport.DataSources.Add(rds);
-                ReportViewer.LocalReport.ReportPath = @"C:\Project PABD\BarangReport.rdlc";
+                ReportViewer.LocalReport.ReportPath = @"A:\Kuliah\Semester 4\PABD\Project\MuseumApp\PerawatanReport.rdlc";
                 ReportViewer.RefreshReport();
             }
             catch (Exception ex)

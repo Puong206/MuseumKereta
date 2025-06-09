@@ -83,6 +83,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="ImportData.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="InputDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -153,6 +157,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DataSetPegawai.xsd</DependentUpon>
     </Compile>
+    <Compile Include="DataSetPerawatan.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSetPerawatan.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ImportData.xaml.cs">
+      <DependentUpon>ImportData.xaml</DependentUpon>
+    </Compile>
     <Compile Include="InputDialog.xaml.cs">
       <DependentUpon>InputDialog.xaml</DependentUpon>
     </Compile>
@@ -218,6 +230,7 @@
     <EmbeddedResource Include="BarangReport.rdlc" />
     <EmbeddedResource Include="KoleksiReport.rdlc" />
     <EmbeddedResource Include="PegawaiReport.rdlc" />
+    <EmbeddedResource Include="PerawatanReport.rdlc" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -269,6 +282,17 @@
     <None Include="DataSetPegawai.xss">
       <DependentUpon>DataSetPegawai.xsd</DependentUpon>
     </None>
+    <None Include="DataSetPerawatan.xsc">
+      <DependentUpon>DataSetPerawatan.xsd</DependentUpon>
+    </None>
+    <None Include="DataSetPerawatan.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSetPerawatan.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="DataSetPerawatan.xss">
+      <DependentUpon>DataSetPerawatan.xsd</DependentUpon>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -302,6 +326,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.SqlServer.Types">
       <Version>160.1000.6</Version>
+    </PackageReference>
+    <PackageReference Include="NPOI">
+      <Version>2.7.3</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
