@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Reporting.WinForms;
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq.Expressions;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace MuseumApp
 {
@@ -19,9 +12,52 @@ namespace MuseumApp
     /// </summary>
     public partial class LaporanPerawatan : Window
     {
-        public LaporanPerawatan()
+        private readonly string connectionString;
+        public LaporanPerawatan(string connStr)
         {
             InitializeComponent();
+            this.connectionString = connStr;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            SetupReportViewer();
+        }
+
+        private void SetupReportViewer()
+        {
+            try
+            {
+                string query = @"SELECT
+                                    b.
+                                    b.
+                                    b
+                                FR";
+
+                DataTable dt = new DataTable();
+
+                using (SqlConnection conn = new SqlConnection(this.connectionString))
+                {
+                    SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                    da.Fill(dt);
+                }
+
+                ReportDataSource rds = new ReportDataSource("DataSetBarang", dt);
+
+                ReportViewer.LocalReport.DataSources.Clear();
+                ReportViewer.LocalReport.DataSources.Add(rds);
+                ReportViewer.LocalReport.ReportPath = @"C:\Project PABD\BarangReport.rdlc";
+                ReportViewer.RefreshReport();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Gagal memuat laporan: {ex.Message}", "Error Laporan", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            }
+        }
+        private void BtnKembali_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }
