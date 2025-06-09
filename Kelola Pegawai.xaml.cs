@@ -250,7 +250,7 @@ namespace MuseumApp
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Page1(connectionString));
+            (Window.GetWindow(this) as MainWindow)?.NavigateHome();
         }
 
         private void AnalyzeQuery(string sqlQuery)
