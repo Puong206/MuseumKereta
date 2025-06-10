@@ -31,7 +31,17 @@ namespace MuseumApp
 
         private void Page1_Loaded(object sender, RoutedEventArgs e)
         {
-
+            if (MainContentFrame.Content == null)
+            {
+                try
+                {
+                    MainContentFrame.Navigate(new DashboardHomePage(this.connectionString));
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Gagal memuat halaman dashboard: " + ex.Message, "Error Navigasi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
 
         private void ButtonKoleksi_Click(object sender, RoutedEventArgs e)
