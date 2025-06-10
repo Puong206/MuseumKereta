@@ -9,21 +9,36 @@ namespace MuseumApp
 {
     public partial class LoginWindow : Window
     {
-        private string baseconnectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;Integrated Security=True;";
+        private string baseconnectionString = "Data Source=LAPTOP-DP8JTMS7\\PUONG206;Initial Catalog=MuseumKeretaApi;Integrated Security=True;";  //DB Arya
+        //private string baseconnectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;Integrated Security=True;";  //DB Olip
+
         public LoginWindow()
         {
             InitializeComponent();
             UsernameTextBox.Focus();
         }
 
+        private void ShowAlert(string message)
+        {
+            AlertTextBlock.Text = message;
+            AlertTextBlock.Visibility = Visibility.Visible;
+        }
+
+        private void HideAlert()
+        {
+            AlertTextBlock.Visibility = Visibility.Collapsed;
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            HideAlert(); // Sembunyikan alert sebelumnya jika ada
+
             string username = UsernameTextBox.Text;
             string password = passwordTextBox.Password;
 
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
             {
-                MessageBox.Show("Username dan password harus diisi.", "Peringatan", MessageBoxButton.OK, MessageBoxImage.Warning);
+                ShowAlert("Username dan password tidak boleh kosong.");
                 return;
             }
 
@@ -49,16 +64,16 @@ namespace MuseumApp
                 // Error 18456 secara spesifik adalah "Login failed for user..."
                 if (ex.Number == 18456)
                 {
-                    MessageBox.Show("Login gagal: Username atau password salah.", "Login Gagal", MessageBoxButton.OK, MessageBoxImage.Error);
+                    ShowAlert("Login gagal: Username atau password salah.");
                 }
                 else
                 {
-                    MessageBox.Show("Kesalahan database: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    ShowAlert("Kesalahan database: " + ex.Message);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Terjadi kesalahan: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShowAlert("Terjadi kesalahan: " + ex.Message);
             }
         }
 
@@ -80,7 +95,13 @@ namespace MuseumApp
         }
 
         // Metode-metode kosong ini bisa dihapus jika tidak digunakan
-        private void UsernameTextBox_TextChanged(object sender, TextChangedEventArgs e) { }
-        private void Frame_Navigated_2(object sender, NavigationEventArgs e) { }
+        private void UsernameTextBox_TextChanged(object sender, TextChangedEventArgs e) 
+        {
+            HideAlert();
+        }
+        private void Frame_Navigated_2(object sender, NavigationEventArgs e) 
+        {
+            HideAlert();
+        }
     }
 }

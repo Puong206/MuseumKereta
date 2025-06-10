@@ -8,7 +8,7 @@
       Title="Login"
       Height="720" Width="1280"
       WindowState="Maximized"
-      WindowStyle="None"
+      WindowStyle="ThreeDBorderWindow"
       PreviewKeyDown="Window_PreviewKeyDown">
 
     <Window.Resources>
@@ -29,6 +29,8 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="border" Property="Opacity" Value="0.85"/>
+                                <Setter Property="Background" Value="White"/>
+                                <Setter Property="Foreground" Value="#FFB85C00"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -80,7 +82,11 @@
                              Background="#FFEAECEE"
                              Height="35" Padding="8,0"
                              BorderThickness="0"/>
-
+                
+                <TextBlock x:Name="AlertTextBlock"
+                           Foreground="#B71C1C" TextWrapping="Wrap"
+                           FontWeight="SemiBold"/>
+                
                 <Button Content="Login"
                         Style="{StaticResource LoginButtonStyle}"
                         HorizontalAlignment="Stretch"
