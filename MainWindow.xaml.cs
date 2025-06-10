@@ -7,7 +7,7 @@ namespace MuseumApp
     {
         //private string connectionString = "Data Source=LAPTOP-DP8JTMS7\\PUONG206;Initial Catalog=MuseumKeretaApi;Initial Catalog=MuseumKeretaApi;Integrated Security=True;";  //DB Arya
         //private string connectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;Initial Catalog=MuseumKeretaApi;Integrated Security=True;";  //DB Olip
-        private string connectionString = "LAPTOP-HDNQCJHP\WILDAN_ZAUHAIR;Initial Catalog=MuseumKeretaApi;Initial Catalog=MuseumKeretaApi;Integrated Security=True;";  //DB Welly
+        private string connectionString = "Data Source=LAPTOP-HDNQCJHP\\WILDAN_ZAUHAIR;Initial Catalog=MuseumKeretaApi;Initial Catalog=MuseumKeretaApi;Integrated Security=True;";  //DB Welly
 
 
         public MainWindow(string connStr)
