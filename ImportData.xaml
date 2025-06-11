@@ -5,73 +5,12 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:MuseumApp"
       mc:Ignorable="d" 
-      d:DesignHeight="600" d:DesignWidth="800"
-      Title="Import Data">
-
-    <Page.Resources>
-        <Style x:Key="BackButtonStyle" TargetType="Button">
-            <Setter Property="FontFamily" Value="Plus Jakarta Sans Bold"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Height" Value="35"/>
-            <Setter Property="MinWidth" Value="100"/>
-            <Setter Property="Padding" Value="18,5"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#2D2B70"/>
-            <Setter Property="BorderBrush" Value="#FFA0A0A0"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#0A2D2B70"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
-            <Setter Property="FontFamily" Value="Plus Jakarta Sans Bold"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Height" Value="38"/>
-            <Setter Property="MinWidth" Value="120"/>
-            <Setter Property="Padding" Value="15,0"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Background" Value="#FF2D2B70"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="5">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#FF4A479A"/>
-                </Trigger>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Opacity" Value="0.6"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </Page.Resources>
+      d:DesignHeight="650" d:DesignWidth="950"
+      Title="Import Data dari Excel"
+      Background="Transparent">
 
     <Grid>
-        <Image Source="/Images/cover-2-1-b4c03b57f59f99cfb01ec83c400ae689_600x400.jpg" Stretch="UniformToFill" Opacity="0.60"/>
-
-        <Border Background="#EBFFFFFF" CornerRadius="15" Margin="30">
+        <Border Background="#FDFDFD" CornerRadius="15" Effect="{StaticResource CardShadowEffect}">
             <Grid Margin="20">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -81,29 +20,69 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Margin="0,0,0,20">
-                    <Button x:Name="BtnBack" Content="← Kembali" Style="{StaticResource BackButtonStyle}" Click="BtnBack_Click" VerticalAlignment="Bottom"/>
-                    <TextBlock Text="Import Data" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Plus Jakarta Sans Bold" FontSize="26" Foreground="#2D2B70"/>
+                    <Button x:Name="BtnBack" Content="← Kembali" Style="{StaticResource BackButtonStyle}" Click="BtnBack_Click"/>
+                    <TextBlock Text="Import Data dari Excel" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Plus Jakarta Sans Bold" FontSize="26" Foreground="#2D2B70"/>
                 </Grid>
 
-                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,15">
-                    <StackPanel Margin="0,0,20,0">
-                        <TextBlock Text="1. Pilih Jenis Data untuk Diimpor:" Margin="0,0,0,5" FontWeight="SemiBold"/>
-                        <ComboBox x:Name="CmbEntityType" Width="200" Height="32" VerticalContentAlignment="Center"/>
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock Text="2. Pilih File Excel (.xlsx):" Margin="0,0,0,5" FontWeight="SemiBold"/>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBox x:Name="TxtFilePath" Width="300" Height="32" IsReadOnly="True" VerticalContentAlignment="Center"/>
-                            <Button x:Name="BtnPilihFile" Content="..." Width="40" Margin="5,0,0,0" Style="{StaticResource PrimaryButtonStyle}" Height="32" Click="BtnPilihFile_Click"/>
-                        </StackPanel>
-                    </StackPanel>
-                </StackPanel>
+                <Grid Grid.Row="1" Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <DataGrid x:Name="PreviewDataGrid" Grid.Row="2" IsReadOnly="True" Margin="0,0,0,15"/>
+                    <StackPanel Grid.Column="0" Margin="0,0,40,0">
+                        <TextBlock Text="1. Pilih Jenis Data" Margin="0,0,0,5" FontWeight="SemiBold" Foreground="#2D2B70"/>
+                        <ComboBox x:Name="CmbEntityType" Width="220" Height="35" VerticalContentAlignment="Center" Padding="8,0,0,0"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="2. Pilih File Excel (.xlsx)" Margin="0,0,0,5" FontWeight="SemiBold" Foreground="#2D2B70"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="TxtFilePath" Grid.Column="0" Height="35" IsReadOnly="True" VerticalContentAlignment="Center"/>
+                            <Button x:Name="BtnPilihFile" Content="..." Width="45" Margin="5,0,0,0" Style="{StaticResource PrimaryButtonStyle}" Height="35" Click="BtnPilihFile_Click"/>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+
+                <DataGrid x:Name="PreviewDataGrid" Grid.Row="2" IsReadOnly="True" Margin="0,0,0,15"
+                          BorderBrush="#DDE2E8" BorderThickness="1"
+                          AlternatingRowBackground="#F9FAFC" GridLinesVisibility="Horizontal">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="#F3F6F9"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="Foreground" Value="#4B5563"/>
+                            <Setter Property="Padding" Value="10,8"/>
+                            <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                            <Setter Property="BorderBrush" Value="#DDE2E8"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                        </Style>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Padding" Value="10,8"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#E0E7FF"/>
+                                    <Setter Property="Foreground" Value="#1D2A4A"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#EFF2F9"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.Resources>
+                </DataGrid>
 
                 <Grid Grid.Row="3">
-                    <TextBlock x:Name="StatusText" VerticalAlignment="Center" HorizontalAlignment="Left" FontStyle="Italic" Foreground="Gray"/>
-                    <Button x:Name="BtnImport" Content="Import" Style="{StaticResource PrimaryButtonStyle}" HorizontalAlignment="Right" IsEnabled="False" Click="BtnMulaiImport_Click"/>
+                    <TextBlock x:Name="StatusText" Text="Silakan pilih jenis data dan file Excel." VerticalAlignment="Center" HorizontalAlignment="Left" FontStyle="Italic" Foreground="Gray"/>
+
+                    <Button x:Name="BtnImport" Content="Mulai Import" Style="{StaticResource PrimaryButtonStyle}" HorizontalAlignment="Right" IsEnabled="False" Click="BtnMulaiImport_Click"/>
                 </Grid>
             </Grid>
         </Border>
