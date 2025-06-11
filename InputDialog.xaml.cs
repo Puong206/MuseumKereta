@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 
 namespace MuseumApp
 {
@@ -34,6 +35,15 @@ namespace MuseumApp
         {
             this.DialogResult = false;
             this.Close();
+        }
+
+        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // Logika untuk memungkinkan window di-drag
+            if (e.ButtonState == MouseButtonState.Pressed)
+            {
+                this.DragMove();
+            }
         }
     }
 
