@@ -145,7 +145,8 @@
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Nama Pegawai:" Style="{StaticResource DialogLabelStyle}" Margin="0,0,10,10"/>
                 <TextBox x:Name="NamaPegawaiTextBox" Grid.Row="1" Grid.Column="1" Style="{StaticResource DialogTextBoxStyle}" Margin="0,0,0,10"
-                         TextChanged="NamaPegawaiTextBox_TextChanged"/>
+                         TextChanged="NamaPegawaiTextBox_TextChanged"
+                         PreviewTextInput="NamaPegawaiTextBox_PreviewTextInput"/>
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Status Karyawan:" Style="{StaticResource DialogLabelStyle}" Margin="0,0,10,10"/>
                 <ComboBox x:Name="StatusKaryawanComboBox" Grid.Row="2" Grid.Column="1" Margin="0,0,0,15"
