@@ -52,7 +52,7 @@ namespace MuseumApp
                     IF OBJECT_ID('dbo.Koleksi', 'U') IS NOT NULL
                     BEGIN
                     IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_JenisKoleksi' AND object_id = OBJECT_ID('dbo.Koleksi'))
-                        CREATE NONCLUSTERED INDEX idx_JenisKoleksi ON dbo.Koleksi(JenisKoleksi);
+                        CREATE UNIQUE NONCLUSTERED INDEX idx_JenisKoleksi ON dbo.Koleksi(JenisKoleksi);
                     END";
                     using (SqlCommand cmd = new SqlCommand(indexScript, conn)) 
                     {
@@ -155,7 +155,7 @@ namespace MuseumApp
                     MessageBox.Show("Gagal menammbah Koleksi" + ex.Message);
                 }
                 
-                
+              
             }
         }
 

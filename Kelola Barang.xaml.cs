@@ -134,7 +134,7 @@ namespace MuseumApp
                             cmd.Parameters.AddWithValue("@AsalBarang", dialog.AsalBarang);
                             conn.Open();
                             cmd.ExecuteNonQuery();
-                            MessageBox.Show("Barang berhasil ditabahkan");
+                            MessageBox.Show("Barang berhasil ditambahkan");
                             _cache.Remove(CacheKey);
                         }
                     }
