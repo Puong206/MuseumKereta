@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MuseumApp
 {
@@ -12,10 +13,6 @@ namespace MuseumApp
         public string TahunPembuatan { get; private set; }
         public string AsalBarang { get; private set; }
         public string KoleksiID { get; private set; }
-
-        
-
-      
 
         public InputDialogBarang()
         {
@@ -54,6 +51,14 @@ namespace MuseumApp
         private void Batal_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
+        }
+
+        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Pressed)
+            {
+                this.DragMove();
+            }
         }
     }
 }
