@@ -127,8 +127,8 @@
             </Grid>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
-                <Button x:Name="SimpanButton" Content="Simpan" Style="{StaticResource PrimaryDialogButtonStyle}" Click="SimpanButton_Click"/>
-                <Button x:Name="BatalButton" Content="Batal" Style="{StaticResource SecondaryDialogButtonStyle}" Click="BatalButton_Click" IsCancel="True"/>
+                <Button x:Name="Simpan" Content="Simpan" Style="{StaticResource PrimaryDialogButtonStyle}" Click="Simpan_Click"/>
+                <Button x:Name="Batal" Content="Batal" Style="{StaticResource SecondaryDialogButtonStyle}" Click="Batal_Click" IsCancel="True"/>
             </StackPanel>
         </StackPanel>
     </Border>

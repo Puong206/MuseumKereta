@@ -150,14 +150,14 @@
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Status Karyawan:" Style="{StaticResource DialogLabelStyle}" Margin="0,0,10,10"/>
                 <ComboBox x:Name="StatusKaryawanComboBox" Grid.Row="2" Grid.Column="1" Margin="0,0,0,15"
                           SelectionChanged="StatusKaryawanComboBox_SelectionChanged">
-                    <ComboBoxItem Content="Aktif" />
-                    <ComboBoxItem Content="Non-Aktif" />
+                    <ComboBoxItem Content="Aktif" FontFamily="Plus Jakarta Sans Regular"/>
+                    <ComboBoxItem Content="Non-Aktif" FontFamily="Plus Jakarta Sans Regular"/>
                 </ComboBox>
             </Grid>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
-                <Button x:Name="SimpanButton" Content="Simpan" Style="{StaticResource PrimaryDialogButtonStyle}" Click="SimpanButton_Click"/>
-                <Button x:Name="BatalButton" Content="Batal" Style="{StaticResource SecondaryDialogButtonStyle}" Click="BatalButton_Click" IsCancel="True"/>
+                <Button x:Name="SimpanButton" Content="Simpan" Style="{StaticResource PrimaryDialogButtonStyle}" Click="Simpan_Click"/>
+                <Button x:Name="BatalButton" Content="Batal" Style="{StaticResource SecondaryDialogButtonStyle}" Click="Batal_Click" IsCancel="True"/>
             </StackPanel>
         </StackPanel>
     </Border>

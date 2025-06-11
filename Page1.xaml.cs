@@ -16,9 +16,6 @@ using System.Windows.Shapes;
 
 namespace MuseumApp
 {
-    /// <summary>
-    /// Interaction logic for Page1.xaml
-    /// </summary>
     public partial class Page1 : Page
     {
         private readonly string connectionString;
