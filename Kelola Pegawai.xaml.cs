@@ -298,7 +298,7 @@ namespace MuseumApp
 
         private void BtnAnalisis_Click(object sender, RoutedEventArgs e)
         {
-            string queryToAnalyze = "SELECT NIPP, NamaKaryawan, statusKaryawan FROM Karyawan";
+            string queryToAnalyze = "SELECT * FROM dbo.Karyawan WHERE NamaKaryawan = 'azril';";
             AnalyzeQuery(queryToAnalyze);
 
         }

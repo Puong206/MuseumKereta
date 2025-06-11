@@ -340,7 +340,7 @@ namespace MuseumApp
 
         private void BtnAnalisis_Click(object sender, RoutedEventArgs e)
         {
-            string queryToAnalyze = "SELECT KoleksiID, JenisKoleksi, Deskripsi FROM Koleksi";
+            string queryToAnalyze = "SELECT * FROM Koleksi WHERE JenisKoleksi = 'tiket';";
             AnalyzeQuery(queryToAnalyze);
         }
     }

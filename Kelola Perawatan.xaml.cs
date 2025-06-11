@@ -388,7 +388,7 @@ namespace MuseumApp
 
         private void BtnAnalisis_Click(object sender, RoutedEventArgs e)
         {
-            string queryToAnalyze = "SELECT * FROM Perawatan";
+            string queryToAnalyze = "SELECT * FROM dbo.Perawatan WHERE TanggalPerawatan BETWEEN '2025-01-01' AND '2025-06-30';";
             AnalyzeQuery(queryToAnalyze);
         }
 
