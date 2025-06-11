@@ -5,123 +5,12 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:MuseumApp"
       mc:Ignorable="d" 
-      d:DesignHeight="600" d:DesignWidth="800"
-      Title="Kelola Koleksi">
-
-    <Page.Resources>
-        <BlurEffect x:Key="PageBlurEffect" Radius="7"/>
-        <DropShadowEffect x:Key="CardShadowEffect" ShadowDepth="2" BlurRadius="10" Color="#FFBBBBBB" Opacity="0.3"/>
-
-        <Style x:Key="BackButtonStyle" TargetType="Button">
-            <Setter Property="FontFamily" Value="Plus Jakarta Sans Bold"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Height" Value="35"/>
-            <Setter Property="MinWidth" Value="100"/>
-            <Setter Property="Padding" Value="5,5"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#2D2B70"/>
-            <Setter Property="BorderBrush" Value="#FFA0A0A0"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="5">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#0A2D2B70"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style x:Key="BaseActionButtonStyle" TargetType="Button">
-            <Setter Property="FontFamily" Value="Plus Jakarta Sans Bold"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Height" Value="38"/>
-            <Setter Property="MinWidth" Value="130"/>
-            <Setter Property="Padding" Value="15,0"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="5">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Opacity" Value="0.6"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style x:Key="AddButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseActionButtonStyle}">
-            <Setter Property="Background" Value="#FF2D2B70"/>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#FF4A479A"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style x:Key="EditButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseActionButtonStyle}">
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="Foreground" Value="#F26924"/>
-            <Setter Property="BorderBrush" Value="#F26924"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#FFF0F0F0"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style x:Key="DeleteButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseActionButtonStyle}">
-            <Setter Property="Background" Value="#F26924"/>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#D85C1F"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style x:Key="AnalysisButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseActionButtonStyle}">
-            <Setter Property="Background" Value="#FF008080"/>
-            <Setter Property="Content" Value="Analisis"/>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#FF006666"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </Page.Resources>
+      d:DesignHeight="650" d:DesignWidth="950"
+      Title="Kelola Koleksi"
+      Background="Transparent">
 
     <Grid>
-        <Image Source="/Images/cover-2-1-b4c03b57f59f99cfb01ec83c400ae689_600x400.jpg"
-               Stretch="UniformToFill" 
-               Opacity="0.60" Effect="{StaticResource PageBlurEffect}"/>
-
-        <Border Background="#EBFFFFFF" CornerRadius="15" 
-                Margin="30"  Effect="{StaticResource CardShadowEffect}">
-
+        <Border Background="#FDFDFD" CornerRadius="15" Effect="{StaticResource CardShadowEffect}">
             <Grid Margin="20">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -135,15 +24,11 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="BtnBack" Content="← Kembali" 
-                            Style="{StaticResource BackButtonStyle}" 
-                            Click="BtnBack_Click"/>
+                    <Button x:Name="BtnBack" Content="← Kembali" Style="{StaticResource BackButtonStyle}" Click="BtnBack_Click"/>
 
-                    <TextBlock Text="Kelola Koleksi"
-                               Grid.Column="1"
-                               HorizontalAlignment="Center" VerticalAlignment="Center"
-                               FontFamily="Plus Jakarta Sans Bold" FontSize="26" 
-                               Foreground="#2D2B70"/>
+                    <TextBlock Text="Kelola Koleksi" 
+                               Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                               FontFamily="Plus Jakarta Sans Bold" FontSize="26" Foreground="#2D2B70"/>
                 </Grid>
 
                 <DataGrid x:Name="dataGridKoleksi" Grid.Row="1"
@@ -158,9 +43,9 @@
                           HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
                           AlternatingRowBackground="#FFF7F9FC" RowHeight="30" GridLinesVisibility="Horizontal">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID Koleksi" Binding="{Binding KoleksiID}" Width="Auto" MinWidth="100" SortMemberPath="KoleksiID"/>
-                        <DataGridTextColumn Header="Jenis Koleksi" Binding="{Binding JenisKoleksi}" Width="*" MinWidth="200" SortMemberPath="JenisKoleksi"/>
-                        <DataGridTextColumn Header="Deskripsi" Binding="{Binding Deskripsi}" Width="2*" MinWidth="250" SortMemberPath="Deskripsi"/>
+                        <DataGridTextColumn Header="ID Koleksi" Binding="{Binding KoleksiID}" SortMemberPath="KoleksiID" Width="Auto" MinWidth="100"/>
+                        <DataGridTextColumn Header="Jenis Koleksi" Binding="{Binding JenisKoleksi}" SortMemberPath="JenisKoleksi" Width="*" MinWidth="200"/>
+                        <DataGridTextColumn Header="Deskripsi" Binding="{Binding Deskripsi}" SortMemberPath="Deskripsi" Width="2*" MinWidth="250"/>
                     </DataGrid.Columns>
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader">
@@ -200,12 +85,13 @@
                 </DataGrid>
 
                 <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
-                    <Button x:Name="BtnTambah" Content="Tambah" Style="{StaticResource AddButtonStyle}" Click="BtnTambah_Click"/>
-                    <Button x:Name="BtnEdit" Content="Edit" Style="{StaticResource EditButtonStyle}" Margin="10,0,0,0" Click="BtnEdit_Click"/>
-                    <Button x:Name="BtnHapus" Content="Hapus" Style="{StaticResource DeleteButtonStyle}" Margin="10,0,0,0" Click="BtnHapus_Click"/>
-                    <Button x:Name="BtnAnalisis" Style="{StaticResource AnalysisButtonStyle}" Margin="10,0,0,0" Click="BtnAnalisis_Click"/>
+                    <Button x:Name="BtnTambah" Content="Tambah Koleksi" Style="{StaticResource AddButtonStyle}" Click="BtnTambah_Click"/>
+                    <Button x:Name="BtnEdit" Content="Edit Koleksi" Style="{StaticResource EditButtonStyle}" Margin="10,0,0,0" Click="BtnEdit_Click"/>
+                    <Button x:Name="BtnHapus" Content="Hapus Koleksi" Style="{StaticResource DeleteButtonStyle}" Margin="10,0,0,0" Click="BtnHapus_Click"/>
+                    <Button x:Name="BtnAnalisis" Content="Analisis Koleksi" Style="{StaticResource AnalysisButtonStyle}" Margin="10,0,0,0" Click="BtnAnalisis_Click"/>
                 </StackPanel>
             </Grid>
         </Border>
+
     </Grid>
 </Page>
