@@ -3,13 +3,14 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace MuseumApp
 {
     /// <summary>
     /// Interaction logic for LaporanPegawai.xaml
     /// </summary>
-    public partial class LaporanPegawai : Window
+    public partial class LaporanPegawai : Page
     {
         private readonly string connectionString;
         public LaporanPegawai(string connectionString)
@@ -44,6 +45,7 @@ namespace MuseumApp
                 ReportViewer.LocalReport.DataSources.Add(rds);
 
                 ReportViewer.LocalReport.ReportPath = @"C:\Project PABD\PegawaiReport.rdlc";
+                ReportViewer.LocalReport.ReportPath = @"A:\Kuliah\Semester 4\PABD\Project\MuseumApp\PegawaiReport.rdlc";
                 ReportViewer.RefreshReport();
             }
             catch (Exception ex) 

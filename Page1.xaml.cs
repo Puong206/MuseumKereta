@@ -88,61 +88,49 @@ namespace MuseumApp
         {
             try
             {
-                // Buat instance dari Window LaporanBarang
-                var reportWindow = new LaporanBarang(this.connectionString);
-
-                // (Opsional tapi direkomendasikan) Set window utama sebagai pemilik window laporan
-                reportWindow.Owner = Window.GetWindow(this);
-
-                // Tampilkan window laporan.
-                // Gunakan .Show() agar tidak memblokir window utama,
-                // atau .ShowDialog() jika Anda ingin window utama tidak bisa diakses sampai window laporan ditutup.
-                reportWindow.Show();
+                MainContentFrame.Navigate(new LaporanBarang(this.connectionString));
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Gagal membuka jendela laporan: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Gagal membuka halaman Laporan Barang: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void LaporanPerawatan_Click(object sender, RoutedEventArgs e)
         {
-            var reportWindow = new LaporanPerawatan(this.connectionString);
+            try
+            {
+                MainContentFrame.Navigate(new LaporanPerawatan(this.connectionString));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Gagal membuka halaman Laporan Barang: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
 
-            // (Opsional tapi direkomendasikan) Set window utama sebagai pemilik window laporan
-            reportWindow.Owner = Window.GetWindow(this);
-
-            // Tampilkan window laporan.
-            // Gunakan .Show() agar tidak memblokir window utama,
-            // atau .ShowDialog() jika Anda ingin window utama tidak bisa diakses sampai window laporan ditutup.
-            reportWindow.Show();
-            
         }
 
         private void LaporanPegawai_Click(object sender, RoutedEventArgs e)
         {
-            var reportWindow = new LaporanPegawai(this.connectionString);
-
-            // (Opsional tapi direkomendasikan) Set window utama sebagai pemilik window laporan
-            reportWindow.Owner = Window.GetWindow(this);
-
-            // Tampilkan window laporan.
-            // Gunakan .Show() agar tidak memblokir window utama,
-            // atau .ShowDialog() jika Anda ingin window utama tidak bisa diakses sampai window laporan ditutup.
-            reportWindow.Show();
+            try
+            {
+                MainContentFrame.Navigate(new LaporanPegawai(this.connectionString));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Gagal membuka halaman Laporan Barang: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void LaporanKoleksi_Click(object sender, RoutedEventArgs e)
         {
-            var reportWindow = new LaporanKoleksi(this.connectionString);
-
-            // (Opsional tapi direkomendasikan) Set window utama sebagai pemilik window laporan
-            reportWindow.Owner = Window.GetWindow(this);
-
-            // Tampilkan window laporan.
-            // Gunakan .Show() agar tidak memblokir window utama,
-            // atau .ShowDialog() jika Anda ingin window utama tidak bisa diakses sampai window laporan ditutup.
-            reportWindow.Show();
+            try
+            {
+                MainContentFrame.Navigate(new LaporanKoleksi(this.connectionString));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Gagal membuka halaman Laporan Barang: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void ButtonImportData_Click(object sender, RoutedEventArgs e)

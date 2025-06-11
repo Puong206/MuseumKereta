@@ -4,13 +4,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq.Expressions;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace MuseumApp
 {
-    /// <summary>
-    /// Interaction logic for LaporanPerawatan.xaml
-    /// </summary>
-    public partial class LaporanPerawatan : Window
+    public partial class LaporanPerawatan : Page
     {
         private readonly string connectionString;
         public LaporanPerawatan(string connStr)
@@ -59,6 +57,7 @@ namespace MuseumApp
                 ReportViewer.LocalReport.DataSources.Clear();
                 ReportViewer.LocalReport.DataSources.Add(rds);
                 ReportViewer.LocalReport.ReportPath = @"C:\Project PABD\PerawatanReport.rdlc";
+                ReportViewer.LocalReport.ReportPath = @"A:\Kuliah\Semester 4\PABD\Project\MuseumApp\PerawatanReport.rdlc";
                 ReportViewer.RefreshReport();
             }
             catch (Exception ex)

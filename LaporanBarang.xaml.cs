@@ -3,10 +3,11 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace MuseumApp
 {
-    public partial class LaporanBarang : Window
+    public partial class LaporanBarang : Page
     {
         private readonly string connectionString;
 
@@ -52,6 +53,7 @@ namespace MuseumApp
                 ReportViewer.LocalReport.DataSources.Clear();
                 ReportViewer.LocalReport.DataSources.Add(rds);
                 ReportViewer.LocalReport.ReportPath = @"C:\Project PABD\BarangReport.rdlc";
+                ReportViewer.LocalReport.ReportPath = @"A:\Kuliah\Semester 4\PABD\Project\MuseumApp\BarangReport.rdlc";
                 ReportViewer.RefreshReport();
             }
             catch (Exception ex)
@@ -60,7 +62,7 @@ namespace MuseumApp
             }
         }
 
-        private void BtnKembali_Click(object sender, RoutedEventArgs e)
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
             (Window.GetWindow(this) as MainWindow)?.NavigateHome();
         }

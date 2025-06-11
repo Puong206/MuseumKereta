@@ -3,10 +3,11 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace MuseumApp
 {
-    public partial class LaporanKoleksi : Window
+    public partial class LaporanKoleksi : Page
     {
         private readonly string connectionString;
         public LaporanKoleksi(string connectionString)
@@ -41,6 +42,7 @@ namespace MuseumApp
                 ReportViewer.LocalReport.DataSources.Add(rds);
 
                 ReportViewer.LocalReport.ReportPath = @"C:\Project PABD\KoleksiReport.rdlc";
+                ReportViewer.LocalReport.ReportPath = @"A:\Kuliah\Semester 4\PABD\Project\MuseumApp\KoleksiReport.rdlc";
                 ReportViewer.RefreshReport();
             }
             catch (Exception ex)
