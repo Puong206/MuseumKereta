@@ -15,10 +15,6 @@ namespace MuseumApp
         {
             InitializeComponent();
             this.connectionString = connStr;
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
             SetupReportViewer();
         }
 
