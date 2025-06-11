@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MuseumApp
 {
@@ -7,7 +8,7 @@ namespace MuseumApp
     {
         public string NIPP => NIPPTextBox.Text;
         public string NamaKaryawan => NamaPegawaiTextBox.Text;
-        public string StatusKaryawan => (StatusKaryawanComboStatus.SelectedItem as ComboBoxItem)?.Content?.ToString();
+        public string StatusKaryawan => (StatusKaryawanComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
 
         public InputDialogPegawai(string nipp = "", string nama = "", string status = "")
         {
@@ -15,11 +16,11 @@ namespace MuseumApp
             NIPPTextBox.Text = nipp;
             NamaPegawaiTextBox.Text = nama;
 
-            foreach (ComboBoxItem item in StatusKaryawanComboStatus.Items)
+            foreach (ComboBoxItem item in StatusKaryawanComboBox.Items)
             {
                 if (item.Content.ToString() == status)
                 {
-                    StatusKaryawanComboStatus.SelectedItem = item;
+                    StatusKaryawanComboBox.SelectedItem = item;
                     break;
                 }
             }
@@ -60,6 +61,14 @@ namespace MuseumApp
         private void StatusKaryawanComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+        }
+
+        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Pressed)
+            {
+                this.DragMove();
+            }
         }
     }
 }
