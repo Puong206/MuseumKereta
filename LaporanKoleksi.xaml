@@ -12,7 +12,7 @@
         Background="Transparent">
 
     <Grid>
-        <Border Background="#F5F7FA">
+        <Border Background="#FDFDFD" CornerRadius="15" Effect="{StaticResource CardShadowEffect}">
             <Grid Margin="20">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
