@@ -26,14 +26,14 @@
         <Style x:Key="StatNumberStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="28"/>
             <Setter Property="FontFamily" Value="Plus Jakarta Sans ExtraBold"/>
-            <Setter Property="Foreground" Value="#1D2A4A"/>
+            <Setter Property="Foreground" Value="#39349f"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
 
         <Style x:Key="StatLabelStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="FontFamily" Value="Plus Jakarta Sans Medium"/>
-            <Setter Property="Foreground" Value="#7A869A"/>
+            <Setter Property="Foreground" Value="#1f1c4a"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="Margin" Value="0,2,0,0"/>
         </Style>
@@ -42,7 +42,7 @@
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="FontFamily" Value="Plus Jakarta Sans"/>
-            <Setter Property="Foreground" Value="#1D2A4A"/>
+            <Setter Property="Foreground" Value="#2D2B70"/>
             <Setter Property="Margin" Value="0,0,0,15"/>
         </Style>
     </Page.Resources>
@@ -55,8 +55,8 @@
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" Margin="10,0,10,20">
-                <TextBlock Text="Dashboard" FontSize="32" FontWeight="ExtraBold" Foreground="#1D2A4A"/>
-                <TextBlock x:Name="DateText" Text="Selasa, 10 Juni 2025" FontSize="16" Foreground="#546E7A"/>
+                <TextBlock Text="Dashboard" FontSize="32" FontFamily="Plus Jakarta Sans ExtraBold" Foreground="#2D2B70"/>
+                <TextBlock x:Name="DateText" Text="Selasa, 10 Juni 2025" FontSize="16" FontFamily="Plus Jakarta Sans Regular" Foreground="#546E7A"/>
             </StackPanel>
 
             <Grid Grid.Row="1">

@@ -33,14 +33,8 @@ namespace MuseumApp
         {
             if (MainContentFrame.Content == null)
             {
-                try
-                {
-                    MainContentFrame.Navigate(new DashboardHomePage(this.connectionString));
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Gagal memuat halaman dashboard: " + ex.Message, "Error Navigasi", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                // Memanggil metode klik tombol dashboard untuk konsistensi
+                ButtonDashboard_Click(null, null);
             }
         }
 
@@ -154,6 +148,19 @@ namespace MuseumApp
         private void ButtonImportData_Click(object sender, RoutedEventArgs e)
         {
             MainContentFrame.Navigate(new ImportData(connectionString));
+        }
+
+        private void ButtonDashboard_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                MainContentFrame.Navigate(new DashboardHomePage(this.connectionString));
+                ButtonDashboard.Focus(); // Memberi highlight pada tombol yang aktif
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal memuat halaman dashboard: " + ex.Message, "Error Navigasi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
