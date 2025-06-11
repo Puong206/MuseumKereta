@@ -98,9 +98,9 @@
                 </DataGrid>
 
                 <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
-                    <Button x:Name="BtnTambahPegawai" Content="Tambah Pegawai" Style="{StaticResource AddButtonStyle}" Click="BtnTambahPegawai_Click"/>
-                    <Button x:Name="BtnEditPegawai" Content="Edit Pegawai" Style="{StaticResource EditButtonStyle}" Margin="10,0,0,0" Click="BtnEditPegawai_Click"/>
-                    <Button x:Name="BtnAnalisis" Content="Analisis Pegawai" Style="{StaticResource AnalysisButtonStyle}" Margin="10,0,0,0" Click="BtnAnalisis_Click"/>
+                    <Button x:Name="BtnTambahPegawai" Content="Tambah" Style="{StaticResource AddButtonStyle}" Click="BtnTambahPegawai_Click"/>
+                    <Button x:Name="BtnEditPegawai" Content="Edit" Style="{StaticResource EditButtonStyle}" Margin="10,0,0,0" Click="BtnEditPegawai_Click"/>
+                    <Button x:Name="BtnAnalisis" Content="Analisis" Style="{StaticResource AnalysisButtonStyle}" Margin="10,0,0,0" Click="BtnAnalisis_Click"/>
                 </StackPanel>
             </Grid>
         </Border>

@@ -84,10 +84,10 @@
                 </DataGrid>
 
                 <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
-                    <Button x:Name="BtnTambah" Content="Tambah Perawatan" Style="{StaticResource AddButtonStyle}" Click="BtnTambah_Click"/>
-                    <Button x:Name="BtnEdit" Content="Edit Perawatan" Style="{StaticResource EditButtonStyle}" Margin="10,0,0,0" Click="BtnEdit_Click"/>
-                    <Button x:Name="BtnHapus" Content="Hapus Perawatan" Style="{StaticResource DeleteButtonStyle}" Margin="10,0,0,0" Click="BtnHapus_Click"/>
-                    <Button x:Name="BtnAnalisis" Content="Analisis Perawatan" Style="{StaticResource AnalysisButtonStyle}" Margin="10,0,0,0" Click="BtnAnalisis_Click"/>
+                    <Button x:Name="BtnTambah" Content="Tambah" Style="{StaticResource AddButtonStyle}" Click="BtnTambah_Click"/>
+                    <Button x:Name="BtnEdit" Content="Edit" Style="{StaticResource EditButtonStyle}" Margin="10,0,0,0" Click="BtnEdit_Click"/>
+                    <Button x:Name="BtnHapus" Content="Hapus" Style="{StaticResource DeleteButtonStyle}" Margin="10,0,0,0" Click="BtnHapus_Click"/>
+                    <Button x:Name="BtnAnalisis" Content="Analisis" Style="{StaticResource AnalysisButtonStyle}" Margin="10,0,0,0" Click="BtnAnalisis_Click"/>
                 </StackPanel>
             </Grid>
         </Border>
