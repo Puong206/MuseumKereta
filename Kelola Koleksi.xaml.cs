@@ -52,7 +52,7 @@ namespace MuseumApp
                     IF OBJECT_ID('dbo.Koleksi', 'U') IS NOT NULL
                     BEGIN
                     IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_JenisKoleksi' AND object_id = OBJECT_ID('dbo.Koleksi'))
-                        CREATE NONCLUSTERED INDEX idx_JenisKoleksi ON dbo.Koleksi(JenisKoleksi);
+                        CREATE UNIQUE NONCLUSTERED INDEX idx_JenisKoleksi ON dbo.Koleksi(JenisKoleksi);
                     END";
                     using (SqlCommand cmd = new SqlCommand(indexScript, conn)) 
                     {
@@ -155,7 +155,7 @@ namespace MuseumApp
                     MessageBox.Show("Gagal menammbah Koleksi" + ex.Message);
                 }
                 
-                
+              
             }
         }
 
@@ -196,12 +196,24 @@ namespace MuseumApp
                             cmd.Parameters.AddWithValue("@Deskripsi", dialog.Deskripsi.Trim());
 
                             conn.Open();
-                            cmd.ExecuteNonQuery();
-                            MessageBox.Show("Koleksi berhasil diperbaharui");
-                            _cache.Remove(CacheKey); 
+                            int rowsAffected = cmd.ExecuteNonQuery();
+                            if (rowsAffected > 0) 
+                            {
+                                MessageBox.Show("Koleksi berhasil diperbarui.", "Sukses", MessageBoxButton.OK, MessageBoxImage.Information);
+                                _cache.Remove("KoleksiData");
+
+                                _cache.Remove("BarangData");
+
+                                LoadData();
+                            }
+                            else
+                            {
+                                MessageBox.Show("Data koleksi tidak ditemukan atau tidak ada perubahan.", "Informasi", MessageBoxButton.OK, MessageBoxImage.Information);
+                            }
+                             
                         }
                     }
-                    LoadData();
+                    
                 }
                 catch (SqlException sqlEx)
                 {
@@ -250,11 +262,17 @@ namespace MuseumApp
 
                         conn.Open();
                         cmd.ExecuteNonQuery();
-                        MessageBox.Show("Koleksi berhasil dihapus");
-                        _cache.Remove(CacheKey); 
+                        MessageBox.Show("Koleksi berhasil dihapus.", "Sukses", MessageBoxButton.OK, MessageBoxImage.Information);
+                        
+                        _cache.Remove("KoleksiData");
+
+                        _cache.Remove("BarangData");
+                        LoadData();
+                       
+                         
                     }
                 }
-                LoadData();
+                
             }
             catch (SqlException sqlEx)
             {
@@ -322,7 +340,7 @@ namespace MuseumApp
 
         private void BtnAnalisis_Click(object sender, RoutedEventArgs e)
         {
-            string queryToAnalyze = "SELECT KoleksiID, JenisKoleksi, Deskripsi FROM Koleksi";
+            string queryToAnalyze = "SELECT * FROM Koleksi WHERE JenisKoleksi = 'tiket';";
             AnalyzeQuery(queryToAnalyze);
         }
     }

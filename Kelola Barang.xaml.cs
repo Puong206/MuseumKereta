@@ -317,7 +317,7 @@ namespace MuseumApp
 
         private void BtnAnalisis_Click(object sender, RoutedEventArgs e)
         {
-            AnalyzeQuery("SELECT * FROM BarangMuseum");
+            AnalyzeQuery("SELECT * FROM BarangMuseum WHERE KoleksiID = 1;");
         }
 
         private void AnalyzeQuery(string query)
