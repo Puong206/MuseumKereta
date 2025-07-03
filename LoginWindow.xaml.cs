@@ -81,7 +81,17 @@ namespace MuseumApp
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Escape)
+            // Cek jika tombol yang ditekan adalah Enter
+            if (e.Key == Key.Enter)
+            {
+                // Panggil metode klik tombol login secara manual
+                Button_Click(sender, e);
+
+                // Tandai bahwa event ini sudah ditangani agar tidak diproses lebih lanjut
+                e.Handled = true;
+            }
+            // Cek jika tombol yang ditekan adalah Escape
+            else if (e.Key == Key.Escape)
             {
                 MessageBoxResult result = MessageBox.Show(
                     "Apakah Anda yakin ingin keluar dari aplikasi?",
