@@ -32,7 +32,7 @@
 
                     <StackPanel Grid.Column="0" Margin="0,0,40,0">
                         <TextBlock Text="1. Pilih Jenis Data" Margin="0,0,0,5" FontWeight="SemiBold" Foreground="#2D2B70"/>
-                        <ComboBox x:Name="CmbEntityType" Width="220" Height="35" VerticalContentAlignment="Center" Padding="8,0,0,0"/>
+                        <ComboBox x:Name="CmbEntityType" Width="220" Height="35" VerticalContentAlignment="Center" Padding="8,0,0,0" />
                     </StackPanel>
 
                     <StackPanel Grid.Column="1">
@@ -42,8 +42,8 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBox x:Name="TxtFilePath" Grid.Column="0" Height="35" IsReadOnly="True" VerticalContentAlignment="Center"/>
-                            <Button x:Name="BtnPilihFile" Content="..." Width="45" Margin="5,0,0,0" Style="{StaticResource PrimaryButtonStyle}" Height="35" Click="BtnPilihFile_Click"/>
+                            <TextBox x:Name="TxtFilePath" Grid.Column="0" Height="35" IsReadOnly="True" VerticalContentAlignment="Center" Margin="0,0,130,0"/>
+                            <Button x:Name="BtnPilihFile" Content="..." Width="45" Margin="530,0,0,0" Style="{StaticResource PrimaryButtonStyle}" Height="35" Click="BtnPilihFile_Click"/>
                         </Grid>
                     </StackPanel>
                 </Grid>
@@ -80,7 +80,7 @@
                 </DataGrid>
 
                 <Grid Grid.Row="3">
-                    <TextBlock x:Name="StatusText" Text="Silakan pilih jenis data dan file Excel." VerticalAlignment="Center" HorizontalAlignment="Left" FontStyle="Italic" Foreground="Gray"/>
+                    <TextBlock x:Name="StatusText" Text="Silakan pilih jenis data dan file Excel." VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Gray" FontFamily="Plus Jakarta Sans Light Italic"/>
 
                     <Button x:Name="BtnImport" Content="Mulai Import" Style="{StaticResource PrimaryButtonStyle}" HorizontalAlignment="Right" IsEnabled="False" Click="BtnMulaiImport_Click"/>
                 </Grid>
