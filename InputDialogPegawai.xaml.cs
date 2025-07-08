@@ -72,17 +72,17 @@ namespace MuseumApp
             // Validasi dasar sebelum menutup
             if (string.IsNullOrWhiteSpace(NIPPTextBox.Text) && NIPPTextBox.IsEnabled)
             {
-                MessageBox.Show("NIPP tidak boleh kosong.", "Peringatan", MessageBoxButton.OK, MessageBoxImage.Warning);
+                CustomMessageBox.ShowWarning("NIPP tidak boleh kosong.", "Peringatan");
                 return;
             }
             if (string.IsNullOrWhiteSpace(NamaPegawaiTextBox.Text))
             {
-                MessageBox.Show("Nama Pegawai tidak boleh kosong.", "Peringatan", MessageBoxButton.OK, MessageBoxImage.Warning);
+                CustomMessageBox.ShowWarning("Nama Pegawai tidak boleh kosong.", "Peringatan");
                 return;
             }
             if (StatusKaryawanComboBox.SelectedItem == null)
             {
-                MessageBox.Show("Status Karyawan harus dipilih.", "Peringatan", MessageBoxButton.OK, MessageBoxImage.Warning);
+                CustomMessageBox.ShowWarning("Status Karyawan harus dipilih.", "Peringatan");
                 return;
             }
 
