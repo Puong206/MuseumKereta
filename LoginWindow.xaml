@@ -38,6 +38,38 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="ViewPasswordToggleStyle" TargetType="ToggleButton">
+            <Setter Property="Width" Value="35"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="Margin" Value="0,0,5,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border Background="Transparent" CornerRadius="17.5">
+                            <TextBlock x:Name="Icon" Text="&#xE7B3;" FontFamily="Segoe MDL2 Assets" 
+                                       FontSize="16" Foreground="#8A8A8A"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Icon" Property="Text" Value="&#xE7B3;"/>
+                                <Setter TargetName="Icon" Property="Foreground" Value="#2D2B70"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter TargetName="Icon" Property="Text" Value="&#xE7B3;"/>
+                                <Setter TargetName="Icon" Property="Foreground" Value="#8A8A8A"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Grid x:Name="Login_Form">
@@ -77,13 +109,21 @@
                 <TextBlock Text="Password" Margin="0,15,0,5"
                            FontFamily="Plus Jakarta Sans Medium" Foreground="#2D2B70"/>
 
-                <PasswordBox x:Name="passwordTextBox"
-                             HorizontalAlignment="Stretch"
-                             VerticalContentAlignment="Center"
-                             Background="#FFEAECEE"
-                             Height="35" Padding="8,0"
-                             BorderThickness="0"/>
-                
+                <Grid>
+                    <TextBox x:Name="RevealedPasswordTextBox"
+                         HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
+                         Background="#FFEAECEE" Height="35" Padding="8,0,40,0"
+                         BorderThickness="0" Visibility="Collapsed"/>
+
+                    <PasswordBox x:Name="passwordTextBox"
+                             HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
+                             Background="#FFEAECEE" Height="35" Padding="8,0,40,0"
+                             BorderThickness="0" PasswordChanged="PasswordTextBox_PasswordChanged"/>
+
+                    <ToggleButton x:Name="ViewPasswordToggleButton" Style="{StaticResource ViewPasswordToggleStyle}"
+                              Checked="ViewPassword_Checked" Unchecked="ViewPassword_Unchecked"/>
+                </Grid>
+
                 <TextBlock x:Name="AlertTextBlock"
                            Foreground="#B71C1C" TextWrapping="Wrap"
                            FontWeight="SemiBold"/>

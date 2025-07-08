@@ -9,8 +9,8 @@ namespace MuseumApp
 {
     public partial class LoginWindow : Window
     {
-        //private string baseconnectionString = "Data Source=LAPTOP-DP8JTMS7\\PUONG206;Initial Catalog=MuseumKeretaApi;";  //DB Arya
-         private string baseconnectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;";  //DB Olip
+        private string baseconnectionString = "Data Source=LAPTOP-DP8JTMS7\\PUONG206;Initial Catalog=MuseumKeretaApi;";  //DB Arya
+        //private string baseconnectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;";  //DB Olip
         //private string baseconnectionString = "Data Source=LAPTOP-HDNQCJHP\\WILDAN_ZAUHAIR;Initial Catalog=MuseumKeretaApi;";  //DB Welly
 
 
@@ -104,6 +104,29 @@ namespace MuseumApp
                     Application.Current.Shutdown();
                 }
             }
+        }
+
+        private void PasswordTextBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            // Sinkronkan isi TextBox dengan PasswordBox setiap kali password diketik
+            RevealedPasswordTextBox.Text = passwordTextBox.Password;
+            HideAlert();
+        }
+
+        private void ViewPassword_Checked(object sender, RoutedEventArgs e)
+        {
+            // Saat tombol "mata" dicentang (mode lihat password)
+            passwordTextBox.Visibility = Visibility.Collapsed;
+            RevealedPasswordTextBox.Visibility = Visibility.Visible;
+            RevealedPasswordTextBox.Focus(); // Pindahkan fokus ke TextBox
+        }
+
+        private void ViewPassword_Unchecked(object sender, RoutedEventArgs e)
+        {
+            // Saat tombol "mata" tidak dicentang (mode password tersembunyi)
+            RevealedPasswordTextBox.Visibility = Visibility.Collapsed;
+            passwordTextBox.Visibility = Visibility.Visible;
+            passwordTextBox.Focus(); // Pindahkan fokus ke PasswordBox
         }
 
         // Metode-metode kosong ini bisa dihapus jika tidak digunakan
