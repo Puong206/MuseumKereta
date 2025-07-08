@@ -20,14 +20,25 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Margin="0,0,0,15">
-                    <Button x:Name="BtnBack" Content="← Kembali" Style="{StaticResource BackButtonStyle}" Click="BtnBack_Click"/>
-                    <TextBlock Text="Laporan Data Barang" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Plus Jakarta Sans Bold" FontSize="26" Foreground="#2D2B70"/>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Button x:Name="BtnBack" Content="← Kembali"
+                            Style="{StaticResource BackButtonStyle}"
+                            Click="BtnBack_Click"/>
+                    
+                    <TextBlock Text="Laporan Data Barang"
+                               Grid.Column="1"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               FontFamily="Plus Jakarta Sans Bold" FontSize="26"
+                               Foreground="#2D2B70"/>
                 </Grid>
 
                 <WindowsFormsHost Grid.Row="1" x:Name="WindowsFormsHost">
                     <rv:ReportViewer x:Name="ReportViewer" />
                 </WindowsFormsHost>
-
             </Grid>
         </Border>
     </Grid>
