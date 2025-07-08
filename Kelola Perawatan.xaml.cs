@@ -10,6 +10,7 @@ using System.Text;
 using System.IO;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using System.Text.RegularExpressions;
 
 
 namespace MuseumApp
@@ -131,29 +132,16 @@ namespace MuseumApp
             var dialog = new InputDialogPerawatan();
             if (dialog.ShowDialog() == true)
             {
-                if (string.IsNullOrWhiteSpace(dialog.IDBarang) || dialog.IDBarang.Length != 5 || !dialog.IDBarang.All(char.IsDigit))
-                {
-                    CustomMessageBox.ShowWarning("BarangID harus terdiri dari tepat 5 digit angka.", "Validasi Gagal");
-                    return;
-                }
+                string idBarang = dialog.IDBarang.Trim();
+                string nipp = dialog.NIPP.Trim();
+                string jenisPerawatan = dialog.JenisPerawatan.Trim();
+                Regex regex = new Regex("^[a-zA-Z0-9 ]+$");
 
-                if (string.IsNullOrWhiteSpace(dialog.NIPP) || dialog.NIPP.Length != 5 || !dialog.NIPP.All(char.IsDigit))
-                {
-                    CustomMessageBox.ShowWarning("NIPP harus terdiri dari tepat 5 digit angka.", "Validasi Gagal");
-                    return;
-                }
+                if (idBarang.Length != 5 || !idBarang.All(char.IsDigit)) { CustomMessageBox.ShowWarning("BarangID harus terdiri dari 5 digit angka.", "Validasi Gagal"); return; }
+                if (nipp.Length != 5 || !nipp.All(char.IsDigit)) { CustomMessageBox.ShowWarning("NIPP harus terdiri dari 5 digit angka.", "Validasi Gagal"); return; }
+                if (dialog.TanggalPerawatan == default(DateTime)) { CustomMessageBox.ShowWarning("Tanggal Perawatan harus diisi.", "Validasi Gagal"); return; }
+                if (string.IsNullOrWhiteSpace(jenisPerawatan) || !regex.IsMatch(jenisPerawatan)) { CustomMessageBox.ShowWarning("Jenis Perawatan harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal"); return; }
 
-                if (dialog.TanggalPerawatan == default(DateTime))
-                {
-                    CustomMessageBox.ShowWarning("Tanggal Perawatan harus diisi.", "Validasi Gagal");
-                    return;
-                }
-
-                if (string.IsNullOrWhiteSpace(dialog.JenisPerawatan))
-                {
-                    CustomMessageBox.ShowWarning("Jenis Perawatan harus diisi.", "Validasi Gagal");
-                    return;
-                }
 
                 try
                 {
@@ -186,18 +174,10 @@ namespace MuseumApp
                 }
                 catch (SqlException sqlEx) 
                 {
-                    if (sqlEx.Number == 50009) 
-                    {
-                        CustomMessageBox.ShowError("BarangID tidak ditemukan di database. Pastikan BarangID valid.", "Kesalahan Tambah");
-                    }
-                    else if (sqlEx.Number == 50010) 
-                    {
-                        CustomMessageBox.ShowError("NIPP tidak ditemukan di database. Pastikan NIPP karyawan valid.", "Kesalahan Tambah");
-                    }
-                    else
-                    {
-                        CustomMessageBox.ShowError("Gagal menambah data: " + sqlEx.Message, "Kesalahan Database");
-                    }
+                    if (sqlEx.Number == 50009) { CustomMessageBox.ShowError("BarangID tidak ditemukan di database.", "Referensi Salah"); }
+                    else if (sqlEx.Number == 50010) { CustomMessageBox.ShowError("NIPP tidak ditemukan di database.", "Referensi Salah"); }
+                    else if (sqlEx.Number == 547) { CustomMessageBox.ShowError("Gagal menyimpan: Format Jenis Perawatan tidak valid.", "Format Salah"); }
+                    else { CustomMessageBox.ShowError("Gagal menambah data: " + sqlEx.Message, "Kesalahan Database"); }
                 }
                 catch (Exception ex)
                 {
@@ -231,6 +211,35 @@ namespace MuseumApp
 
             if (dialog.ShowDialog() == true)
             {
+
+                string idBarang = dialog.IDBarang.Trim();
+                string nipp = dialog.NIPP.Trim();
+                string jenisPerawatan = dialog.JenisPerawatan.Trim();
+                Regex regex = new Regex("^[a-zA-Z0-9 ]+$");
+
+                if (idBarang.Length != 5 || !idBarang.All(char.IsDigit))
+                {
+                    CustomMessageBox.ShowWarning("BarangID harus terdiri dari 5 digit angka.", "Validasi Gagal");
+                    return;
+                }
+                if (nipp.Length != 5 || !nipp.All(char.IsDigit))
+                {
+                    CustomMessageBox.ShowWarning("NIPP harus terdiri dari 5 digit angka.", "Validasi Gagal");
+                    return;
+                }
+                if (dialog.TanggalPerawatan == default(DateTime))
+                {
+                    CustomMessageBox.ShowWarning("Tanggal Perawatan harus diisi.", "Validasi Gagal");
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(jenisPerawatan) || !regex.IsMatch(jenisPerawatan))
+                {
+                    CustomMessageBox.ShowWarning("Jenis Perawatan harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal");
+                    return;
+                }
+
+
+
                 try
                 {
                     using (SqlConnection conn = new SqlConnection(connectionString)) 
@@ -269,6 +278,10 @@ namespace MuseumApp
                     else if (sqlEx.Number == 50013)
                     {
                         CustomMessageBox.ShowError("Data perawatan tidak ditemukan. Mungkin sudah dihapus atau ID tidak valid.", "Kesalahan Update");
+                    }
+                    else if (sqlEx.Number == 547)
+                    {
+                        CustomMessageBox.ShowError("Gagal menyimpan: Format Jenis Perawatan tidak valid.", "Format Salah");
                     }
                     else
                     {
