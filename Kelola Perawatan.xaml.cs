@@ -79,7 +79,7 @@ namespace MuseumApp
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Gagal memuat data: " + ex.Message);
+                        CustomMessageBox.ShowError("Gagal memuat data: " + ex.Message);
                     }
                 }
                 
@@ -101,7 +101,7 @@ namespace MuseumApp
                 }
                 else
                 {
-                    MessageBox.Show("Kesalahan", "error data", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.ShowError("Kesalahan", "Error Data");
                     selectedPerawatanId = 0;
                 }
                 if (BtnEdit !=null)
@@ -133,25 +133,25 @@ namespace MuseumApp
             {
                 if (string.IsNullOrWhiteSpace(dialog.IDBarang) || dialog.IDBarang.Length != 5 || !dialog.IDBarang.All(char.IsDigit))
                 {
-                    MessageBox.Show("BarangID harus terdiri dari tepat 5 digit angka.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    CustomMessageBox.ShowWarning("BarangID harus terdiri dari tepat 5 digit angka.", "Validasi Gagal");
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(dialog.NIPP) || dialog.NIPP.Length != 5 || !dialog.NIPP.All(char.IsDigit))
                 {
-                    MessageBox.Show("NIPP harus terdiri dari tepat 5 digit angka.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    CustomMessageBox.ShowWarning("NIPP harus terdiri dari tepat 5 digit angka.", "Validasi Gagal");
                     return;
                 }
 
                 if (dialog.TanggalPerawatan == default(DateTime))
                 {
-                    MessageBox.Show("Tanggal Perawatan harus diisi.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    CustomMessageBox.ShowWarning("Tanggal Perawatan harus diisi.", "Validasi Gagal");
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(dialog.JenisPerawatan))
                 {
-                    MessageBox.Show("Jenis Perawatan harus diisi.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    CustomMessageBox.ShowWarning("Jenis Perawatan harus diisi.", "Validasi Gagal");
                     return;
                 }
 
@@ -176,7 +176,7 @@ namespace MuseumApp
                             cmd.ExecuteNonQuery();
                             int generatedID = (int)outputIdParam.Value;
 
-                            MessageBox.Show("Data berhasil ditambah.");
+                            CustomMessageBox.ShowSuccess("Data berhasil ditambah.");
                             _cache.Remove(CacheKey);
                         }
                     }
@@ -188,20 +188,20 @@ namespace MuseumApp
                 {
                     if (sqlEx.Number == 50009) 
                     {
-                        MessageBox.Show("BarangID tidak ditemukan di database. Pastikan BarangID valid.", "Kesalahan Tambah", MessageBoxButton.OK, MessageBoxImage.Error);
+                        CustomMessageBox.ShowError("BarangID tidak ditemukan di database. Pastikan BarangID valid.", "Kesalahan Tambah");
                     }
                     else if (sqlEx.Number == 50010) 
                     {
-                        MessageBox.Show("NIPP tidak ditemukan di database. Pastikan NIPP karyawan valid.", "Kesalahan Tambah", MessageBoxButton.OK, MessageBoxImage.Error);
+                        CustomMessageBox.ShowError("NIPP tidak ditemukan di database. Pastikan NIPP karyawan valid.", "Kesalahan Tambah");
                     }
                     else
                     {
-                        MessageBox.Show("Gagal menambah data: " + sqlEx.Message, "Kesalahan Database", MessageBoxButton.OK, MessageBoxImage.Error);
+                        CustomMessageBox.ShowError("Gagal menambah data: " + sqlEx.Message, "Kesalahan Database");
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Terjadi kesalahan tak terduga saat menambah data: " + ex.Message, "Kesalahan Umum", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.ShowError("Terjadi kesalahan tak terduga saat menambah data: " + ex.Message, "Kesalahan Umum");
                 }
             }
         }
@@ -210,13 +210,13 @@ namespace MuseumApp
         {
             if (!(dataGridPerawatan.SelectedItem is DataRowView row))
             {
-                MessageBox.Show("Pilih data yang akan diedit.");
+                CustomMessageBox.ShowWarning("Pilih data yang akan diedit.");
                 return;
             }
 
             if (selectedPerawatanId <= 0)
             {
-                MessageBox.Show("ID perawatan tidak valid", "kesalahan ID", MessageBoxButton.OK, MessageBoxImage.Warning);
+                CustomMessageBox.ShowWarning("ID perawatan tidak valid", "kesalahan ID");
                 return;
             }
 
@@ -248,7 +248,7 @@ namespace MuseumApp
 
                             conn.Open();
                             cmd.ExecuteNonQuery();
-                            MessageBox.Show("Data berhasil diperbarui.");
+                            CustomMessageBox.ShowSuccess("Data berhasil diperbarui.");
                             _cache.Remove(CacheKey);
                         }
                     }
@@ -260,24 +260,24 @@ namespace MuseumApp
                 {
                     if (sqlEx.Number == 50011)
                     {
-                        MessageBox.Show("BarangID tidak ditemukan di database. Pastikan BarangID valid.", "Kesalahan Update", MessageBoxButton.OK, MessageBoxImage.Error);
+                        CustomMessageBox.ShowError("BarangID tidak ditemukan di database. Pastikan BarangID valid.", "Kesalahan Update");
                     }
                     else if (sqlEx.Number == 50012)
                     {
-                        MessageBox.Show("NIPP tidak ditemukan di database. Pastikan NIPP karyawan valid.", "Kesalahan Update", MessageBoxButton.OK, MessageBoxImage.Error);
+                        CustomMessageBox.ShowError("NIPP tidak ditemukan di database. Pastikan NIPP karyawan valid.", "Kesalahan Update");
                     }
                     else if (sqlEx.Number == 50013)
                     {
-                        MessageBox.Show("Data perawatan tidak ditemukan. Mungkin sudah dihapus atau ID tidak valid.", "Kesalahan Update", MessageBoxButton.OK, MessageBoxImage.Error);
+                        CustomMessageBox.ShowError("Data perawatan tidak ditemukan. Mungkin sudah dihapus atau ID tidak valid.", "Kesalahan Update");
                     }
                     else
                     {
-                        MessageBox.Show("Gagal memperbarui data: " + sqlEx.Message, "Kesalahan Database", MessageBoxButton.OK, MessageBoxImage.Error);
+                        CustomMessageBox.ShowError("Gagal memperbarui data: " + sqlEx.Message, "Kesalahan Database");
                     }
                 }
                 catch (Exception ex) 
                 {
-                    MessageBox.Show("Terjadi kesalahan tak terduga saat memperbarui data: " + ex.Message, "Kesalahan Umum", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.ShowError("Terjadi kesalahan tak terduga saat memperbarui data: " + ex.Message, "Kesalahan Umum");
                 }
             }
         }
@@ -286,19 +286,19 @@ namespace MuseumApp
         {
             if (!(dataGridPerawatan.SelectedItem is DataRowView row))
             {
-                MessageBox.Show("Pilih data yang akan dihapus.");
+                CustomMessageBox.ShowWarning("Pilih data yang akan dihapus.");
                 return;
             }
 
             if (selectedPerawatanId <= 0)
             {
-                MessageBox.Show("ID perawatan tidak valid. Silakan pilih baris yang benar.", "Kesalahan ID", MessageBoxButton.OK, MessageBoxImage.Warning);
+                CustomMessageBox.ShowWarning("ID perawatan tidak valid. Silakan pilih baris yang benar.", "Kesalahan ID");
                 return;
             }
 
             
 
-            if (MessageBox.Show("Yakin ingin menghapus data ini?", "Konfirmasi", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (CustomMessageBox.ShowYesNo("Yakin ingin menghapus data ini?", "Konfirmasi"))
             {
                 try
                 {
@@ -310,7 +310,7 @@ namespace MuseumApp
                             cmd.Parameters.AddWithValue("@PerawatanID", selectedPerawatanId);
                             conn.Open();
                             cmd.ExecuteNonQuery();
-                            MessageBox.Show("Data berhasil dihapus.");
+                            CustomMessageBox.ShowSuccess("Data berhasil dihapus.");
                             _cache.Remove(CacheKey);
                         }
                     }
@@ -322,16 +322,16 @@ namespace MuseumApp
                 {
                     if (sqlEx.Number == 50006)
                     {
-                        MessageBox.Show("Data perawatan tidak ditemukan. Mungkin sudah dihapus atau ID tidak valid.", "Kesalahan Hapus", MessageBoxButton.OK, MessageBoxImage.Error);
+                        CustomMessageBox.ShowError("Data perawatan tidak ditemukan. Mungkin sudah dihapus atau ID tidak valid.", "Kesalahan Hapus");
                     }
                     else
                     {
-                        MessageBox.Show("Gagal menghapus data: " + sqlEx.Message, "Kesalahan Database", MessageBoxButton.OK, MessageBoxImage.Error);
+                        CustomMessageBox.ShowError("Gagal menghapus data: " + sqlEx.Message, "Kesalahan Database");
                     }
                 }
                 catch (Exception ex) 
                 {
-                    MessageBox.Show("Terjadi kesalahan tak terduga saat menghapus data: " + ex.Message, "Kesalahan Umum", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.ShowError("Terjadi kesalahan tak terduga saat menghapus data: " + ex.Message, "Kesalahan Umum");
                 }
             }
         }
@@ -369,7 +369,7 @@ namespace MuseumApp
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("error saat menganalisis query" + ex.Message, "error analisis", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.ShowError("Error saat menganalisis query" + ex.Message, "Error Analisis");
                     return;
                 }
 
@@ -378,11 +378,11 @@ namespace MuseumApp
 
             if (statisticsResult.Length > 0)
             {
-                MessageBox.Show(statisticsResult.ToString(), "STATISTICS INFO", MessageBoxButton.OK, MessageBoxImage.Information);
+                CustomMessageBox.ShowInfo(statisticsResult.ToString(), "STATISTICS INFO");
             }
             else
             {
-                MessageBox.Show("tidak ada informasi statistik yang diterima", "STATISTICS INFO", MessageBoxButton.OK, MessageBoxImage.Warning);
+                CustomMessageBox.ShowWarning("tidak ada informasi statistik yang diterima", "STATISTICS INFO");
             }
         }
 
