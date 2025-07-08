@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Runtime.Caching;
 using System.Text;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 
 
@@ -123,13 +124,23 @@ namespace MuseumApp
             var dialog = new InputDialog();
             if (dialog.ShowDialog() == true)
             {
+                string jenisKoleksi = dialog.JenisKoleksi.Trim();
+                string deskripsi = dialog.Deskripsi.Trim();
+                
+                Regex regex = new Regex("^[a-zA-Z0-9 ]+$");
+                if (string.IsNullOrWhiteSpace(jenisKoleksi) || !regex.IsMatch(jenisKoleksi))
+                {
+                    CustomMessageBox.ShowWarning("Jenis Koleksi harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal");
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(deskripsi))
+                {
+                    CustomMessageBox.ShowWarning("Deskripsi harus diisi!", "Peringatan");
+                    return;
+                }
+
                 try
                 {
-                    if (string.IsNullOrWhiteSpace(dialog.JenisKoleksi) || string.IsNullOrWhiteSpace(dialog.Deskripsi))
-                    {
-                        CustomMessageBox.ShowWarning("Jenis Koleksi dan Deskripsi harus diisi!", "Peringatan");
-                        return;
-                    }
                     using (SqlConnection conn = new SqlConnection(connectionString))
                     {
                         using (SqlCommand cmd = new SqlCommand("AddKoleksi", conn))
@@ -150,12 +161,27 @@ namespace MuseumApp
                     }
 
                     LoadData();
-                } catch (Exception ex)
+                } catch (SqlException sqlEx)
                 {
-                    CustomMessageBox.ShowWarning("Gagal menammbah Koleksi" + ex.Message);
+                    if (sqlEx.Number == 2601)
+                    {
+                        CustomMessageBox.ShowError($"Gagal menyimpan: Jenis Koleksi '{jenisKoleksi}' sudah terdaftar.", "Data Duplikat");
+                    }
+                    else if (sqlEx.Number == 547)
+                    {
+                        CustomMessageBox.ShowError("Gagal menyimpan: Format Jenis Koleksi tidak valid. Hanya boleh huruf, angka, dan spasi.", "Format Salah");
+                    }
+                    else
+                    {
+                        CustomMessageBox.ShowError("Gagal menambah Koleksi: " + sqlEx.Message, "Kesalahan Database");
+                    }
                 }
-                
-              
+                catch (Exception ex)
+                {
+                    CustomMessageBox.ShowError("Terjadi kesalahan umum: " + ex.Message, "Kesalahan");
+                }
+
+
             }
         }
 
@@ -179,6 +205,23 @@ namespace MuseumApp
 
             if (dialog.ShowDialog() == true)
             {
+                string jenisKoleksi = dialog.JenisKoleksi.Trim();
+                string deskripsi = dialog.Deskripsi.Trim();
+
+              
+                Regex regex = new Regex("^[a-zA-Z0-9 ]+$");
+                if (string.IsNullOrWhiteSpace(jenisKoleksi) || !regex.IsMatch(jenisKoleksi))
+                {
+                    CustomMessageBox.ShowWarning("Jenis Koleksi harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal");
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(deskripsi))
+                {
+                    CustomMessageBox.ShowWarning("Deskripsi harus diisi!", "Peringatan");
+                    return;
+                }
+
+
                 try
                 {
                     if (string.IsNullOrWhiteSpace(dialog.JenisKoleksi) || string.IsNullOrWhiteSpace(dialog.Deskripsi))
@@ -213,6 +256,14 @@ namespace MuseumApp
                     if (sqlEx.Number == 50001)
                     {
                         CustomMessageBox.ShowError("Data koleksi tidak ditemukan", "Kesalahan Update");
+                    }
+                    else if (sqlEx.Number == 2601) // Error UNIQUE constraint
+                    {
+                        CustomMessageBox.ShowError($"Gagal menyimpan: Jenis Koleksi '{jenisKoleksi}' sudah terdaftar.", "Data Duplikat");
+                    }
+                    else if (sqlEx.Number == 547) // Error CHECK constraint
+                    {
+                        CustomMessageBox.ShowError("Gagal menyimpan: Format Jenis Koleksi tidak valid.", "Format Salah");
                     }
                     else
                     {
