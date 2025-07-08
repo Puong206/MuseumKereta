@@ -56,10 +56,10 @@ namespace MuseumApp
         {
             // Regex ini mengizinkan huruf (a-z, A-Z), spasi, dan titik.
             // Anda bisa menambahkan karakter lain jika diperlukan, misalnya tanda kutip.
-            Regex regex = new Regex("[^a-zA-Z .]");
+            //Regex regex = new Regex("[^a-zA-Z .]");
 
             // e.Handled = true akan MENCEGAH karakter ditampilkan jika tidak cocok dengan pola.
-            e.Handled = regex.IsMatch(e.Text);
+            //e.Handled = regex.IsMatch(e.Text);
         }
 
         private void StatusKaryawanTextBox_TextChanged(object sender, TextChangedEventArgs e)

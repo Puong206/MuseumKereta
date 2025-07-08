@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace MuseumApp
 {
@@ -131,17 +132,24 @@ namespace MuseumApp
                 string Nama = dialog.NamaKaryawan.Trim();
                 string Status = dialog.StatusKaryawan.Trim();
 
+                Regex regex = new Regex("^[a-zA-Z0-9 ]+$");
+
                 if (NIPP.Length != 5 || !NIPP.All(char.IsDigit))
                 {
                     CustomMessageBox.ShowWarning("NIPP harus terdiri dari 5 digit angka.", "Validasi Gagal");
                     return;
                 }
-
-                if (string.IsNullOrWhiteSpace(Nama) || string.IsNullOrWhiteSpace(Status))
+                if (string.IsNullOrWhiteSpace(Nama) || !regex.IsMatch(Nama))
                 {
-                    CustomMessageBox.ShowWarning("Semua kolom harus diisi.", "Validasi Input");
+                    CustomMessageBox.ShowWarning("Nama Karyawan harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal");
                     return;
                 }
+                if (string.IsNullOrWhiteSpace(Status))
+                {
+                    CustomMessageBox.ShowWarning("Status Karyawan harus dipilih.", "Validasi Gagal");
+                    return;
+                }
+
 
                 try
                 {
@@ -162,6 +170,23 @@ namespace MuseumApp
                     }
                     LoadData();
                 }
+
+                catch (SqlException sqlEx)
+                {
+                    if (sqlEx.Number == 2627) // Primary Key violation
+                    {
+                        CustomMessageBox.ShowError($"Gagal menyimpan: NIPP '{NIPP}' sudah terdaftar.", "Data Duplikat");
+                    }
+                    else if (sqlEx.Number == 547) // Check Constraint violation
+                    {
+                        CustomMessageBox.ShowError("Gagal menyimpan: Data yang dimasukkan tidak sesuai format yang ditentukan (misal: nama atau status tidak valid).", "Format Salah");
+                    }
+                    else
+                    {
+                        CustomMessageBox.ShowError("Gagal menambah data: " + sqlEx.Message, "Kesalahan Database");
+                    }
+                }
+
                 catch (Exception ex)
                 {
                     CustomMessageBox.ShowError("Gagal menambah data: " + ex.Message);
@@ -196,13 +221,13 @@ namespace MuseumApp
                 string namaBaru = dialog.NamaKaryawan.Trim();
                 string statusBaru = dialog.StatusKaryawan.Trim();
 
-                if (string.IsNullOrWhiteSpace(namaBaru))
+                Regex regex = new Regex("^[a-zA-Z0-9 ]+$");
+                if (string.IsNullOrWhiteSpace(namaBaru) || !regex.IsMatch(namaBaru))
                 {
-                    CustomMessageBox.ShowWarning("Nama Karyawan tidak boleh kosong.", "Validasi Gagal");
+                    CustomMessageBox.ShowWarning("Nama Karyawan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal");
                     return;
                 }
-                
-                if (string.IsNullOrWhiteSpace(statusBaru)) 
+                if (string.IsNullOrWhiteSpace(statusBaru))
                 {
                     CustomMessageBox.ShowWarning("Status Karyawan harus dipilih.", "Validasi Gagal");
                     return;
@@ -232,6 +257,10 @@ namespace MuseumApp
                     if (sqlEx.Number == 50007) 
                     {
                         CustomMessageBox.ShowError("Data pegawai tidak ditemukan: " + sqlEx.Message);
+                    }
+                    else if (sqlEx.Number == 547) // Check Constraint violation
+                    {
+                        CustomMessageBox.ShowError("Gagal menyimpan: Format Nama atau Status tidak valid.", "Format Salah");
                     }
                     else
                     {
