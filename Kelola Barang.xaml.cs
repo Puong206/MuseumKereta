@@ -149,7 +149,7 @@ namespace MuseumApp
                             cmd.Parameters.AddWithValue("@AsalBarang", dialog.AsalBarang);
                             conn.Open();
                             cmd.ExecuteNonQuery();
-                            CustomMessageBox.ShowSuccess("Barang berhasil ditabahkan");
+                            CustomMessageBox.ShowSuccess("Barang berhasil ditambahkan");
                             _cache.Remove(CacheKey);
                         }
                     }
