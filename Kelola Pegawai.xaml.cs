@@ -76,7 +76,7 @@ namespace MuseumApp
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Gagal memuat data: " + ex.Message);
+                        CustomMessageBox.ShowError("Gagal memuat data: " + ex.Message);
                     }
                     
 
@@ -133,13 +133,13 @@ namespace MuseumApp
 
                 if (NIPP.Length != 5 || !NIPP.All(char.IsDigit))
                 {
-                    MessageBox.Show("NIPP harus terdiri dari 5 digit angka.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    CustomMessageBox.ShowWarning("NIPP harus terdiri dari 5 digit angka.", "Validasi Gagal");
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(Nama) || string.IsNullOrWhiteSpace(Status))
                 {
-                    MessageBox.Show("Semua kolom harus diisi.", "Validasi Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    CustomMessageBox.ShowWarning("Semua kolom harus diisi.", "Validasi Input");
                     return;
                 }
 
@@ -156,7 +156,7 @@ namespace MuseumApp
 
                             conn.Open();
                             cmd.ExecuteNonQuery();
-                            MessageBox.Show("Karyawan berhasil ditambahkan");
+                            CustomMessageBox.ShowSuccess("Karyawan berhasil ditambahkan");
                             _cache.Remove(CacheKey);
                         }
                     }
@@ -164,7 +164,7 @@ namespace MuseumApp
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Gagal menambah data: " + ex.Message);
+                    CustomMessageBox.ShowError("Gagal menambah data: " + ex.Message);
                 }
             }
         }
@@ -174,13 +174,13 @@ namespace MuseumApp
             var selectedRow = dataGridPegawai.SelectedItem as DataRowView;
             if (selectedRow == null)
             {
-                MessageBox.Show("Pilih pegawai yang ingin diedit.");
+                CustomMessageBox.ShowWarning("Pilih pegawai yang ingin diedit.");
                 return;
             }
 
             if (string.IsNullOrEmpty(selectedNIPP))
             {
-                MessageBox.Show("NIPP pegawai tidak valid", "Kesalahan ID", MessageBoxButton.OK, MessageBoxImage.Warning);
+                CustomMessageBox.ShowWarning("NIPP pegawai tidak valid", "Kesalahan ID");
             }
 
             
@@ -198,13 +198,13 @@ namespace MuseumApp
 
                 if (string.IsNullOrWhiteSpace(namaBaru))
                 {
-                    MessageBox.Show("Nama Karyawan tidak boleh kosong.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    CustomMessageBox.ShowWarning("Nama Karyawan tidak boleh kosong.", "Validasi Gagal");
                     return;
                 }
                 
                 if (string.IsNullOrWhiteSpace(statusBaru)) 
                 {
-                    MessageBox.Show("Status Karyawan harus dipilih.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    CustomMessageBox.ShowWarning("Status Karyawan harus dipilih.", "Validasi Gagal");
                     return;
                 }
 
@@ -221,7 +221,7 @@ namespace MuseumApp
 
                             conn.Open();
                             cmd.ExecuteNonQuery();
-                            MessageBox.Show("Data karyawan berhasil diperbarui");
+                            CustomMessageBox.ShowSuccess("Data karyawan berhasil diperbarui");
                             _cache.Remove(CacheKey);
                         }
                     }
@@ -231,17 +231,17 @@ namespace MuseumApp
                 {
                     if (sqlEx.Number == 50007) 
                     {
-                        MessageBox.Show("Data pegawai tidak ditemukan: " + sqlEx.Message);
+                        CustomMessageBox.ShowError("Data pegawai tidak ditemukan: " + sqlEx.Message);
                     }
                     else
                     {
-                        MessageBox.Show("Gagal memperbarui data: " + sqlEx.Message, "Kesalahan Database", MessageBoxButton.OK, MessageBoxImage.Error);
+                        CustomMessageBox.ShowError("Gagal memperbarui data: " + sqlEx.Message, "Kesalahan Database");
                     }
                     
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Gagal memperbarui data: " + ex.Message);
+                    CustomMessageBox.ShowError("Gagal memperbarui data: " + ex.Message);
                 }
             }
         }
@@ -280,17 +280,17 @@ namespace MuseumApp
                 }
                 catch (Exception ex) 
                 {
-                    MessageBox.Show("error saat menganalisis query: " + ex.Message, "error analisis", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.ShowError("error saat menganalisis query: " + ex.Message, "error analisis");
                     return;
                 }
 
                 if (statisticResult.Length > 0 ) 
                 {
-                    MessageBox.Show(statisticResult.ToString(), "STATISTICS INFO", MessageBoxButton.OK, MessageBoxImage.Information);                   
+                    CustomMessageBox.ShowInfo(statisticResult.ToString(), "STATISTICS INFO");                   
                 }
                 else
                 {
-                    MessageBox.Show("tidak ada informasi statistik yang diterima", "STATISTICS INFO", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    CustomMessageBox.ShowWarning("tidak ada informasi statistik yang diterima", "STATISTICS INFO");
                 }
             }
         }
