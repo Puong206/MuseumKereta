@@ -144,7 +144,7 @@ namespace MuseumApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal memuat data dashboard: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                CustomMessageBox.ShowError("Gagal memuat data dashboard: ", "Error");
             }
         }
 
