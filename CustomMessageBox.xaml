@@ -5,91 +5,127 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MuseumApp"
         mc:Ignorable="d"
-        Title="Pesan" Height="Auto" Width="420"
-        SizeToContent="Height" WindowStartupLocation="CenterOwner"
+        Title="Pesan" Height="720" Width="1280"
+        WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False" ResizeMode="NoResize"
-        WindowStyle="None" AllowsTransparency="True"
-        Background="Transparent">
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowState="Maximized"
+        WindowStyle="None">
 
     <Window.Resources>
-        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#FF2D2B70"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Height" Value="35"/>
-            <Setter Property="MinWidth" Value="80"/>
-            <Setter Property="Padding" Value="15, 0"/>
+        <Style x:Key="DialogButtonStyle" TargetType="Button">
             <Setter Property="FontFamily" Value="Plus Jakarta Sans Bold"/>
+            <Setter Property="Width" Value="90"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Margin" Value="10,0,0,0"/>
             <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="5">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Opacity" Value="0.85"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style x:Key="SecondaryButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
-            <Setter Property="Background" Value="#E0E0E0"/>
-            <Setter Property="Foreground" Value="#2D2B70"/>
+
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button" BasedOn="{StaticResource DialogButtonStyle}">
+            <Setter Property="Background" Value="#FF2D2B70"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#4A479A"/>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect ShadowDepth="1" BlurRadius="10" Color="#4A479A" Opacity="0.6"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#24225A"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="SecondaryButtonStyle" TargetType="Button" BasedOn="{StaticResource DialogButtonStyle}">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#455A64"/>
+            <Setter Property="BorderBrush" Value="#CFD8DC"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#ECEFF1"/>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect ShadowDepth="1" BlurRadius="8" Color="#CFD8DC" Opacity="0.8"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#CFD8DC"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
 
-    <Border Background="White" CornerRadius="8"
-            BorderBrush="#DDDDDD" BorderThickness="1"
-            MouseLeftButtonDown="Border_MouseLeftButtonDown">
-        <Border.Effect>
-            <DropShadowEffect Color="#000000" 
-                              BlurRadius="20" 
-                              ShadowDepth="1" 
+    <Grid>
+        <Rectangle Fill="#DDFDFDFD" Opacity="0.6"
+                   Height="720" Width="1920"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center">
+            <Rectangle.Effect>
+                <BlurEffect Radius="500" KernelType="Gaussian"/>
+            </Rectangle.Effect>
+        </Rectangle>
+
+        <Border Background="White" CornerRadius="8"
+            BorderBrush="#E0E4E8" BorderThickness="1"
+            MouseLeftButtonDown="Border_MouseLeftButtonDown"
+            Height="Auto" Width="420" 
+            MinHeight="100" MaxHeight="600"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center">
+            <Border.Effect>
+                <DropShadowEffect Color="#1D2A4A" 
+                              BlurRadius="30" 
+                              ShadowDepth="0" 
                               Opacity="0.3"/>
-        </Border.Effect>
+            </Border.Effect>
 
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-            <Border x:Name="IconBackground" 
-                    Grid.Column="0" 
-                    Background="#2D2B70" 
-                    Width="80"
+                <Border x:Name="IconBackground" Grid.Column="0" 
+                    Background="#2D2B70" Width="90" 
                     CornerRadius="8,0,0,8">
-                <TextBlock x:Name="IconText"
-                           Text="&#xE946;"
-                           FontFamily="Segoe MDL2 Assets"
-                           FontSize="40"
-                           Foreground="White"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"/>
-            </Border>
+                    <TextBlock x:Name="IconText" Text="&#xE946;"
+                           FontFamily="Segoe MDL2 Assets" FontSize="40"
+                           Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
 
-            <StackPanel Grid.Column="1"
-                        Margin="25,20,25,20">
-                <TextBlock x:Name="TitleText"
-                           Text="Judul Pesan"
-                           FontWeight="Bold"
-                           FontSize="18"
-                           Foreground="#2b457d"
-                           Margin="0,0,0,10"/>
-                <TextBlock x:Name="MessageText"
+                <StackPanel Grid.Column="1" Margin="25,20,25,20" VerticalAlignment="Center">
+                    <TextBlock x:Name="TitleText" Text="Judul Pesan" 
+                           FontWeight="Bold" FontSize="18" 
+                           Foreground="#1D2A4A" Margin="0,0,0,8"/>
+
+                    <TextBlock x:Name="MessageText" 
                            Text="Ini adalah isi pesan yang bisa sangat panjang dan akan turun baris secara otomatis."
-                           TextWrapping="Wrap" FontFamily="14" Foreground="#1D2A4A"
-                           MinHeight="40"/>
+                           TextWrapping="Wrap" FontSize="14" Foreground="#546E7A" 
+                           MinHeight="40" MaxWidth="300" LineHeight="20"/>
 
-                <StackPanel x:Name="ButtonArea"
+                    <StackPanel x:Name="ButtonArea"
                             Orientation="Horizontal"
                             HorizontalAlignment="Right"
-                            Margin="0,35,0,0">
+                            Margin="0,30,0,0">
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
-        </Grid>
-    </Border>
+            </Grid>
+        </Border>
+    </Grid>
 </Window>
