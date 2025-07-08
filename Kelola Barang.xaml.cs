@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.Caching;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -100,27 +101,41 @@ namespace MuseumApp
             var dialog = new InputDialogBarang();
             if (dialog.ShowDialog() == true)
             {
+                string barangID = dialog.BarangID.Trim();
+                string namaBarang = dialog.NamaBarang.Trim();
+                string tahunPembuatan = dialog.TahunPembuatan.Trim();
+                string asalBarang = dialog.AsalBarang.Trim();
+                Regex regex = new Regex("^[a-zA-Z0-9 ]+$");
+                int koleksiIdInt;
+
+                if (barangID.Length != 5 || !barangID.All(char.IsDigit))
+                {
+                    CustomMessageBox.ShowWarning("BarangID harus terdiri dari 5 digit angka.", "Validasi Gagal");
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(namaBarang) || !regex.IsMatch(namaBarang))
+                {
+                    CustomMessageBox.ShowWarning("Nama Barang harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal");
+                    return;
+                }
+                if (tahunPembuatan.Length != 4 || !tahunPembuatan.All(char.IsDigit))
+                {
+                    CustomMessageBox.ShowWarning("Tahun Pembuatan harus terdiri dari 4 digit angka.", "Validasi Gagal");
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(asalBarang) || !regex.IsMatch(asalBarang))
+                {
+                    CustomMessageBox.ShowWarning("Asal Barang harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal");
+                    return;
+                }
+                if (!int.TryParse(dialog.KoleksiID, out koleksiIdInt))
+                {
+                    CustomMessageBox.ShowWarning("KoleksiID harus berupa angka yang valid.", "Validasi Gagal");
+                    return;
+                }
+
                 try
                 {
-                    if (string.IsNullOrWhiteSpace(dialog.BarangID) || string.IsNullOrWhiteSpace(dialog.NamaBarang) || string.IsNullOrWhiteSpace(dialog.Deskripsi) || string.IsNullOrWhiteSpace(dialog.KoleksiID) || string.IsNullOrWhiteSpace(dialog.TahunPembuatan) || string.IsNullOrWhiteSpace(dialog.AsalBarang))
-                    {
-                        CustomMessageBox.ShowWarning("Jenis Koleksi dan Deskripsi harus diisi!", "Peringatan");
-                        return;
-                    }
-
-                    int KoleksiIdInt;
-                    if (!int.TryParse(dialog.KoleksiID, out KoleksiIdInt))
-                    {
-                        CustomMessageBox.ShowWarning("KoleksiID harus berupa angka yang valid", "Validasi gagal");
-                        return;
-                    }
-
-                    if (dialog.TahunPembuatan.Length != 4 || !dialog.TahunPembuatan.All(char.IsDigit))
-                    {
-                        CustomMessageBox.ShowWarning("Tahun Pembuatan harus terdiri dari tepat 4 digit angka.", "Validasi Gagal");
-                        return;
-                    }
-
                     using (SqlConnection conn = new SqlConnection(connectionString))
                     {
                         using (SqlCommand cmd = new SqlCommand("Addbarang", conn))
@@ -129,7 +144,7 @@ namespace MuseumApp
                             cmd.Parameters.AddWithValue("@BarangID", dialog.BarangID);
                             cmd.Parameters.AddWithValue("@NamaBarang", dialog.NamaBarang);
                             cmd.Parameters.AddWithValue("@Deskripsi", dialog.Deskripsi);
-                            cmd.Parameters.AddWithValue("@KoleksiID", KoleksiIdInt);
+                            cmd.Parameters.AddWithValue("@KoleksiID", koleksiIdInt);
                             cmd.Parameters.AddWithValue("@TahunPembuatan", dialog.TahunPembuatan);
                             cmd.Parameters.AddWithValue("@AsalBarang", dialog.AsalBarang);
                             conn.Open();
@@ -140,11 +155,37 @@ namespace MuseumApp
                     }
                     LoadData();
                 }
+                catch (SqlException sqlEx)
+                {
+                    if (sqlEx.Number == 2627) // primary Key violation
+                    {
+                        CustomMessageBox.ShowError($"Gagal menyimpan: BarangID '{barangID}' sudah terdaftar.", "Data Duplikat");
+                    }
+                    else if (sqlEx.Number == 547) // foreign Key atau Check Constraint violation
+                    {
+                        if (sqlEx.Message.Contains("FK_"))
+                        {
+                            CustomMessageBox.ShowError($"Gagal menyimpan: KoleksiID '{dialog.KoleksiID}' tidak ditemukan.", "Referensi Salah");
+                        }
+                        else
+                        {
+                            CustomMessageBox.ShowError("Gagal menyimpan: Data yang dimasukkan tidak sesuai format yang ditentukan di database.", "Format Salah");
+                        }
+                    }
+                    else if (sqlEx.Number == 50003) // error dari SP
+                    {
+                        CustomMessageBox.ShowError($"Gagal menyimpan: KoleksiID '{dialog.KoleksiID}' tidak ditemukan.", "Referensi Salah");
+                    }
+                    else
+                    {
+                        CustomMessageBox.ShowError("Gagal menambah data: " + sqlEx.Message, "Kesalahan Database");
+                    }
+                }
                 catch (Exception ex)
                 {
-                    CustomMessageBox.ShowWarning("Gagal menambah data: " + ex.Message);
+                    CustomMessageBox.ShowError("Terjadi kesalahan umum: " + ex.Message, "Kesalahan");
                 }
-                
+
             }
         }
 
@@ -174,29 +215,17 @@ namespace MuseumApp
 
             if (dialog.ShowDialog() == true)
             {
-
-                if (string.IsNullOrWhiteSpace(dialog.NamaBarang) || string.IsNullOrWhiteSpace(dialog.Deskripsi) ||
-                    string.IsNullOrWhiteSpace(dialog.KoleksiID) || string.IsNullOrWhiteSpace(dialog.TahunPembuatan) ||
-                    string.IsNullOrWhiteSpace(dialog.AsalBarang))
-                {
-                    CustomMessageBox.ShowWarning("Semua kolom harus diisi!", "Peringatan");
-                    return;
-                }
-
-
-
-                if (dialog.TahunPembuatan.Length != 4 || !dialog.TahunPembuatan.All(char.IsDigit))
-                {
-                    CustomMessageBox.ShowWarning("Tahun Pembuatan harus terdiri dari tepat 4 digit angka.", "Validasi Gagal");
-                    return;
-                }
-
+                string namaBarang = dialog.NamaBarang.Trim();
+                string tahunPembuatan = dialog.TahunPembuatan.Trim();
+                string asalBarang = dialog.AsalBarang.Trim();
+                Regex regexFormat = new Regex("^[a-zA-Z0-9 ]+$");
                 int koleksiIdInt;
-                if (string.IsNullOrWhiteSpace(dialog.KoleksiID) || !int.TryParse(dialog.KoleksiID, out koleksiIdInt))
-                {
-                    CustomMessageBox.ShowWarning("KoleksiID harus diisi dengan angka yang valid.", "Validasi Gagal");
-                    return;
-                }
+
+                if (string.IsNullOrWhiteSpace(namaBarang) || !regexFormat.IsMatch(namaBarang)) { CustomMessageBox.ShowWarning("Nama Barang harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal"); return; }
+                if (tahunPembuatan.Length != 4 || !tahunPembuatan.All(char.IsDigit)) { CustomMessageBox.ShowWarning("Tahun Pembuatan harus terdiri dari 4 digit angka.", "Validasi Gagal"); return; }
+                if (string.IsNullOrWhiteSpace(asalBarang) || !regexFormat.IsMatch(asalBarang)) { CustomMessageBox.ShowWarning("Asal Barang harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal"); return; }
+                if (!int.TryParse(dialog.KoleksiID, out koleksiIdInt)) { CustomMessageBox.ShowWarning("KoleksiID harus berupa angka yang valid.", "Validasi Gagal"); return; }
+
 
                 try
                 {
@@ -227,6 +256,23 @@ namespace MuseumApp
                     {
                         CustomMessageBox.ShowError("Data barang tidak ditemukan. Mungkin sudah dihapus atau ID tidak valid", "Kesalahan Update");
                     }
+
+                    else if (SqlEx.Number == 50004) // Custom error dari SP
+                    {
+                        CustomMessageBox.ShowError($"Gagal menyimpan: KoleksiID '{dialog.KoleksiID}' tidak ditemukan.", "Referensi Salah");
+                    }
+                    else if (SqlEx.Number == 547) // Foreign Key atau Check Constraint
+                    {
+                        if (SqlEx.Message.Contains("FK_"))
+                        {
+                            CustomMessageBox.ShowError($"Gagal menyimpan: KoleksiID '{dialog.KoleksiID}' tidak ditemukan.", "Referensi Salah");
+                        }
+                        else
+                        {
+                            CustomMessageBox.ShowError("Gagal menyimpan: Data yang dimasukkan tidak sesuai format yang ditentukan.", "Format Salah");
+                        }
+                    }
+
                     else
                     {
                         CustomMessageBox.ShowError("Gagal menambah data" + SqlEx.Message, "Kesalahan database");
