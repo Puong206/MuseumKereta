@@ -10,7 +10,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Navigation;
-using MessageBox = System.Windows.MessageBox;
 
 namespace MuseumApp
 {
@@ -90,7 +89,7 @@ namespace MuseumApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal Membaca file excel: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                CustomMessageBox.ShowError("Gagal Membaca file excel: ", "Error");
                 BtnImport.IsEnabled = false;
             }
         }
@@ -99,19 +98,21 @@ namespace MuseumApp
         {
             if (previewDataTable == null || previewDataTable.Rows.Count == 0)
             {
-                MessageBox.Show("Tidak ada data untuk diimpor.", "Peringatan",  MessageBoxButton.OK, MessageBoxImage.Warning);
+                CustomMessageBox.ShowWarning("Tidak ada data untuk diimpor.", "Peringatan");
                 return;
             }
 
-            MessageBoxResult confirm = MessageBox.Show($"Anda akan mengimpor {previewDataTable.Rows.Count} baris data. Lanjutkan?", "Konfirmasi impor", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (confirm != MessageBoxResult.Yes) return;
+            bool confirm = CustomMessageBox.ShowYesNo(
+                $"Anda akan mengimpor {previewDataTable.Rows.Count} baris data. Lanjutkan?");
+
+            if (!confirm) return;
 
             string entityType = CmbEntityType.SelectedItem.ToString();
             bool success = ImportDataToDatabase(entityType);
 
             if (success)
             {
-                MessageBox.Show("Proses impor selesai.", "Sukses", MessageBoxButton.OK, MessageBoxImage.Information);
+                CustomMessageBox.ShowSuccess("Proses impor selesai.", "Sukses");
                 TxtFilePath.Text = "";
                 PreviewDataGrid.ItemsSource = null;
                 BtnImport.IsEnabled = false;
@@ -153,7 +154,7 @@ namespace MuseumApp
                                 break;
                             default:
                                 transaction.Rollback();
-                                MessageBox.Show("Jenis entitas tidak valid.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                CustomMessageBox.ShowError("Jenis entitas tidak valid.", "Error");
                                 return false;
                         }
                     }
@@ -161,7 +162,7 @@ namespace MuseumApp
                     if (failedCount > 0)
                     {
                         transaction.Rollback();
-                        MessageBox.Show($"Impor dibatalkan karena {failedCount} baris data tidak valid. Tidak ada data yang disimpan.", "Impor gagal", MessageBoxButton.OK, MessageBoxImage.Error);
+                        CustomMessageBox.ShowError($"Impor dibatalkan karena {failedCount} baris data tidak valid. Tidak ada data yang disimpan.", "Impor gagal");
                         return false;
                     }
                     else
@@ -174,7 +175,7 @@ namespace MuseumApp
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    MessageBox.Show("Terjadi kesalahan fatal saat mengimpor data ke database: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.ShowError("Terjadi kesalahan fatal saat mengimpor data ke database: " + ex.Message, "Error");
                     return false;
                 }
             }
