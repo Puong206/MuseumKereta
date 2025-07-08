@@ -226,6 +226,7 @@
     <Compile Include="Kelola Perawatan.xaml.cs">
       <DependentUpon>Kelola Perawatan.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Koneksi.cs" />
     <Compile Include="LaporanBarang.xaml.cs">
       <DependentUpon>LaporanBarang.xaml</DependentUpon>
     </Compile>
