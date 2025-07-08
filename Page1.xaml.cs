@@ -59,9 +59,7 @@ namespace MuseumApp
 
         private void ButtonLogout_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Apakah Anda yakin ingin logout?", "Konfirmasi Logout", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.Yes)
+            if (CustomMessageBox.ShowYesNo("Apakah Anda yakin ingin logout?", "Konfirmasi Logout"))
             {
                 Window parentWindow = Window.GetWindow(this);
                 LoginWindow loginWindow = new LoginWindow();
@@ -89,7 +87,7 @@ namespace MuseumApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Gagal membuka halaman Laporan Barang: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                CustomMessageBox.ShowError($"Gagal membuka halaman Laporan Barang: {ex.Message}", "Error");
             }
         }
 
@@ -101,7 +99,7 @@ namespace MuseumApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Gagal membuka halaman Laporan Barang: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                CustomMessageBox.ShowError($"Gagal membuka halaman Laporan Barang: {ex.Message}", "Error");
             }
 
         }
@@ -114,7 +112,7 @@ namespace MuseumApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Gagal membuka halaman Laporan Barang: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                CustomMessageBox.ShowError($"Gagal membuka halaman Laporan Barang: {ex.Message}", "Error");
             }
         }
 
@@ -126,7 +124,7 @@ namespace MuseumApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Gagal membuka halaman Laporan Barang: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                CustomMessageBox.ShowError($"Gagal membuka halaman Laporan Barang: {ex.Message}", "Error");
             }
         }
 
@@ -144,7 +142,7 @@ namespace MuseumApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal memuat halaman dashboard: " + ex.Message, "Error Navigasi", MessageBoxButton.OK, MessageBoxImage.Error);
+                CustomMessageBox.ShowError("Gagal memuat halaman dashboard: " + ex.Message, "Error Navigasi");
             }
         }
     }
