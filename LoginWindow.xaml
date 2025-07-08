@@ -12,76 +12,28 @@
       WindowStyle="ThreeDBorderWindow"
       PreviewKeyDown="Window_PreviewKeyDown">
 
-    <Window.Resources>
-        <Style x:Key="LoginButtonStyle" TargetType="Button">
-            <Setter Property="FontFamily" Value="Plus Jakarta Sans Bold"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Background" Value="#FFF26924"/>
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="BorderBrush" Value="{x:Null}"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="4">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Opacity" Value="0.85"/>
-                                <Setter Property="Background" Value="White"/>
-                                <Setter Property="Foreground" Value="#FFB85C00"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="ViewPasswordToggleStyle" TargetType="ToggleButton">
-            <Setter Property="Width" Value="35"/>
-            <Setter Property="Height" Value="35"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Right"/>
-            <Setter Property="Margin" Value="0,0,5,0"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ToggleButton">
-                        <Border Background="Transparent" CornerRadius="17.5">
-                            <TextBlock x:Name="Icon" Text="&#xE7B3;" FontFamily="Segoe MDL2 Assets" 
-                                       FontSize="16" Foreground="#8A8A8A"
-                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Icon" Property="Text" Value="&#xE7B3;"/>
-                                <Setter TargetName="Icon" Property="Foreground" Value="#2D2B70"/>
-                            </Trigger>
-                            <Trigger Property="IsChecked" Value="False">
-                                <Setter TargetName="Icon" Property="Text" Value="&#xE7B3;"/>
-                                <Setter TargetName="Icon" Property="Foreground" Value="#8A8A8A"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource WindowLoadAnimation}"/>
+        </EventTrigger>
+    </Window.Triggers>
 
     <Grid x:Name="Login_Form">
-        <Image Source="/Images/cover-2-1-b4c03b57f59f99cfb01ec83c400ae689_600x400.jpg" Stretch="Fill" Opacity="0.6">
+        <Image Source="/Images/Background.JPG" Stretch="Fill" Opacity="0.6">
             <Image.Effect>
                 <BlurEffect Radius="5"/>
             </Image.Effect>
         </Image>
 
-        <Border HorizontalAlignment="Center" VerticalAlignment="Center"
+        <Border x:Name="LoginFormContainer" HorizontalAlignment="Center" VerticalAlignment="Center"
                 MinWidth="340" MaxWidth="450" Margin="20"
-                Background="#F7F9FC" CornerRadius="8">
+                Background="#F7F9FC" CornerRadius="8"
+                Opacity="0">
+
+            <Border.RenderTransform>
+                <TranslateTransform x:Name="LoginFormTransform" Y="30"/>
+            </Border.RenderTransform>
+            
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="2" BlurRadius="10" Color="#FFCCCCCC" Opacity="0.5"/>
             </Border.Effect>

@@ -9,8 +9,14 @@
       Title="Import Data dari Excel"
       Background="Transparent">
 
+    <Page.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource ImportPageAnimation}"/>
+        </EventTrigger>
+    </Page.Triggers>
+
     <Grid>
-        <Border Background="#FDFDFD" CornerRadius="15" Margin="10" Effect="{StaticResource CardShadowEffect}">
+        <Border Background="#FDFDFD" CornerRadius="15" Effect="{StaticResource CardShadowEffect}">
             <Grid Margin="25,20,25,20">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -19,12 +25,18 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Margin="0,0,0,25">
+                <Grid x:Name="TopBarPanel" Grid.Row="0" Margin="0,0,0,25" Opacity="0">
+                    <Grid.RenderTransform>
+                        <TranslateTransform x:Name="TopBarPanelTransform" Y="-20"/>
+                    </Grid.RenderTransform>
                     <Button x:Name="BtnBack" Content="← Kembali" Style="{StaticResource BackButtonStyle}" Click="BtnBack_Click"/>
                     <TextBlock Text="Import Data dari Excel" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Plus Jakarta Sans Bold" FontSize="26" Foreground="#2D2B70"/>
                 </Grid>
 
-                <Grid Grid.Row="1" Margin="0,0,0,20">
+                <Grid x:Name="InputControlsPanel" Grid.Row="1" Margin="0,0,0,20" Opacity="0">
+                    <Grid.RenderTransform>
+                        <TranslateTransform x:Name="InputControlsPanelTransform" Y="20"/>
+                    </Grid.RenderTransform>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" MinWidth="220"/>
                         <ColumnDefinition Width="*"/>
@@ -44,9 +56,12 @@
                     </StackPanel>
                 </Grid>
 
-                <DataGrid x:Name="PreviewDataGrid" Grid.Row="2" IsReadOnly="True" Margin="0,0,0,15"
+                <DataGrid x:Name="PreviewDataGrid" Grid.Row="2" IsReadOnly="True" Margin="0,0,0,15" Opacity="0"
                           BorderBrush="#DDE2E8" BorderThickness="1"
                           AlternatingRowBackground="#F9FAFC" GridLinesVisibility="Horizontal">
+                    <DataGrid.RenderTransform>
+                        <TranslateTransform x:Name="PreviewDataGridTransform" Y="20"/>
+                    </DataGrid.RenderTransform>
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="Background" Value="#F3F6F9"/>
@@ -75,7 +90,10 @@
                     </DataGrid.Resources>
                 </DataGrid>
 
-                <Grid Grid.Row="3">
+                <Grid x:Name="BottomActionPanel" Grid.Row="3" Opacity="0">
+                    <Grid.RenderTransform>
+                        <TranslateTransform x:Name="BottomActionPanelTransform" Y="20"/>
+                    </Grid.RenderTransform>
                     <TextBlock x:Name="StatusText" Text="Silakan pilih jenis data dan file Excel." VerticalAlignment="Center" HorizontalAlignment="Left" FontStyle="Italic" Foreground="Gray"/>
                     <Button x:Name="BtnImport" Content="Mulai Import" Style="{StaticResource PrimaryButtonStyle}" HorizontalAlignment="Right" IsEnabled="False" Click="BtnMulaiImport_Click"/>
                 </Grid>

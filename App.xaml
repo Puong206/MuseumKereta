@@ -130,5 +130,416 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        
+        
+        <!-- Login Styles -->
+        <Storyboard x:Key="WindowLoadAnimation">
+            <DoubleAnimation Storyboard.TargetName="LoginFormContainer"
+                             Storyboard.TargetProperty="Opacity"
+                             From="0" To="1" Duration="0:0:2.5">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="LoginFormTransform"
+                             Storyboard.TargetProperty="Y"
+                             From="30" To="0" Duration="0:0:2.5">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        
+        <Style x:Key="LoginButtonStyle" TargetType="Button">
+            <Setter Property="FontFamily" Value="Plus Jakarta Sans Bold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#FFF26924"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderBrush" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Opacity" Value="0.85"/>
+                                <Setter Property="Background" Value="White"/>
+                                <Setter Property="Foreground" Value="#FFB85C00"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ViewPasswordToggleStyle" TargetType="ToggleButton">
+            <Setter Property="Width" Value="35"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="Margin" Value="0,0,5,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border Background="Transparent" CornerRadius="17.5">
+                            <TextBlock x:Name="Icon" Text="&#xE7B3;" FontFamily="Segoe MDL2 Assets" 
+                               FontSize="16" Foreground="#8A8A8A"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Icon" Property="Text" Value="&#xE7B4;"/>
+                                <Setter TargetName="Icon" Property="Foreground" Value="#2D2B70"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter TargetName="Icon" Property="Text" Value="&#xE7B3;"/>
+                                <Setter TargetName="Icon" Property="Foreground" Value="#8A8A8A"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <!-- Dashboard Styles -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="25,20,25,20"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
+            <Setter Property="BorderBrush" Value="#EAEFF6"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="0" BlurRadius="25" Color="#8B92A4" Opacity="0.1"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="StatNumberStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="28"/>
+            <Setter Property="FontFamily" Value="Plus Jakarta Sans ExtraBold"/>
+            <Setter Property="Foreground" Value="#39349f"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+
+        <Style x:Key="StatLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontFamily" Value="Plus Jakarta Sans Medium"/>
+            <Setter Property="Foreground" Value="#1f1c4a"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="0,2,0,0"/>
+        </Style>
+
+        <Style x:Key="CardTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontFamily" Value="Plus Jakarta Sans"/>
+            <Setter Property="Foreground" Value="#2D2B70"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+        </Style>
+
+        <Storyboard x:Key="PageLoadAnimation">
+            <DoubleAnimation Storyboard.TargetName="HeaderPanel" Storyboard.TargetProperty="Opacity"
+                             From="0" To="1" Duration="0:0:0.5" BeginTime="0:0:0.0">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="HeaderPanelTransform" Storyboard.TargetProperty="Y"
+                             From="-20" To="0" Duration="0:0:0.5" BeginTime="0:0:0.0">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            
+            <DoubleAnimation Storyboard.TargetName="Column1" Storyboard.TargetProperty="Opacity"
+                             From="0" To="1" Duration="0:0:0.5" BeginTime="0:0:0.1">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="Column1Transform" Storyboard.TargetProperty="Y"
+                             From="30" To="0" Duration="0:0:0.5" BeginTime="0:0:0.1">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <DoubleAnimation Storyboard.TargetName="Column2" Storyboard.TargetProperty="Opacity"
+                             From="0" To="1" Duration="0:0:0.5" BeginTime="0:0:0.3">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="Column2Transform" Storyboard.TargetProperty="Y"
+                             From="30" To="0" Duration="0:0:0.5" BeginTime="0:0:0.3">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <DoubleAnimation Storyboard.TargetName="Column3" Storyboard.TargetProperty="Opacity"
+                             From="0" To="1" Duration="0:0:0.5" BeginTime="0:0:0.5">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="Column3Transform" Storyboard.TargetProperty="Y"
+                             From="30" To="0" Duration="0:0:0.5" BeginTime="0:0:0.5">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+
+        <!-- Kelola Barang Animation -->
+        <Storyboard x:Key="BarangListPageLoadAnimation">
+            <DoubleAnimation Storyboard.TargetName="TopBarGrid" Storyboard.TargetProperty="Opacity" 
+                             From="0" To="1" Duration="0:0:0.4" BeginTime="0:0:0.1">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="TopBarGridTransform" Storyboard.TargetProperty="Y" 
+                             From="-20" To="0" Duration="0:0:0.4" BeginTime="0:0:0.1">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <DoubleAnimation Storyboard.TargetName="dataGridBarang" Storyboard.TargetProperty="Opacity" 
+                             From="0" To="1" Duration="0:0:0.4" BeginTime="0:0:0.2">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="DataGridTransform" Storyboard.TargetProperty="Y" 
+                             From="20" To="0" Duration="0:0:0.4" BeginTime="0:0:0.2">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <DoubleAnimation Storyboard.TargetName="ActionButtonsPanel" Storyboard.TargetProperty="Opacity" 
+                             From="0" To="1" Duration="0:0:0.4" BeginTime="0:0:0.3">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="ActionButtonsPanelTransform" Storyboard.TargetProperty="Y" 
+                             From="20" To="0" Duration="0:0:0.4" BeginTime="0:0:0.3">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+
+        <!-- Kelola Koleksi Animation -->
+        <Storyboard x:Key="KoleksiListPageLoadAnimation">
+            <DoubleAnimation Storyboard.TargetName="TopBarGrid" Storyboard.TargetProperty="Opacity" 
+                             From="0" To="1" Duration="0:0:0.4" BeginTime="0:0:0.1">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="TopBarGridTransform" Storyboard.TargetProperty="Y" 
+                             From="-20" To="0" Duration="0:0:0.4" BeginTime="0:0:0.1">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <DoubleAnimation Storyboard.TargetName="dataGridKoleksi" Storyboard.TargetProperty="Opacity" 
+                             From="0" To="1" Duration="0:0:0.4" BeginTime="0:0:0.2">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="DataGridTransform" Storyboard.TargetProperty="Y" 
+                             From="20" To="0" Duration="0:0:0.4" BeginTime="0:0:0.2">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <DoubleAnimation Storyboard.TargetName="ActionButtonsPanel" Storyboard.TargetProperty="Opacity" 
+                             From="0" To="1" Duration="0:0:0.4" BeginTime="0:0:0.3">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="ActionButtonsPanelTransform" Storyboard.TargetProperty="Y" 
+                             From="20" To="0" Duration="0:0:0.4" BeginTime="0:0:0.3">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+
+        <!-- Kelola Pegawai Animation -->
+        <Storyboard x:Key="PegawaiListPageLoadAnimation">
+            <DoubleAnimation Storyboard.TargetName="TopBarGrid" Storyboard.TargetProperty="Opacity" 
+                             From="0" To="1" Duration="0:0:0.4" BeginTime="0:0:0.1">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="TopBarGridTransform" Storyboard.TargetProperty="Y" 
+                             From="-20" To="0" Duration="0:0:0.4" BeginTime="0:0:0.1">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <DoubleAnimation Storyboard.TargetName="SearchFilterPanel" Storyboard.TargetProperty="Opacity"
+                             From="0" To="1" Duration="0:0:0.4" BeginTime="0:0:0.1">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="SearchFilterTransform" Storyboard.TargetProperty="Y" 
+                             From="20" To="0" Duration="0:0:0.4" BeginTime="0:0:0.1">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <DoubleAnimation Storyboard.TargetName="dataGridPegawai" Storyboard.TargetProperty="Opacity" 
+                             From="0" To="1" Duration="0:0:0.4" BeginTime="0:0:0.2">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="DataGridTransform" Storyboard.TargetProperty="Y" 
+                             From="20" To="0" Duration="0:0:0.4" BeginTime="0:0:0.2">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <DoubleAnimation Storyboard.TargetName="ActionButtonsPanel" Storyboard.TargetProperty="Opacity" 
+                             From="0" To="1" Duration="0:0:0.4" BeginTime="0:0:0.3">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="ActionButtonsPanelTransform" Storyboard.TargetProperty="Y" 
+                             From="20" To="0" Duration="0:0:0.4" BeginTime="0:0:0.3">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+
+        <!-- Kelola Perawatan Animation -->
+        <Storyboard x:Key="PerawatanListPageLoadAnimation">
+            <DoubleAnimation Storyboard.TargetName="TopBarGrid" Storyboard.TargetProperty="Opacity" 
+                             From="0" To="1" Duration="0:0:0.4" BeginTime="0:0:0.1">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="TopBarGridTransform" Storyboard.TargetProperty="Y" 
+                             From="-20" To="0" Duration="0:0:0.4" BeginTime="0:0:0.1">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <DoubleAnimation Storyboard.TargetName="dataGridPerawatan" Storyboard.TargetProperty="Opacity" 
+                             From="0" To="1" Duration="0:0:0.4" BeginTime="0:0:0.2">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="DataGridTransform" Storyboard.TargetProperty="Y" 
+                             From="20" To="0" Duration="0:0:0.4" BeginTime="0:0:0.2">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <DoubleAnimation Storyboard.TargetName="ActionButtonsPanel" Storyboard.TargetProperty="Opacity" 
+                             From="0" To="1" Duration="0:0:0.4" BeginTime="0:0:0.3">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="ActionButtonsPanelTransform" Storyboard.TargetProperty="Y" 
+                             From="20" To="0" Duration="0:0:0.4" BeginTime="0:0:0.3">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+        
+        <!-- Import Data Animation -->
+        <Storyboard x:Key="ImportPageAnimation">
+            <DoubleAnimation Storyboard.TargetName="TopBarPanel" Storyboard.TargetProperty="Opacity"
+                             From="0" To="1" Duration="0:0:0.4" BeginTime="0:0:0.1">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="TopBarPanelTransform" Storyboard.TargetProperty="Y"
+                             From="-20" To="0" Duration="0:0:0.4" BeginTime="0:0:0.1">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <DoubleAnimation Storyboard.TargetName="InputControlsPanel" Storyboard.TargetProperty="Opacity"
+                             From="0" To="1" Duration="0:0:0.4" BeginTime="0:0:0.2">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="InputControlsPanelTransform" Storyboard.TargetProperty="Y"
+                             From="20" To="0" Duration="0:0:0.4" BeginTime="0:0:0.2">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <DoubleAnimation Storyboard.TargetName="PreviewDataGrid" Storyboard.TargetProperty="Opacity"
+                             From="0" To="1" Duration="0:0:0.4" BeginTime="0:0:0.3">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="PreviewDataGridTransform" Storyboard.TargetProperty="Y"
+                             From="20" To="0" Duration="0:0:0.4" BeginTime="0:0:0.3">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <DoubleAnimation Storyboard.TargetName="BottomActionPanel" Storyboard.TargetProperty="Opacity"
+                             From="0" To="1" Duration="0:0:0.4" BeginTime="0:0:0.4">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="BottomActionPanelTransform" Storyboard.TargetProperty="Y"
+                             From="20" To="0" Duration="0:0:0.4" BeginTime="0:0:0.4">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
     </Application.Resources>
 </Application>

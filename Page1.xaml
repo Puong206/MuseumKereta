@@ -54,8 +54,38 @@
             </Setter>
         </Style>
 
-        <Style x:Key="LogoutButtonStyle" TargetType="Button" BasedOn="{StaticResource SidebarButtonStyle}">
+        <Style x:Key="LogoutButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontFamily" Value="Plus Jakarta Sans Medium"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8" Padding="10,0,10,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" 
+                                   FontFamily="Segoe MDL2 Assets" FontSize="18" VerticalAlignment="Center" Margin="5,0,15,0"/>
+
+                                <ContentPresenter x:Name="ContentText" Grid.Column="1" VerticalAlignment="Center"
+                                          Visibility="{Binding IsChecked, ElementName=MenuToggleButton, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
             <Setter Property="Foreground" Value="#D32F2F"/>
+
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#1AD32F2F"/>
@@ -124,7 +154,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Image Source="/Images/cover-2-1-b4c03b57f59f99cfb01ec83c400ae689_600x400.jpg" Stretch="UniformToFill" Opacity="0.75" Grid.RowSpan="2" Grid.ColumnSpan="2">
+        <Image Source="/Images/Background.JPG" Stretch="UniformToFill" Opacity="0.75" Grid.RowSpan="2" Grid.ColumnSpan="2">
             <Image.Effect>
                 <BlurEffect Radius="7"/>
             </Image.Effect>
