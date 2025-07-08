@@ -116,12 +116,10 @@ namespace MuseumApp
 
             if (success)
             {
-                MessageBox.Show(
-                    $"Proses impor selesai.\n\n" +
-                    $"Waktu Aktual (Elapsed Time): {stopwatch.ElapsedMilliseconds} ms",
-                    "Info Performa Import",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
+                string successMessage = $"Proses impor selesai.\n\n" +
+                                        $"Waktu Aktual (Elapsed Time): {stopwatch.ElapsedMilliseconds} ms";
+
+                CustomMessageBox.ShowSuccess(successMessage, "Info Performa Import");
 
                 TxtFilePath.Text = "";
                 PreviewDataGrid.ItemsSource = null;
