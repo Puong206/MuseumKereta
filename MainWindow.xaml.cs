@@ -6,14 +6,13 @@ namespace MuseumApp
     public partial class MainWindow : Window
     {
         //private string connectionString = "Data Source=LAPTOP-DP8JTMS7\\PUONG206;Initial Catalog=MuseumKeretaApi;";  //DB Arya
-        private string connectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password;";  //DB Olip
+        //private string connectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password;";  //DB Olip
         //private string connectionString = "Data Source=LAPTOP-HDNQCJHP\\WILDAN_ZAUHAIR;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password;";  //DB Welly
-        
-
-        public MainWindow(string connStr)
+        private readonly string appConnectionString;
+        public MainWindow(string connectionString)
         {
             InitializeComponent();
-            connectionString = connStr; // Simpan connection string
+            this.appConnectionString = connectionString; // Simpan connection string
 
             // Saat MainWindow terbuka, langsung tampilkan Page1 (dashboard)
             NavigateHome();
@@ -22,7 +21,7 @@ namespace MuseumApp
         public void NavigateHome()
         {
             // Navigasi ke instance baru dari Page1
-            MainFrame.Navigate(new Page1(connectionString));
+            MainFrame.Navigate(new Page1(this.appConnectionString));
 
             // PENTING: Hapus semua riwayat navigasi 'Back' agar pengguna
             // tidak bisa kembali dari dashboard ke halaman sebelumnya (misal, Kelola Koleksi)
