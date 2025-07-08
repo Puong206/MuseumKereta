@@ -319,6 +319,7 @@ namespace MuseumApp
                     }
                     CustomMessageBox.ShowSuccess("Barang berhasil dihapus!");
                     _cache.Remove(CacheKey);
+                    _cache.Remove("PerawatanData");
                     LoadData();
                 }
                 catch (SqlException sqlEx)
