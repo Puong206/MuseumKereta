@@ -10,9 +10,10 @@ namespace MuseumApp
     public partial class LoginWindow : Window
     {
         //private string baseconnectionString = "Data Source=LAPTOP-DP8JTMS7\\PUONG206;Initial Catalog=MuseumKeretaApi;";  //DB Arya
-        private string baseconnectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;";  //DB Olip
+        //private string baseconnectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;";  //DB Olip
         //private string baseconnectionString = "Data Source=LAPTOP-HDNQCJHP\\WILDAN_ZAUHAIR;Initial Catalog=MuseumKeretaApi;";  //DB Welly
 
+        private readonly Koneksi koneksi = new Koneksi();
 
         public LoginWindow()
         {
@@ -49,17 +50,24 @@ namespace MuseumApp
                 // Bangun connection string lengkap dengan kredensial pengguna
                 // PENTING: Pendekatan ini hanya untuk SQL Server Authentication.
                 // Jika Anda menggunakan Integrated Security (Windows Auth), logika login akan berbeda.
-                string connectionString = baseconnectionString + $"User ID={username};Password={password}";
+                string baseConnectionString = koneksi.GetConnectionString();
 
+                if (string.IsNullOrEmpty(baseConnectionString))
+                {
+                    ShowAlert("Connection string tidak ditemukan. Pastikan koneksi database sudah diatur.");
+                    return;
+                }
+
+                string userConnectionString = $"{baseConnectionString}User ID={username};Password={password};";
                 // Coba buka koneksi untuk memvalidasi login
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlConnection conn = new SqlConnection(userConnectionString))
                 {
                     conn.Open();
-                    MainWindow mainWindow = new MainWindow(connectionString);
-                    mainWindow.Show();
-                    this.Close();
                 }
-                
+                MainWindow mainWindow = new MainWindow(userConnectionString);
+                mainWindow.Show();
+                this.Close();
+
             }
             catch (SqlException ex)
             {
