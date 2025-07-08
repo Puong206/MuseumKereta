@@ -8,16 +8,26 @@
       d:DesignHeight="650" d:DesignWidth="950" Title="Kelola Barang"
       Background="Transparent">
 
+    <Page.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource BarangListPageLoadAnimation}"/>
+        </EventTrigger>
+    </Page.Triggers>
+
     <Grid>
         <Border Background="#FDFDFD" CornerRadius="15" Effect="{StaticResource CardShadowEffect}">
             <Grid Margin="20">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="47*"/>
+                    <RowDefinition Height="450*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Margin="0,0,0,20">
+                <Grid Grid.Row="0" Margin="0,0,0,20" x:Name="TopBarGrid" Opacity="0">
+                    <Grid.RenderTransform>
+                        <TranslateTransform x:Name="TopBarGridTransform" Y="20"/>
+                    </Grid.RenderTransform>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
@@ -26,13 +36,16 @@
                     <TextBlock Text="Kelola Barang" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Plus Jakarta Sans Bold" FontSize="26" Foreground="#2D2B70"/>
                 </Grid>
 
-                <DataGrid x:Name="dataGridBarang" Grid.Row="1"
+                <DataGrid x:Name="dataGridBarang" Grid.Row="1" Opacity="0"
                           FontFamily="Plus Jakarta Sans Medium"
                           AutoGenerateColumns="False" CanUserSortColumns="True" IsReadOnly="True"
                           SelectionMode="Single" SelectionUnit="FullRow" SelectionChanged="dataGridBarang_SelectionChanged"
                           Background="White" BorderBrush="#FFD6D6D6" BorderThickness="1"
                           HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
-                          AlternatingRowBackground="#FFF7F9FC" RowHeight="30" GridLinesVisibility="Horizontal">
+                          AlternatingRowBackground="#FFF7F9FC" RowHeight="30" GridLinesVisibility="Horizontal" Grid.RowSpan="2">
+                    <DataGrid.RenderTransform>
+                        <TranslateTransform x:Name="DataGridTransform" Y="20"/>
+                    </DataGrid.RenderTransform>
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ID Barang" Binding="{Binding BarangID}" SortMemberPath="BarangID" Width="Auto" MinWidth="100"/>
                         <DataGridTextColumn Header="Nama Barang" Binding="{Binding NamaBarang}" SortMemberPath="NamaBarang" Width="1.5*" MinWidth="180"/>
@@ -77,7 +90,10 @@
                     </DataGrid.Resources>
                 </DataGrid>
 
-                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                <StackPanel x:Name="ActionButtonsPanel" Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0" Opacity="0">
+                    <StackPanel.RenderTransform>
+                        <TranslateTransform x:Name="ActionButtonsPanelTransform" Y="20"/>
+                    </StackPanel.RenderTransform>
                     <Button x:Name="BtnTambah" Content="Tambah" Style="{StaticResource AddButtonStyle}" Click="BtnTambah_Click"/>
                     <Button x:Name="BtnEdit" Content="Edit" Style="{StaticResource EditButtonStyle}" Margin="10,0,0,0" Click="BtnEdit_Click"/>
                     <Button x:Name="BtnHapus" Content="Hapus" Style="{StaticResource DeleteButtonStyle}" Margin="10,0,0,0" Click="BtnHapus_Click"/>
@@ -86,6 +102,6 @@
             </Grid>
         </Border>
 
-        
+
     </Grid>
 </Page>
