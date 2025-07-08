@@ -73,7 +73,7 @@
     </Window.Resources>
 
     <Grid x:Name="Login_Form">
-        <Image Source="/Images/cover-2-1-b4c03b57f59f99cfb01ec83c400ae689_600x400.jpg" Stretch="Fill" Opacity="0.6">
+        <Image Source="/Images/Background.JPG" Stretch="Fill" Opacity="0.6">
             <Image.Effect>
                 <BlurEffect Radius="5"/>
             </Image.Effect>
