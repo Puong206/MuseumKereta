@@ -106,12 +106,22 @@ namespace MuseumApp
             MessageBoxResult confirm = MessageBox.Show($"Anda akan mengimpor {previewDataTable.Rows.Count} baris data. Lanjutkan?", "Konfirmasi impor", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (confirm != MessageBoxResult.Yes) return;
 
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
             string entityType = CmbEntityType.SelectedItem.ToString();
             bool success = ImportDataToDatabase(entityType);
 
+            stopwatch.Stop();
+
             if (success)
             {
-                MessageBox.Show("Proses impor selesai.", "Sukses", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(
+                    $"Proses impor selesai.\n\n" +
+                    $"Waktu Aktual (Elapsed Time): {stopwatch.ElapsedMilliseconds} ms",
+                    "Info Performa Import",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+
                 TxtFilePath.Text = "";
                 PreviewDataGrid.ItemsSource = null;
                 BtnImport.IsEnabled = false;

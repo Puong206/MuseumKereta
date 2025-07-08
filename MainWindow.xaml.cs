@@ -5,8 +5,8 @@ namespace MuseumApp
 {
     public partial class MainWindow : Window
     {
-        private string connectionString = "Data Source=LAPTOP-DP8JTMS7\\PUONG206;Initial Catalog=MuseumKeretaApi;";  //DB Arya
-        //private string connectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password;";  //DB Olip
+        //private string connectionString = "Data Source=LAPTOP-DP8JTMS7\\PUONG206;Initial Catalog=MuseumKeretaApi;";  //DB Arya
+        private string connectionString = "Data Source=OLIPIA\\OLIP;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password;";  //DB Olip
         //private string connectionString = "Data Source=LAPTOP-HDNQCJHP\\WILDAN_ZAUHAIR;Initial Catalog=MuseumKeretaApi;User ID=username;Password=password;";  //DB Welly
         
 
