@@ -57,7 +57,7 @@ namespace MuseumApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal memastikan indeks: " + ex.Message, "Error Indeks", MessageBoxButton.OK, MessageBoxImage.Error);
+                CustomMessageBox.ShowError("Gagal memastikan indeks: " + ex.Message, "Error Indeks");
             }
             
         }
@@ -88,7 +88,7 @@ namespace MuseumApp
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Gagal memuat data: " + ex.Message);
+                    CustomMessageBox.ShowWarning("Gagal memuat data: " + ex.Message);
                 }
             }
 
@@ -104,20 +104,20 @@ namespace MuseumApp
                 {
                     if (string.IsNullOrWhiteSpace(dialog.BarangID) || string.IsNullOrWhiteSpace(dialog.NamaBarang) || string.IsNullOrWhiteSpace(dialog.Deskripsi) || string.IsNullOrWhiteSpace(dialog.KoleksiID) || string.IsNullOrWhiteSpace(dialog.TahunPembuatan) || string.IsNullOrWhiteSpace(dialog.AsalBarang))
                     {
-                        MessageBox.Show("Jenis Koleksi dan Deskripsi harus diisi!", "Peringatan", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        CustomMessageBox.ShowWarning("Jenis Koleksi dan Deskripsi harus diisi!", "Peringatan");
                         return;
                     }
 
                     int KoleksiIdInt;
                     if (!int.TryParse(dialog.KoleksiID, out KoleksiIdInt))
                     {
-                        MessageBox.Show("KoleksiID harus berupa angka yang valid", "Validasi gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        CustomMessageBox.ShowWarning("KoleksiID harus berupa angka yang valid", "Validasi gagal");
                         return;
                     }
 
                     if (dialog.TahunPembuatan.Length != 4 || !dialog.TahunPembuatan.All(char.IsDigit))
                     {
-                        MessageBox.Show("Tahun Pembuatan harus terdiri dari tepat 4 digit angka.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        CustomMessageBox.ShowWarning("Tahun Pembuatan harus terdiri dari tepat 4 digit angka.", "Validasi Gagal");
                         return;
                     }
 
@@ -134,7 +134,7 @@ namespace MuseumApp
                             cmd.Parameters.AddWithValue("@AsalBarang", dialog.AsalBarang);
                             conn.Open();
                             cmd.ExecuteNonQuery();
-                            MessageBox.Show("Barang berhasil ditabahkan");
+                            CustomMessageBox.ShowSuccess("Barang berhasil ditabahkan");
                             _cache.Remove(CacheKey);
                         }
                     }
@@ -142,7 +142,7 @@ namespace MuseumApp
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Gagal menambah data: " + ex.Message);
+                    CustomMessageBox.ShowWarning("Gagal menambah data: " + ex.Message);
                 }
                 
             }
@@ -154,13 +154,13 @@ namespace MuseumApp
             DataRowView row = dataGridBarang.SelectedItem as DataRowView;
             if (row == null)
             {
-                MessageBox.Show("Pilih data barang yang akan diedit");
+                CustomMessageBox.ShowWarning("Pilih data barang yang akan diedit");
                 return;
             }
             string asalBarangID = row["BarangID"]?.ToString();
             if (string.IsNullOrWhiteSpace(asalBarangID))
             {
-                MessageBox.Show("BarangID data yang dipilih tidak valid", "Kesalahan Data", MessageBoxButton.OK, MessageBoxImage.Error);
+                CustomMessageBox.ShowError("BarangID data yang dipilih tidak valid", "Kesalahan Data");
                 return;
             }
 
@@ -179,7 +179,7 @@ namespace MuseumApp
                     string.IsNullOrWhiteSpace(dialog.KoleksiID) || string.IsNullOrWhiteSpace(dialog.TahunPembuatan) ||
                     string.IsNullOrWhiteSpace(dialog.AsalBarang))
                 {
-                    MessageBox.Show("Semua kolom harus diisi!", "Peringatan", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    CustomMessageBox.ShowWarning("Semua kolom harus diisi!", "Peringatan");
                     return;
                 }
 
@@ -187,14 +187,14 @@ namespace MuseumApp
 
                 if (dialog.TahunPembuatan.Length != 4 || !dialog.TahunPembuatan.All(char.IsDigit))
                 {
-                    MessageBox.Show("Tahun Pembuatan harus terdiri dari tepat 4 digit angka.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    CustomMessageBox.ShowWarning("Tahun Pembuatan harus terdiri dari tepat 4 digit angka.", "Validasi Gagal");
                     return;
                 }
 
                 int koleksiIdInt;
                 if (string.IsNullOrWhiteSpace(dialog.KoleksiID) || !int.TryParse(dialog.KoleksiID, out koleksiIdInt))
                 {
-                    MessageBox.Show("KoleksiID harus diisi dengan angka yang valid.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    CustomMessageBox.ShowWarning("KoleksiID harus diisi dengan angka yang valid.", "Validasi Gagal");
                     return;
                 }
 
@@ -215,7 +215,7 @@ namespace MuseumApp
                             conn.Open();
                             cmd.ExecuteNonQuery();
 
-                            MessageBox.Show("Data barang berhasil diperbaharui");
+                            CustomMessageBox.ShowSuccess("Data barang berhasil diperbaharui");
                             _cache.Remove(CacheKey);
                         }
                     }
@@ -225,16 +225,16 @@ namespace MuseumApp
                 {
                     if (SqlEx.Number == 50005)
                     {
-                        MessageBox.Show("Data barang tidak ditemukan. Mungkin sudah dihapus atau ID tidak valid", "Kesalahan Update", MessageBoxButton.OK, MessageBoxImage.Error);
+                        CustomMessageBox.ShowError("Data barang tidak ditemukan. Mungkin sudah dihapus atau ID tidak valid", "Kesalahan Update");
                     }
                     else
                     {
-                        MessageBox.Show("Gagal menambah data" + SqlEx.Message, "Kesalahan database", MessageBoxButton.OK, MessageBoxImage.Error);
+                        CustomMessageBox.ShowError("Gagal menambah data" + SqlEx.Message, "Kesalahan database");
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Terjadi kesalahan tak terduga saat mengubah data: " + ex.Message, "Kesalahan Umum", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.ShowError("Terjadi kesalahan tak terduga saat mengubah data: " + ex.Message, "Kesalahan Umum");
                 }
 
             }
@@ -245,18 +245,18 @@ namespace MuseumApp
             DataRowView row = dataGridBarang.SelectedItem as DataRowView;
             if (row == null)
             {
-                MessageBox.Show("Pilih data barang yang akan dihapus.");
+                CustomMessageBox.ShowWarning("Pilih data barang yang akan dihapus.");
                 return;
             }
             
 
             if (string.IsNullOrWhiteSpace(selectedBarangId))
             {
-                MessageBox.Show("BarangID dari data yang dipilih tidak valid.", "Kesalahan Data", MessageBoxButton.OK, MessageBoxImage.Error);
+                CustomMessageBox.ShowError("BarangID dari data yang dipilih tidak valid.", "Kesalahan Data");
                 return;
             }
 
-            if (MessageBox.Show($"Yakin ingin menghapus BarangID {selectedBarangId}?", "Konfirmasi", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (CustomMessageBox.ShowYesNo($"Yakin ingin menghapus BarangID {selectedBarangId}?", "Konfirmasi"))
             {
                 try
                 {
@@ -271,7 +271,7 @@ namespace MuseumApp
                             cmd.ExecuteNonQuery();
                         }
                     }
-                    MessageBox.Show("Barang berhasil dihapus!");
+                    CustomMessageBox.ShowSuccess("Barang berhasil dihapus!");
                     _cache.Remove(CacheKey);
                     LoadData();
                 }
@@ -279,16 +279,16 @@ namespace MuseumApp
                 {
                     if (sqlEx.Number == 50006)
                     {
-                        MessageBox.Show("Data barang tidak ditemukan. Mungkin sudah dihapus atau ID tidak valid.", "Kesalahan Hapus", MessageBoxButton.OK, MessageBoxImage.Error);
+                        CustomMessageBox.ShowError("Data barang tidak ditemukan. Mungkin sudah dihapus atau ID tidak valid.", "Kesalahan Hapus");
                     }
                     else
                     {
-                        MessageBox.Show("Gagal menghapus data: " + sqlEx.Message, "Kesalahan Database", MessageBoxButton.OK, MessageBoxImage.Error);
+                        CustomMessageBox.ShowError("Gagal menghapus data: " + sqlEx.Message, "Kesalahan Database");
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Terjadi kesalahan tak terduga saat menghapus data: " + ex.Message, "Kesalahan Umum", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.ShowError("Terjadi kesalahan tak terduga saat menghapus data: " + ex.Message, "Kesalahan Umum");
                 }
             }
         }
@@ -337,12 +337,12 @@ namespace MuseumApp
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error saat menganalisis kueri: " + ex.Message, "Error Analisis", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.ShowWarning("Error saat menganalisis kueri: " + ex.Message, "Error Analisis");
                     return;
                 }
             }
-            if (statisticsResult.Length > 0) MessageBox.Show(statisticsResult.ToString(), "STATISTICS INFO", MessageBoxButton.OK, MessageBoxImage.Information);
-            else MessageBox.Show("Tidak ada informasi statistik yang diterima.", "STATISTICS INFO", MessageBoxButton.OK, MessageBoxImage.Warning);
+            if (statisticsResult.Length > 0) CustomMessageBox.ShowInfo(statisticsResult.ToString(), "STATISTICS INFO");
+            else CustomMessageBox.ShowWarning("Tidak ada informasi statistik yang diterima.", "STATISTICS INFO");
         }
     }
 }
