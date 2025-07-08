@@ -45,7 +45,7 @@ namespace MuseumApp
             }
             catch (Exception ex) 
             {
-                MessageBox.Show($"Gagal memuat laporan koleksi: {ex.Message}", "Error Laporan", MessageBoxButton.OK, MessageBoxImage.Error);
+                CustomMessageBox.ShowError($"Gagal memuat laporan koleksi: {ex.Message}", "Error Laporan");
             }
             
         }
