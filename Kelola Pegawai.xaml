@@ -9,6 +9,12 @@
       Title="Kelola Pegawai"
       Background="Transparent">
 
+    <Page.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource PegawaiListPageLoadAnimation}"/>
+        </EventTrigger>
+    </Page.Triggers>
+    
     <Grid>
         <Border Background="#FDFDFD" CornerRadius="15" Effect="{StaticResource CardShadowEffect}">
             <Grid Margin="20">
@@ -19,7 +25,10 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Margin="0,0,0,15">
+                <Grid Grid.Row="0" Margin="0,0,0,20" x:Name="TopBarGrid" Opacity="0">
+                    <Grid.RenderTransform>
+                        <TranslateTransform x:Name="TopBarGridTransform" Y="20"/>
+                    </Grid.RenderTransform>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
@@ -32,7 +41,10 @@
                                FontFamily="Plus Jakarta Sans Bold" FontSize="26" Foreground="#2D2B70"/>
                 </Grid>
 
-                <Grid Grid.Row="1" Margin="0,0,0,20">
+                <Grid x:Name="SearchFilterPanel" Grid.Row="1" Margin="0,0,0,20" Opacity="0">
+                    <Grid.RenderTransform>
+                        <TranslateTransform x:Name="SearchFilterTransform" Y="20"/>
+                    </Grid.RenderTransform>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*" MinWidth="150"/>
@@ -48,13 +60,16 @@
                     <TextBox x:Name="txtNama" Grid.Column="4" Height="32" VerticalContentAlignment="Center"/>
                 </Grid>
 
-                <DataGrid x:Name="dataGridPegawai" Grid.Row="2"
+                <DataGrid x:Name="dataGridPegawai" Grid.Row="2" Opacity="0"
                           FontFamily="Plus Jakarta Sans Medium"
                           AutoGenerateColumns="False" CanUserSortColumns="True" IsReadOnly="True"
                           SelectionMode="Single" SelectionUnit="FullRow" SelectionChanged="dataGridPegawai_SelectionChanged"
                           Background="White" BorderBrush="#FFD6D6D6" BorderThickness="1"
                           HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
                           AlternatingRowBackground="#FFF7F9FC" RowHeight="30" GridLinesVisibility="Horizontal">
+                    <DataGrid.RenderTransform>
+                        <TranslateTransform x:Name="DataGridTransform" Y="20"/>
+                    </DataGrid.RenderTransform>
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="NIPP" Binding="{Binding NIPP}" SortMemberPath="NIPP" Width="Auto" MinWidth="120"/>
                         <DataGridTextColumn Header="Nama Pegawai" Binding="{Binding NamaKaryawan}" SortMemberPath="NamaKaryawan" Width="*" MinWidth="250"/>
@@ -97,7 +112,10 @@
                     </DataGrid.Resources>
                 </DataGrid>
 
-                <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                <StackPanel x:Name="ActionButtonsPanel" Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0" Opacity="0">
+                    <StackPanel.RenderTransform>
+                        <TranslateTransform x:Name="ActionButtonsPanelTransform" Y="20"/>
+                    </StackPanel.RenderTransform>
                     <Button x:Name="BtnTambahPegawai" Content="Tambah" Style="{StaticResource AddButtonStyle}" Click="BtnTambahPegawai_Click"/>
                     <Button x:Name="BtnEditPegawai" Content="Edit" Style="{StaticResource EditButtonStyle}" Margin="10,0,0,0" Click="BtnEditPegawai_Click"/>
                     <Button x:Name="BtnAnalisis" Content="Analisis" Style="{StaticResource AnalysisButtonStyle}" Margin="10,0,0,0" Click="BtnAnalisis_Click"/>
