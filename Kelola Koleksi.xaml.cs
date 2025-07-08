@@ -196,20 +196,13 @@ namespace MuseumApp
                             cmd.Parameters.AddWithValue("@Deskripsi", dialog.Deskripsi.Trim());
 
                             conn.Open();
-                            int rowsAffected = cmd.ExecuteNonQuery();
-                            if (rowsAffected > 0) 
-                            {
-                                MessageBox.Show("Koleksi berhasil diperbarui.", "Sukses", MessageBoxButton.OK, MessageBoxImage.Information);
-                                _cache.Remove("KoleksiData");
-
-                                _cache.Remove("BarangData");
-
-                                LoadData();
-                            }
-                            else
-                            {
-                                MessageBox.Show("Data koleksi tidak ditemukan atau tidak ada perubahan.", "Informasi", MessageBoxButton.OK, MessageBoxImage.Information);
-                            }
+                            cmd.ExecuteNonQuery();
+                            
+                            MessageBox.Show("Koleksi berhasil diperbarui.", "Sukses", MessageBoxButton.OK, MessageBoxImage.Information);
+                            _cache.Remove("KoleksiData");
+                            _cache.Remove("BarangData");
+                            LoadData();
+                            
                              
                         }
                     }

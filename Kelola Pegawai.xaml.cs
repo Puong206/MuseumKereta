@@ -11,6 +11,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using System.Linq;
 
 namespace MuseumApp
 {
@@ -130,11 +131,9 @@ namespace MuseumApp
                 string Nama = dialog.NamaKaryawan.Trim();
                 string Status = dialog.StatusKaryawan.Trim();
 
-
-                if (NIPP.Length != 5 || !int.TryParse(NIPP, out _))
+                if (NIPP.Length != 5 || !NIPP.All(char.IsDigit))
                 {
-                    MessageBox.Show("NIPP harus 5 digit angka.", "Validasi Input", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    
+                    MessageBox.Show("NIPP harus terdiri dari 5 digit angka.", "Validasi Gagal", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
