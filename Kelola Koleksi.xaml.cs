@@ -82,7 +82,7 @@ namespace MuseumApp
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Gagal memuat data: " + ex.Message);
+                    CustomMessageBox.ShowWarning("Gagal memuat data: " + ex.Message);
                 }
                 
             }
@@ -127,7 +127,7 @@ namespace MuseumApp
                 {
                     if (string.IsNullOrWhiteSpace(dialog.JenisKoleksi) || string.IsNullOrWhiteSpace(dialog.Deskripsi))
                     {
-                        MessageBox.Show("Jenis Koleksi dan Deskripsi harus diisi!", "Peringatan", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        CustomMessageBox.ShowWarning("Jenis Koleksi dan Deskripsi harus diisi!", "Peringatan");
                         return;
                     }
                     using (SqlConnection conn = new SqlConnection(connectionString))
@@ -144,7 +144,7 @@ namespace MuseumApp
                             conn.Open();
                             cmd.ExecuteNonQuery();
                             int generatedID = (int)outputIdParam.Value;
-                            MessageBox.Show("Koleksi berhasil ditambahkan");
+                            CustomMessageBox.ShowSuccess("Koleksi berhasil ditambahkan");
                             _cache.Remove(CacheKey);
                         }
                     }
@@ -152,7 +152,7 @@ namespace MuseumApp
                     LoadData();
                 } catch (Exception ex)
                 {
-                    MessageBox.Show("Gagal menammbah Koleksi" + ex.Message);
+                    CustomMessageBox.ShowWarning("Gagal menammbah Koleksi" + ex.Message);
                 }
                 
               
@@ -163,13 +163,13 @@ namespace MuseumApp
         {
             if (dataGridKoleksi.SelectedItem == null)
             {
-                MessageBox.Show("Pilih koleksi yang ingin diedit");
+                CustomMessageBox.ShowWarning("Pilih koleksi yang ingin diedit");
                 return;
             }
 
             if (selectedId <= 0)
             {
-                MessageBox.Show("ID Koleksi tidak valid", "kesalahan", MessageBoxButton.OK, MessageBoxImage.Warning);
+                CustomMessageBox.ShowWarning("ID Koleksi tidak valid", "kesalahan");
                 return;
             }
 
@@ -183,7 +183,7 @@ namespace MuseumApp
                 {
                     if (string.IsNullOrWhiteSpace(dialog.JenisKoleksi) || string.IsNullOrWhiteSpace(dialog.Deskripsi))
                     {
-                        MessageBox.Show("Jenis Koleksi dan Deskripsi harus diisi!", "Peringatan", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        CustomMessageBox.ShowWarning("Jenis Koleksi dan Deskripsi harus diisi!", "Peringatan");
                         return;
                     }
                     using (SqlConnection conn = new SqlConnection(connectionString))
@@ -198,7 +198,7 @@ namespace MuseumApp
                             conn.Open();
                             cmd.ExecuteNonQuery();
                             
-                            MessageBox.Show("Koleksi berhasil diperbarui.", "Sukses", MessageBoxButton.OK, MessageBoxImage.Information);
+                            CustomMessageBox.ShowSuccess("Koleksi berhasil diperbarui.", "Sukses");
                             _cache.Remove("KoleksiData");
                             _cache.Remove("BarangData");
                             LoadData();
@@ -212,16 +212,16 @@ namespace MuseumApp
                 {
                     if (sqlEx.Number == 50001)
                     {
-                        MessageBox.Show("Data koleksi tidak ditemukan", "Kesalahan Update", MessageBoxButton.OK, MessageBoxImage.Error);
+                        CustomMessageBox.ShowError("Data koleksi tidak ditemukan", "Kesalahan Update");
                     }
                     else
                     {
-                        MessageBox.Show("Gagal memperbaharui Koleksi" + sqlEx.Message, "Kesalahan Database", MessageBoxButton.OK, MessageBoxImage.Error);
+                        CustomMessageBox.ShowError("Gagal memperbaharui Koleksi" + sqlEx.Message, "Kesalahan Database");
                     }
                 }
                 catch (Exception ex) 
                 {
-                    MessageBox.Show("Terjadi kesalahan tak terduga saat memperbaharui Koleksi: " + ex.Message, "Kesalahan Umum", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.ShowError("Terjadi kesalahan tak terduga saat memperbaharui Koleksi: " + ex.Message, "Kesalahan Umum");
                 }
 
 
@@ -232,55 +232,53 @@ namespace MuseumApp
         {
             if (dataGridKoleksi.SelectedItem == null)
             {
-                MessageBox.Show("Pilih koleksi yang ingin dihapus.");
+                CustomMessageBox.ShowYesNo("Pilih koleksi yang ingin dihapus.");
                 return;
             }
 
             if (selectedId <= 0)
             {
-                MessageBox.Show("ID koleksi tidak valid. Silakan pilih baris yang benar.", "Kesalahan ID", MessageBoxButton.OK, MessageBoxImage.Warning);
+                CustomMessageBox.ShowWarning("ID koleksi tidak valid. Silakan pilih baris yang benar.", "Kesalahan ID");
                 return;
             }
 
-            var result = MessageBox.Show($"Yakin ingin menghapus koleksi dengan ID {selectedId}?", "Konfirmasi", MessageBoxButton.YesNo);
-            if (result != MessageBoxResult.Yes) return;
-            try
+            if (CustomMessageBox.ShowYesNo($"Yakin ingin menghapus koleksi dengan ID {selectedId}?", "Konfirmasi"));
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                try
                 {
-                    using (SqlCommand cmd = new SqlCommand("DeleteKoleksi", conn))
+                    using (SqlConnection conn = new SqlConnection(connectionString))
                     {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@KoleksiID", selectedId);
+                        using (SqlCommand cmd = new SqlCommand("DeleteKoleksi", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@KoleksiID", selectedId);
 
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
-                        MessageBox.Show("Koleksi berhasil dihapus.", "Sukses", MessageBoxButton.OK, MessageBoxImage.Information);
-                        
-                        _cache.Remove("KoleksiData");
+                            conn.Open();
+                            cmd.ExecuteNonQuery();
+                            CustomMessageBox.ShowInfo("Koleksi berhasil dihapus.", "Sukses");
 
-                        _cache.Remove("BarangData");
-                        LoadData();
-                       
-                         
+                            _cache.Remove("KoleksiData");
+
+                            _cache.Remove("BarangData");
+                            LoadData();
+                        }
                     }
                 }
-                
-            }
-            catch (SqlException sqlEx)
-            {
-                if (sqlEx.Number == 50002)
+                catch (SqlException sqlEx)
                 {
-                    MessageBox.Show("Data koleksi tidak ditemukan.", "Kesalahan Hapus", MessageBoxButton.OK, MessageBoxImage.Error);
+                    if (sqlEx.Number == 50002)
+                    {
+                        CustomMessageBox.ShowError("Data koleksi tidak ditemukan.", "Kesalahan Hapus");
+                    }
+                    else
+                    {
+                        CustomMessageBox.ShowError("Gagal menghapus data: " + sqlEx.Message, "Kesalahan Database");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Gagal menghapus data: " + sqlEx.Message, "Kesalahan Database", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.ShowError("Terjadi kesalahan tak terduga saat menghapus data: " + ex.Message, "Kesalahan Umum");
                 }
-            }
-            catch (Exception ex) 
-            {
-                MessageBox.Show("Terjadi kesalahan tak terduga saat menghapus data: " + ex.Message, "Kesalahan Umum", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -316,18 +314,18 @@ namespace MuseumApp
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("error saat enganalisis query" + ex.Message, "error analisis",MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.ShowError("error saat enganalisis query" + ex.Message, "error analisis");
                     return;
                 }
             }
 
             if (statisticsResult.Length > 0)
             {
-                MessageBox.Show(statisticsResult.ToString(), "STATISTICS INFO", MessageBoxButton.OK, MessageBoxImage.Information);
+                CustomMessageBox.ShowInfo(statisticsResult.ToString(), "STATISTICS INFO");
             }
             else
             {
-                MessageBox.Show("tidak ada informasi statistik yang diterima", "STATISTICS INFO", MessageBoxButton.OK, MessageBoxImage.Warning );
+                CustomMessageBox.ShowWarning("tidak ada informasi statistik yang diterima", "STATISTICS INFO");
             }
         }
 
