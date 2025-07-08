@@ -55,7 +55,7 @@ namespace MuseumApp
 
         private void LoadData()
         {
-            DataTable dt = _cache.Get(CacheKey) as DataTable;
+            DataTable dt = _cache.Get(CacheKey) as DataTable; //cek cache
 
             if (dt == null) 
             {

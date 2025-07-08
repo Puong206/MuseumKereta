@@ -107,12 +107,22 @@ namespace MuseumApp
 
             if (!confirm) return;
 
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
             string entityType = CmbEntityType.SelectedItem.ToString();
             bool success = ImportDataToDatabase(entityType);
 
+            stopwatch.Stop();
+
             if (success)
             {
-                CustomMessageBox.ShowSuccess("Proses impor selesai.", "Sukses");
+                MessageBox.Show(
+                    $"Proses impor selesai.\n\n" +
+                    $"Waktu Aktual (Elapsed Time): {stopwatch.ElapsedMilliseconds} ms",
+                    "Info Performa Import",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+
                 TxtFilePath.Text = "";
                 PreviewDataGrid.ItemsSource = null;
                 BtnImport.IsEnabled = false;
