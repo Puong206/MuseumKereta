@@ -35,14 +35,14 @@ namespace MuseumApp
         {
             if (IDBarang.Length != 5 || !IDBarang.All(char.IsDigit))
             {
-                MessageBox.Show("ID Barang harus 5 digit");
+                CustomMessageBox.ShowWarning("ID Barang harus 5 digit");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(IDBarang) || dpTanggalPerawatan.SelectedDate == null ||
                 string.IsNullOrWhiteSpace(JenisPerawatan) || string.IsNullOrWhiteSpace(Catatan) || string.IsNullOrWhiteSpace(NIPP))
             {
-                MessageBox.Show("Harap lengkapi semua data.");
+                CustomMessageBox.ShowWarning("Harap lengkapi semua data.");
                 return;
             }
 
