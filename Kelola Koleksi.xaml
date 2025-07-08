@@ -9,6 +9,12 @@
       Title="Kelola Koleksi"
       Background="Transparent">
 
+    <Page.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource KoleksiListPageLoadAnimation}"/>
+        </EventTrigger>
+    </Page.Triggers>
+
     <Grid>
         <Border Background="#FDFDFD" CornerRadius="15" Effect="{StaticResource CardShadowEffect}">
             <Grid Margin="20">
@@ -18,7 +24,10 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Margin="0,0,0,20">
+                <Grid Grid.Row="0" Margin="0,0,0,20" x:Name="TopBarGrid" Opacity="0">
+                    <Grid.RenderTransform>
+                        <TranslateTransform x:Name="TopBarGridTransform" Y="20"/>
+                    </Grid.RenderTransform>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
@@ -31,7 +40,7 @@
                                FontFamily="Plus Jakarta Sans Bold" FontSize="26" Foreground="#2D2B70"/>
                 </Grid>
 
-                <DataGrid x:Name="dataGridKoleksi" Grid.Row="1"
+                <DataGrid x:Name="dataGridKoleksi" Grid.Row="1" Opacity="0"
                           FontFamily="Plus Jakarta Sans Medium"
                           AutoGenerateColumns="False" 
                           CanUserSortColumns="True" 
@@ -42,6 +51,9 @@
                           BorderBrush="#FFD6D6D6" BorderThickness="1"
                           HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
                           AlternatingRowBackground="#FFF7F9FC" RowHeight="30" GridLinesVisibility="Horizontal">
+                    <DataGrid.RenderTransform>
+                        <TranslateTransform x:Name="DataGridTransform" Y="20"/>
+                    </DataGrid.RenderTransform>
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ID Koleksi" Binding="{Binding KoleksiID}" SortMemberPath="KoleksiID" Width="Auto" MinWidth="100"/>
                         <DataGridTextColumn Header="Jenis Koleksi" Binding="{Binding JenisKoleksi}" SortMemberPath="JenisKoleksi" Width="*" MinWidth="200"/>
@@ -84,7 +96,10 @@
                     </DataGrid.Resources>
                 </DataGrid>
 
-                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                <StackPanel x:Name="ActionButtonsPanel" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0" Opacity="0">
+                    <StackPanel.RenderTransform>
+                        <TranslateTransform x:Name="ActionButtonsPanelTransform" Y="20"/>
+                    </StackPanel.RenderTransform>
                     <Button x:Name="BtnTambah" Content="Tambah" Style="{StaticResource AddButtonStyle}" Click="BtnTambah_Click"/>
                     <Button x:Name="BtnEdit" Content="Edit" Style="{StaticResource EditButtonStyle}" Margin="10,0,0,0" Click="BtnEdit_Click"/>
                     <Button x:Name="BtnHapus" Content="Hapus" Style="{StaticResource DeleteButtonStyle}" Margin="10,0,0,0" Click="BtnHapus_Click"/>
