@@ -10,7 +10,7 @@ namespace MuseumApp
 {
     internal class Koneksi
     {
-        public string connectionString()
+        public string GetConnectionString()
         {
             string connectionString = "";
             try
