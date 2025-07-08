@@ -93,13 +93,8 @@ namespace MuseumApp
             // Cek jika tombol yang ditekan adalah Escape
             else if (e.Key == Key.Escape)
             {
-                MessageBoxResult result = MessageBox.Show(
-                    "Apakah Anda yakin ingin keluar dari aplikasi?",
-                    "Konfirmasi Keluar",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question);
-
-                if (result == MessageBoxResult.Yes)
+                if (CustomMessageBox.ShowYesNo("Apakah Anda yakin ingin keluar dari aplikasi?",
+                    "Konfirmasi Keluar"))
                 {
                     Application.Current.Shutdown();
                 }
