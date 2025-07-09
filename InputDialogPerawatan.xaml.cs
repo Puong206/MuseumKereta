@@ -17,7 +17,7 @@ namespace MuseumApp
     public partial class InputDialogPerawatan : Window
     {
         public string IDBarang => IDBarangTextBox.Text;
-        public DateTime TanggalPerawatan => (dpTanggalPerawatan.SelectedDate ?? DateTime.Now).Date;
+        public DateTime TanggalPerawatan => dpTanggalPerawatan.SelectedDate ?? DateTime.Today;
         public string JenisPerawatan => JenisPerawatanTextBox.Text;
         public string Catatan => CatatanTextBox.Text;
         public string NIPP => NIPPTextBox.Text;
@@ -29,25 +29,40 @@ namespace MuseumApp
             JenisPerawatanTextBox.Text = jenis;
             CatatanTextBox.Text = catatan;
             NIPPTextBox.Text = nipp;
+
+            IDBarangTextBox.Focus();
         }
 
         private void Simpan_Click(object sender, RoutedEventArgs e)
         {
-            if (IDBarang.Length != 5 || !IDBarang.All(char.IsDigit))
+            // --- Validasi Input ---
+            string idBarang = IDBarangTextBox.Text.Trim();
+            string nipp = NIPPTextBox.Text.Trim();
+            string jenisPerawatan = JenisPerawatanTextBox.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(idBarang) || idBarang.Length != 5 || !idBarang.All(char.IsDigit))
             {
-                CustomMessageBox.ShowWarning("ID Barang harus 5 digit");
+                CustomMessageBox.ShowWarning("ID Barang harus diisi dan terdiri dari 5 digit angka.", "Validasi Gagal");
+                return;
+            }
+            if (dpTanggalPerawatan.SelectedDate == null)
+            {
+                CustomMessageBox.ShowWarning("Tanggal Perawatan harus diisi.", "Validasi Gagal");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(jenisPerawatan))
+            {
+                CustomMessageBox.ShowWarning("Jenis Perawatan tidak boleh kosong.", "Validasi Gagal");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(nipp) || nipp.Length != 5 || !nipp.All(char.IsDigit))
+            {
+                CustomMessageBox.ShowWarning("NIPP harus diisi dan terdiri dari 5 digit angka.", "Validasi Gagal");
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(IDBarang) || dpTanggalPerawatan.SelectedDate == null ||
-                string.IsNullOrWhiteSpace(JenisPerawatan) || string.IsNullOrWhiteSpace(Catatan) || string.IsNullOrWhiteSpace(NIPP))
-            {
-                CustomMessageBox.ShowWarning("Harap lengkapi semua data.");
-                return;
-            }
-
+            // Jika semua validasi lolos, tutup dialog
             DialogResult = true;
-            Close();
         }
 
         private void Batal_Click(object sender, RoutedEventArgs e)

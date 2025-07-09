@@ -135,13 +135,13 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Jenis Koleksi:" Style="{StaticResource DialogLabelStyle}" Margin="0,0,10,10"/>
-                <TextBox x:Name="JenisTextBox" Grid.Row="0" Grid.Column="1" Style="{StaticResource DialogTextBoxStyle}" Margin="0,0,0,10" TextChanged="JenisTextBox_TextChanged"/>
+                <TextBox x:Name="JenisTextBox" Grid.Row="0" Grid.Column="1" Style="{StaticResource DialogTextBoxStyle}" Margin="0,0,0,10"/>
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Deskripsi:" Style="{StaticResource DialogLabelStyle}" VerticalAlignment="Top" Margin="0,5,10,10"/>
                 <TextBox x:Name="DeskripsiTextBox" Grid.Row="1" Grid.Column="1" Style="{StaticResource DialogTextBoxStyle}" 
                          MinHeight="80" TextWrapping="Wrap" AcceptsReturn="True" 
                          VerticalScrollBarVisibility="Auto" Margin="0,0,0,15"
-                         VerticalContentAlignment="Top" Padding="8,5" TextChanged="DeskripsiTextBox_TextChanged"/>
+                         VerticalContentAlignment="Top" Padding="8,5"/>
             </Grid>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">

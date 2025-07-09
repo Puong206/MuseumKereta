@@ -24,12 +24,14 @@ namespace MuseumApp
             AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5)
         };
         private const string CacheKey = "PerawatanData";
+
+        // Variabel untuk menyimpan data dari baris yang dipilih
         private int selectedPerawatanId;
-        //SqlConnection conn;
-        //SqlCommand cmd;
-        SqlDataAdapter adapter;
-        //DataTable dt;
-        
+        private string selectedBarangId;
+        private DateTime selectedTanggalPerawatan;
+        private string selectedJenisPerawatan;
+        private string selectedCatatan;
+        private string selectedNipp;
 
         public Kelola_Perawatan(string connStr)
         {
@@ -37,54 +39,57 @@ namespace MuseumApp
             connectionString = connStr;
             EnsureIndexes();
             LoadData();
+            // Nonaktifkan tombol saat pertama kali dimuat
+            BtnEdit.IsEnabled = false;
+            BtnHapus.IsEnabled = false;
         }
 
         private void EnsureIndexes()
         {
-            using (SqlConnection conn = new SqlConnection(connectionString)) 
+            try
             {
-                conn.Open();
-                var indexScript = @"
-                IF OBJECT_ID('dbo.Perawatan', 'U') IS NOT NULL
-                BEGIN
-                    IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_TanggalPerawatan' AND object_id = OBJECT_ID('dbo.Perawatan'))
-                        CREATE NONCLUSTERED INDEX idx_TanggalPerawatan ON dbo.Perawatan(TanggalPerawatan);
-                END";
-                using (SqlCommand cmd = new SqlCommand(indexScript, conn)) 
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    cmd.ExecuteNonQuery();  
+                    conn.Open();
+                    var indexScript = @"
+                    IF OBJECT_ID('dbo.Perawatan', 'U') IS NOT NULL
+                    BEGIN
+                        IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_TanggalPerawatan' AND object_id = OBJECT_ID('dbo.Perawatan'))
+                            CREATE NONCLUSTERED INDEX idx_TanggalPerawatan ON dbo.Perawatan(TanggalPerawatan);
+                    END";
+                    using (SqlCommand cmd = new SqlCommand(indexScript, conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
                 }
-
+            }
+            catch (Exception ex)
+            {
+                CustomMessageBox.ShowError("Gagal memastikan indeks: " + ex.Message, "Error Indeks");
             }
         }
 
         private void LoadData()
         {
             DataTable dt = _cache.Get(CacheKey) as DataTable;
-
             if (dt == null)
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                try
                 {
-                    try
+                    using (SqlConnection conn = new SqlConnection(connectionString))
                     {
-                        using (SqlCommand cmd = conn.CreateCommand())
-                        {
-                            conn.Open();
-                            adapter = new SqlDataAdapter("SELECT * FROM Perawatan", conn);
-                            dt = new DataTable();
-                            adapter.Fill(dt);
-                            dataGridPerawatan.ItemsSource = dt.DefaultView;
-                            _cache.Set(CacheKey, dt, _policy);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        CustomMessageBox.ShowError("Gagal memuat data: " + ex.Message);
+                        conn.Open();
+                        SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Perawatan", conn);
+                        dt = new DataTable();
+                        adapter.Fill(dt);
+                        dataGridPerawatan.ItemsSource = dt.DefaultView;
+                        _cache.Set(CacheKey, dt, _policy);
                     }
                 }
-                
-                
+                catch (Exception ex)
+                {
+                    CustomMessageBox.ShowError("Gagal memuat data: " + ex.Message);
+                }
             }
             else
             {
@@ -94,36 +99,27 @@ namespace MuseumApp
 
         private void dataGridPerawatan_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (dataGridPerawatan.SelectedItem is DataRowView selectedRow)
+            if (dataGridPerawatan.SelectedItem is DataRowView row)
             {
-                if (int.TryParse(selectedRow["PerawatanID"]?.ToString(), out int id))
-                {
-                    selectedPerawatanId = id;
-                }
-                else
-                {
-                    CustomMessageBox.ShowError("Kesalahan", "Error Data");
-                    selectedPerawatanId = 0;
-                }
-                if (BtnEdit !=null)
-                {
-                    BtnEdit.IsEnabled = true;
-                }
-                if (BtnHapus != null)
-                {
-                    BtnHapus.IsEnabled = true;
-                }
+                // Ambil semua data dari baris yang dipilih
+                int.TryParse(row["PerawatanID"]?.ToString(), out selectedPerawatanId);
+                selectedBarangId = row["BarangID"]?.ToString();
+                DateTime.TryParse(row["TanggalPerawatan"]?.ToString(), out selectedTanggalPerawatan);
+                selectedJenisPerawatan = row["JenisPerawatan"]?.ToString();
+                selectedCatatan = row["Catatan"]?.ToString();
+                selectedNipp = row["NIPP"]?.ToString();
+
+                // Aktifkan tombol jika item valid dipilih
+                bool isItemSelected = selectedPerawatanId > 0;
+                BtnEdit.IsEnabled = isItemSelected;
+                BtnHapus.IsEnabled = isItemSelected;
             }
             else
             {
-                if (BtnEdit != null)
-                {
-                    BtnEdit.IsEnabled = false;
-                }
-                if (BtnHapus != null)
-                {
-                    BtnHapus.IsEnabled = false;
-                }
+                // Reset state dan nonaktifkan tombol jika tidak ada yang dipilih
+                selectedPerawatanId = 0;
+                BtnEdit.IsEnabled = false;
+                BtnHapus.IsEnabled = false;
             }
         }
 
@@ -132,17 +128,6 @@ namespace MuseumApp
             var dialog = new InputDialogPerawatan();
             if (dialog.ShowDialog() == true)
             {
-                string idBarang = dialog.IDBarang.Trim();
-                string nipp = dialog.NIPP.Trim();
-                string jenisPerawatan = dialog.JenisPerawatan.Trim();
-                Regex regex = new Regex("^[a-zA-Z0-9 ]+$");
-
-                if (idBarang.Length != 5 || !idBarang.All(char.IsDigit)) { CustomMessageBox.ShowWarning("BarangID harus terdiri dari 5 digit angka.", "Validasi Gagal"); return; }
-                if (nipp.Length != 5 || !nipp.All(char.IsDigit)) { CustomMessageBox.ShowWarning("NIPP harus terdiri dari 5 digit angka.", "Validasi Gagal"); return; }
-                if (dialog.TanggalPerawatan == default(DateTime)) { CustomMessageBox.ShowWarning("Tanggal Perawatan harus diisi.", "Validasi Gagal"); return; }
-                if (string.IsNullOrWhiteSpace(jenisPerawatan) || !regex.IsMatch(jenisPerawatan)) { CustomMessageBox.ShowWarning("Jenis Perawatan harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal"); return; }
-
-
                 try
                 {
                     using (SqlConnection conn = new SqlConnection(connectionString))
@@ -150,26 +135,19 @@ namespace MuseumApp
                         using (SqlCommand cmd = new SqlCommand("AddPerawatan", conn))
                         {
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@BarangID", (object)dialog.IDBarang);
+                            cmd.Parameters.AddWithValue("@BarangID", dialog.IDBarang);
                             cmd.Parameters.AddWithValue("@TanggalPerawatan", dialog.TanggalPerawatan);
                             cmd.Parameters.AddWithValue("@JenisPerawatan", dialog.JenisPerawatan);
-                            cmd.Parameters.AddWithValue("@Catatan", (object)dialog.Catatan);
+                            cmd.Parameters.AddWithValue("@Catatan", dialog.Catatan);
                             cmd.Parameters.AddWithValue("@NIPP", dialog.NIPP);
-
-                            SqlParameter outputIdParam = new SqlParameter("@PerawatanIDIdentity", SqlDbType.Int);
-                            outputIdParam.Direction = ParameterDirection.Output;
-                            cmd.Parameters.Add(outputIdParam);
 
                             conn.Open();
                             cmd.ExecuteNonQuery();
-                            int generatedID = (int)outputIdParam.Value;
 
-                            CustomMessageBox.ShowSuccess("Data berhasil ditambah.");
+                            CustomMessageBox.ShowSuccess("Data perawatan berhasil ditambahkan.");
                             _cache.Remove(CacheKey);
                         }
                     }
-
-
                     LoadData();
                 }
                 catch (SqlException sqlEx) 
@@ -188,81 +166,42 @@ namespace MuseumApp
 
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
-            if (!(dataGridPerawatan.SelectedItem is DataRowView row))
-            {
-                CustomMessageBox.ShowWarning("Pilih data yang akan diedit.");
-                return;
-            }
-
             if (selectedPerawatanId <= 0)
             {
-                CustomMessageBox.ShowWarning("ID perawatan tidak valid", "kesalahan ID");
+                CustomMessageBox.ShowWarning("Pilih data perawatan yang akan diedit.", "Peringatan");
                 return;
             }
 
-            int perawatanId = Convert.ToInt32(row["PerawatanID"]);
             var dialog = new InputDialogPerawatan(
-                row["BarangID"].ToString(),
-                Convert.ToDateTime(row["TanggalPerawatan"]),
-                row["JenisPerawatan"].ToString(),
-                row["Catatan"].ToString(),
-                row["NIPP"].ToString()
+                selectedBarangId,
+                selectedTanggalPerawatan,
+                selectedJenisPerawatan,
+                selectedCatatan,
+                selectedNipp
             );
 
             if (dialog.ShowDialog() == true)
             {
-
-                string idBarang = dialog.IDBarang.Trim();
-                string nipp = dialog.NIPP.Trim();
-                string jenisPerawatan = dialog.JenisPerawatan.Trim();
-                Regex regex = new Regex("^[a-zA-Z0-9 ]+$");
-
-                if (idBarang.Length != 5 || !idBarang.All(char.IsDigit))
-                {
-                    CustomMessageBox.ShowWarning("BarangID harus terdiri dari 5 digit angka.", "Validasi Gagal");
-                    return;
-                }
-                if (nipp.Length != 5 || !nipp.All(char.IsDigit))
-                {
-                    CustomMessageBox.ShowWarning("NIPP harus terdiri dari 5 digit angka.", "Validasi Gagal");
-                    return;
-                }
-                if (dialog.TanggalPerawatan == default(DateTime))
-                {
-                    CustomMessageBox.ShowWarning("Tanggal Perawatan harus diisi.", "Validasi Gagal");
-                    return;
-                }
-                if (string.IsNullOrWhiteSpace(jenisPerawatan) || !regex.IsMatch(jenisPerawatan))
-                {
-                    CustomMessageBox.ShowWarning("Jenis Perawatan harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal");
-                    return;
-                }
-
-
-
                 try
                 {
-                    using (SqlConnection conn = new SqlConnection(connectionString)) 
+                    using (SqlConnection conn = new SqlConnection(connectionString))
                     {
                         using (SqlCommand cmd = new SqlCommand("UpdatePerawatan", conn))
                         {
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@PerawatanID", perawatanId);
-                            cmd.Parameters.AddWithValue("@BarangID", (object)dialog.IDBarang); 
+                            cmd.Parameters.AddWithValue("@PerawatanID", selectedPerawatanId);
+                            cmd.Parameters.AddWithValue("@BarangID", dialog.IDBarang);
                             cmd.Parameters.AddWithValue("@TanggalPerawatan", dialog.TanggalPerawatan);
                             cmd.Parameters.AddWithValue("@JenisPerawatan", dialog.JenisPerawatan);
-                            cmd.Parameters.AddWithValue("@Catatan", (object)dialog.Catatan); 
+                            cmd.Parameters.AddWithValue("@Catatan", dialog.Catatan);
                             cmd.Parameters.AddWithValue("@NIPP", dialog.NIPP);
-
 
                             conn.Open();
                             cmd.ExecuteNonQuery();
-                            CustomMessageBox.ShowSuccess("Data berhasil diperbarui.");
+                            CustomMessageBox.ShowSuccess("Data perawatan berhasil diperbarui.");
                             _cache.Remove(CacheKey);
                         }
                     }
-
-                    
                     LoadData();
                 }
                 catch (SqlException sqlEx)
@@ -297,25 +236,17 @@ namespace MuseumApp
 
         private void BtnHapus_Click(object sender, RoutedEventArgs e)
         {
-            if (!(dataGridPerawatan.SelectedItem is DataRowView row))
-            {
-                CustomMessageBox.ShowWarning("Pilih data yang akan dihapus.");
-                return;
-            }
-
             if (selectedPerawatanId <= 0)
             {
-                CustomMessageBox.ShowWarning("ID perawatan tidak valid. Silakan pilih baris yang benar.", "Kesalahan ID");
+                CustomMessageBox.ShowWarning("Pilih data perawatan yang akan dihapus.", "Peringatan");
                 return;
             }
 
-            
-
-            if (CustomMessageBox.ShowYesNo("Yakin ingin menghapus data ini?", "Konfirmasi"))
+            if (CustomMessageBox.ShowYesNo($"Yakin ingin menghapus data perawatan ID {selectedPerawatanId}?", "Konfirmasi Hapus"))
             {
                 try
                 {
-                    using (SqlConnection conn = new SqlConnection(connectionString)) 
+                    using (SqlConnection conn = new SqlConnection(connectionString))
                     {
                         using (SqlCommand cmd = new SqlCommand("DeletePerawatan", conn))
                         {
@@ -327,8 +258,6 @@ namespace MuseumApp
                             _cache.Remove(CacheKey);
                         }
                     }
-
-                    
                     LoadData();
                 }
                 catch (SqlException sqlEx)
@@ -385,8 +314,6 @@ namespace MuseumApp
                     CustomMessageBox.ShowError("Error saat menganalisis query" + ex.Message, "Error Analisis");
                     return;
                 }
-
-
             }
 
             if (statisticsResult.Length > 0)
