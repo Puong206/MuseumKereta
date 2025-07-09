@@ -293,7 +293,7 @@ namespace MuseumApp
                 return;
             }
 
-            if (CustomMessageBox.ShowYesNo($"Yakin ingin menghapus koleksi dengan ID {selectedId}?", "Konfirmasi"));
+            if (CustomMessageBox.ShowYesNo($"Yakin ingin menghapus koleksi dengan ID {selectedId}?", "Konfirmasi"))
             {
                 try
                 {
