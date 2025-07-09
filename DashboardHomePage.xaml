@@ -74,7 +74,7 @@
                         </StackPanel.RenderTransform>
                         <Border Style="{StaticResource CardStyle}">
                             <StackPanel>
-                                <TextBlock Text="Distribusi Barang per Tahun" Style="{StaticResource CardTitleStyle}"/>
+                                <TextBlock Text="Grafik Tahun Pembuatan" Style="{StaticResource CardTitleStyle}"/>
                                 <lvc:PieChart x:Name="ItemYearChart" Series="{Binding PieChartSeries}" LegendLocation="Bottom" InnerRadius="50" Height="250">
                                     <lvc:PieChart.ChartLegend>
                                         <lvc:DefaultLegend BulletSize="12" FontSize="11"/>
