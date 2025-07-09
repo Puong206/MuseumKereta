@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Input;
 
 namespace MuseumApp
@@ -25,10 +26,29 @@ namespace MuseumApp
 
         private void Simpan_Click(object sender, RoutedEventArgs e)
         {
-            JenisKoleksi = JenisTextBox.Text;
-            Deskripsi = DeskripsiTextBox.Text;
+            string jenisKoleksi = JenisTextBox.Text.Trim();
+            string deskripsi = DeskripsiTextBox.Text.Trim();
+            Regex regex = new Regex("^[a-zA-Z0-9 ]+$");
+
+            if (string.IsNullOrWhiteSpace(jenisKoleksi) && string.IsNullOrWhiteSpace(deskripsi))
+            {
+                CustomMessageBox.ShowWarning("Jenis Koleksi dan Deskripsi wajib diisi.", "Input Kosong");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(jenisKoleksi) || !regex.IsMatch(jenisKoleksi))
+            {
+                CustomMessageBox.ShowWarning("Jenis Koleksi harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(deskripsi))
+            {
+                CustomMessageBox.ShowWarning("Deskripsi tidak boleh kosong.", "Peringatan");
+                return;
+            }
+
             this.DialogResult = true;
-            this.Close();
         }
 
         private void Batal_Click(object sender, RoutedEventArgs e)
