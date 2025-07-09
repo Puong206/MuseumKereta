@@ -1,8 +1,9 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Text.RegularExpressions;
 
 namespace MuseumApp
 {
@@ -18,7 +19,18 @@ namespace MuseumApp
             NIPPTextBox.Text = nipp;
             NamaPegawaiTextBox.Text = nama;
 
-            // Jika status tidak kosong (mode edit), pilih item yang sesuai
+            // Jika dalam mode edit, nonaktifkan input NIPP
+            if (!string.IsNullOrEmpty(nipp))
+            {
+                NIPPTextBox.IsEnabled = false;
+                NamaPegawaiTextBox.Focus();
+            }
+            else
+            {
+                NIPPTextBox.Focus();
+            }
+
+            // Pilih item ComboBox yang sesuai
             if (!string.IsNullOrEmpty(status))
             {
                 foreach (ComboBoxItem item in StatusKaryawanComboBox.Items)
@@ -32,69 +44,43 @@ namespace MuseumApp
             }
             else
             {
-                // Set default untuk mode tambah
-                StatusKaryawanComboBox.SelectedIndex = 0;
+                // Set default untuk mode tambah jika belum ada yang terpilih
+                if (StatusKaryawanComboBox.SelectedIndex == -1)
+                {
+                    StatusKaryawanComboBox.SelectedIndex = 0;
+                }
             }
-        }
-
-        public void DisableNIPPInput()
-        {
-            NIPPTextBox.IsEnabled = false;
-        }
-
-        private void NIPPTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
-        private void NamaPegawaiTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
-        private void NamaPegawaiTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            // Regex ini mengizinkan huruf (a-z, A-Z), spasi, dan titik.
-            //Regex regex = new Regex("[^a-zA-Z .]");
-            //e.Handled = regex.IsMatch(e.Text);
-        }
-
-        private void StatusKaryawanTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
         }
 
         private void Simpan_Click(object sender, RoutedEventArgs e)
         {
-            if (NIPPTextBox.IsEnabled && string.IsNullOrWhiteSpace(NIPPTextBox.Text) && string.IsNullOrWhiteSpace(NamaPegawaiTextBox.Text))
+            // --- Validasi Input ---
+            string nipp = NIPPTextBox.Text.Trim();
+            string nama = NamaPegawaiTextBox.Text.Trim();
+
+            // Validasi NIPP (hanya jika dalam mode 'Tambah')
+            if (NIPPTextBox.IsEnabled && (string.IsNullOrWhiteSpace(nipp) || nipp.Length != 5 || !nipp.All(char.IsDigit)))
             {
-                CustomMessageBox.ShowWarning("NIPP dan Nama Karyawan wajib diisi.", "Peringatan");
+                CustomMessageBox.ShowWarning("NIPP harus diisi dan terdiri dari 5 digit angka.", "Validasi Gagal");
                 return;
             }
 
-            // Cek NIPP satu per satu (hanya untuk add)
-            if (NIPPTextBox.IsEnabled && string.IsNullOrWhiteSpace(NIPPTextBox.Text))
+            // Validasi Nama
+            Regex regex = new Regex("^[a-zA-Z .']+$"); // Izinkan huruf, spasi, titik, dan apostrof
+            if (string.IsNullOrWhiteSpace(nama) || !regex.IsMatch(nama))
             {
-                CustomMessageBox.ShowWarning("NIPP tidak boleh kosong.", "Peringatan");
+                CustomMessageBox.ShowWarning("Nama Pegawai harus diisi dan hanya boleh berisi huruf dan spasi.", "Validasi Gagal");
                 return;
             }
 
-            // Cek Nama Karyawan
-            if (string.IsNullOrWhiteSpace(NamaPegawaiTextBox.Text))
-            {
-                CustomMessageBox.ShowWarning("Nama Pegawai tidak boleh kosong.", "Peringatan");
-                return;
-            }
-
-            // Cek Status
+            // Validasi Status
             if (StatusKaryawanComboBox.SelectedItem == null)
             {
-                CustomMessageBox.ShowWarning("Status Karyawan harus dipilih.", "Peringatan");
+                CustomMessageBox.ShowWarning("Status Karyawan harus dipilih.", "Validasi Gagal");
                 return;
             }
 
-            // Set properti DialogResult menjadi true HANYA jika validasi lolos.
-            // Logika untuk menyimpan properti tidak lagi diperlukan di sini karena sudah ada public getter.
+            // Jika semua validasi lolos, tutup dialog
             this.DialogResult = true;
         }
 

@@ -1,9 +1,4 @@
-﻿using System.IO;
-using NPOI.SS.UserModel;
-using NPOI.XSSF.UserModel;
-using Microsoft.Win32;
-
-using System;
+﻿using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Runtime.Caching;
@@ -25,69 +20,72 @@ namespace MuseumApp
             AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5)
         };
         private const string CacheKey = "KaryawanData";
+
         private string selectedNIPP;
-        //private SqlConnection conn;
-        private SqlDataAdapter adapter;
-        //private DataTable dt;
+        private string selectedNama;
+        private string selectedStatus;
+
         public Kelola_Pegawai(string connStr)
         {
             InitializeComponent();
             connectionString = connStr;
             EnsureIndexes();
             LoadData();
+            // Nonaktifkan tombol Edit dan Hapus saat pertama kali dimuat
+            BtnEditPegawai.IsEnabled = false;
         }
 
         private void EnsureIndexes()
         {
-            using (SqlConnection conn = new SqlConnection(connectionString)) 
+            try
             {
-                conn.Open();
-                var indexScript = @"
-                IF OBJECT_ID('dbo.Karyawan', 'U') IS NOT NULL
-                BEGIN
-                    IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_NamaKaryawan' AND object_id = OBJECT_ID('dbo.Karyawan'))
-                        CREATE NONCLUSTERED INDEX idx_NamaKaryawan ON  dbo.Karyawan(NamaKaryawan);
-                END";
-                using (SqlCommand cmd = new SqlCommand(indexScript, conn)) 
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Open();
+                    var indexScript = @"
+                    IF OBJECT_ID('dbo.Karyawan', 'U') IS NOT NULL
+                    BEGIN
+                        IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_NamaKaryawan' AND object_id = OBJECT_ID('dbo.Karyawan'))
+                            CREATE NONCLUSTERED INDEX idx_NamaKaryawan ON dbo.Karyawan(NamaKaryawan);
+                    END";
+                    using (SqlCommand cmd = new SqlCommand(indexScript, conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                CustomMessageBox.ShowError("Gagal memastikan indeks: " + ex.Message, "Error Indeks");
             }
         }
 
         private void LoadData()
         {
-            DataTable dt = _cache.Get(CacheKey) as DataTable; //cek cache
-
-            if (dt == null) 
+            DataTable dt = _cache.Get(CacheKey) as DataTable;
+            if (dt == null)
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                try
                 {
-                    try
+                    using (SqlConnection conn = new SqlConnection(connectionString))
                     {
                         conn.Open();
-
-                        adapter = new SqlDataAdapter("SELECT NIPP, NamaKaryawan, statusKaryawan FROM Karyawan", conn);
-
+                        SqlDataAdapter adapter = new SqlDataAdapter("SELECT NIPP, NamaKaryawan, statusKaryawan FROM Karyawan", conn);
                         dt = new DataTable();
                         adapter.Fill(dt);
                         dataGridPegawai.ItemsSource = dt.DefaultView;
                         _cache.Set(CacheKey, dt, _policy);
-                        conn.Close();
                     }
-                    catch (Exception ex)
-                    {
-                        CustomMessageBox.ShowError("Gagal memuat data: " + ex.Message);
-                    }
-                    
-
+                }
+                catch (Exception ex)
+                {
+                    CustomMessageBox.ShowError("Gagal memuat data: " + ex.Message);
                 }
             }
-            else 
+            else
             {
                 dataGridPegawai.ItemsSource = dt.DefaultView;
             }
-            
         }
 
         private void dataGridPegawai_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -95,31 +93,29 @@ namespace MuseumApp
             if (dataGridPegawai.SelectedItem is DataRowView row)
             {
                 selectedNIPP = row["NIPP"]?.ToString();
+                selectedNama = row["NamaKaryawan"]?.ToString();
+                selectedStatus = row["statusKaryawan"]?.ToString();
+
+                // Mengisi TextBox di UI (jika masih digunakan)
                 txtNIPP.Text = selectedNIPP;
-                txtNama.Text = row["NamaKaryawan"]?.ToString();
-                txtNIPP.IsEnabled = false;
+                txtNama.Text = selectedNama;
+                txtNIPP.IsEnabled = false; // NIPP tidak boleh diubah dari sini
 
-                if (BtnEditPegawai != null)
-                {
-                    BtnEditPegawai.IsEnabled = true;
-                }
-
+                bool isItemSelected = !string.IsNullOrEmpty(selectedNIPP);
+                BtnEditPegawai.IsEnabled = isItemSelected;
             }
             else
             {
-                selectedNIPP = string.Empty;
+                selectedNIPP = null;
+                selectedNama = null;
+                selectedStatus = null;
+
                 txtNIPP.Text = string.Empty;
                 txtNama.Text = string.Empty;
-                txtNIPP.IsEnabled = false;
 
-                if (BtnEditPegawai != null)
-                {
-                    BtnEditPegawai.IsEnabled = false;
-                }
+                BtnEditPegawai.IsEnabled = false;
             }
         }
-
-        
 
         private void BtnTambahPegawai_Click(object sender, RoutedEventArgs e)
         {
@@ -128,32 +124,9 @@ namespace MuseumApp
 
             if (dialog.ShowDialog() == true)
             {
-                string NIPP = dialog.NIPP.Trim();
-                string Nama = dialog.NamaKaryawan.Trim();
-                string Status = dialog.StatusKaryawan.Trim();
-
-                Regex regex = new Regex("^[a-zA-Z0-9 ]+$");
-
-                if (string.IsNullOrWhiteSpace(NIPP) && string.IsNullOrWhiteSpace(Nama))
-                {
-                    CustomMessageBox.ShowWarning("NIPP dan Nama Karyawan wajib diisi.", "Input Kosong");
-                    return;
-                }
-                else if (string.IsNullOrWhiteSpace(NIPP) || NIPP.Length != 5 || !NIPP.All(char.IsDigit))
-                {
-                    CustomMessageBox.ShowWarning("NIPP harus diisi dan terdiri dari 5 digit angka.", "Validasi Gagal");
-                    return;
-                }
-                else if (string.IsNullOrWhiteSpace(Nama) || !regex.IsMatch(Nama))
-                {
-                    CustomMessageBox.ShowWarning("Nama Karyawan harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal");
-                    return;
-                }
-                else if (string.IsNullOrWhiteSpace(Status))
-                {
-                    CustomMessageBox.ShowWarning("Status Karyawan harus dipilih.", "Validasi Gagal");
-                    return;
-                }
+                string nipp = dialog.NIPP;
+                string nama = dialog.NamaKaryawan;
+                string status = dialog.StatusKaryawan;
 
                 try
                 {
@@ -162,13 +135,13 @@ namespace MuseumApp
                         using (SqlCommand cmd = new SqlCommand("AddKaryawan", conn))
                         {
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@NIPP", NIPP);
-                            cmd.Parameters.AddWithValue("@NamaKaryawan", Nama);
-                            cmd.Parameters.AddWithValue("@statuskaryawan", Status);
+                            cmd.Parameters.AddWithValue("@NIPP", nipp);
+                            cmd.Parameters.AddWithValue("@NamaKaryawan", nama);
+                            cmd.Parameters.AddWithValue("@statuskaryawan", status);
 
                             conn.Open();
                             cmd.ExecuteNonQuery();
-                            CustomMessageBox.ShowSuccess("Karyawan berhasil ditambahkan");
+                            CustomMessageBox.ShowSuccess("Karyawan berhasil ditambahkan.");
                             _cache.Remove(CacheKey);
                         }
                     }
@@ -179,7 +152,7 @@ namespace MuseumApp
                 {
                     if (sqlEx.Number == 2627) // Primary Key violation
                     {
-                        CustomMessageBox.ShowError($"Gagal menyimpan: NIPP '{NIPP}' sudah terdaftar.", "Data Duplikat");
+                        CustomMessageBox.ShowError($"Gagal menyimpan: NIPP '{nipp}' sudah terdaftar.", "Data Duplikat");
                     }
                     else if (sqlEx.Number == 547) // Check Constraint violation
                     {
@@ -200,44 +173,19 @@ namespace MuseumApp
 
         private void BtnEditPegawai_Click(object sender, RoutedEventArgs e)
         {
-            var selectedRow = dataGridPegawai.SelectedItem as DataRowView;
-            if (selectedRow == null)
+            if (string.IsNullOrEmpty(selectedNIPP))
             {
-                CustomMessageBox.ShowWarning("Pilih pegawai yang ingin diedit.");
+                CustomMessageBox.ShowWarning("Pilih pegawai yang ingin diedit.", "Peringatan");
                 return;
             }
 
-            if (string.IsNullOrEmpty(selectedNIPP))
-            {
-                CustomMessageBox.ShowWarning("NIPP pegawai tidak valid", "Kesalahan ID");
-            }
-
-            
-            string currentNama = selectedRow["NamaKaryawan"].ToString();
-            string currentStatus = selectedRow["statusKaryawan"].ToString();
-
-            var dialog = new InputDialogPegawai(selectedNIPP, currentNama, currentStatus);
+            var dialog = new InputDialogPegawai(selectedNIPP, selectedNama, selectedStatus);
             dialog.Owner = Window.GetWindow(this);
-            dialog.DisableNIPPInput();
 
             if (dialog.ShowDialog() == true)
             {
-                string NIPP = dialog.NIPP.Trim();
-                string namaBaru = dialog.NamaKaryawan.Trim();
-                string statusBaru = dialog.StatusKaryawan.Trim();
-
-                Regex regex = new Regex("^[a-zA-Z0-9 ]+$");
-
-                if (string.IsNullOrWhiteSpace(namaBaru) || !regex.IsMatch(namaBaru))
-                {
-                    CustomMessageBox.ShowWarning("Nama Karyawan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal");
-                    return;
-                }
-                if (string.IsNullOrWhiteSpace(statusBaru))
-                {
-                    CustomMessageBox.ShowWarning("Status Karyawan harus dipilih.", "Validasi Gagal");
-                    return;
-                }
+                string namaBaru = dialog.NamaKaryawan;
+                string statusBaru = dialog.StatusKaryawan;
 
                 try
                 {
@@ -247,12 +195,12 @@ namespace MuseumApp
                         {
                             cmd.CommandType = CommandType.StoredProcedure;
                             cmd.Parameters.AddWithValue("@NIPP", selectedNIPP);
-                            cmd.Parameters.AddWithValue("@NamaKaryawan", (object)namaBaru);
-                            cmd.Parameters.AddWithValue("@statusKaryawan", (object)statusBaru);
+                            cmd.Parameters.AddWithValue("@NamaKaryawan", namaBaru);
+                            cmd.Parameters.AddWithValue("@statusKaryawan", statusBaru);
 
                             conn.Open();
                             cmd.ExecuteNonQuery();
-                            CustomMessageBox.ShowSuccess("Data karyawan berhasil diperbarui");
+                            CustomMessageBox.ShowSuccess("Data karyawan berhasil diperbarui.");
                             _cache.Remove(CacheKey);
                         }
                     }
