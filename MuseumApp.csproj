@@ -362,6 +362,9 @@
     <Resource Include="Images\cover-2-1-b4c03b57f59f99cfb01ec83c400ae689_600x400.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="LiveCharts.Wpf">
+      <Version>0.9.7</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.ReportingServices.ReportViewerControl.WebForms">
       <Version>150.1652.0</Version>
     </PackageReference>

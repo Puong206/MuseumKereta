@@ -6,13 +6,15 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using LiveCharts;
+using LiveCharts.Wpf;
 
 namespace MuseumApp
 {
     public partial class DashboardHomePage : Page
     {
         private readonly string connectionString;
-
+        public SeriesCollection PieChartSeries { get; set; }
         // Kelas internal sederhana untuk menampung data daftar
         private class ListItem
         {
@@ -27,6 +29,9 @@ namespace MuseumApp
         {
             InitializeComponent();
             connectionString = connStr;
+
+            PieChartSeries = new SeriesCollection();
+            DataContext = this;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -73,6 +78,22 @@ namespace MuseumApp
                        TahunPembuatan as Data3
                 FROM BarangMuseum
                 ORDER BY BarangID DESC; -- Ganti dengan 'TanggalDitambahkan DESC' jika ada
+
+                -- 5. BARU: Data untuk Pie Chart (Top 5 Tahun + Lainnya)
+                WITH YearCounts AS (
+                    SELECT
+                        TahunPembuatan,
+                        COUNT(*) AS ItemCount,
+                        ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC, TahunPembuatan DESC) as rn
+                    FROM BarangMuseum
+                    WHERE TahunPembuatan IS NOT NULL
+                    GROUP BY TahunPembuatan
+                )
+                SELECT 'PieChart' as DataType,
+                    CASE WHEN rn <= 5 THEN CAST(TahunPembuatan AS VARCHAR(20)) ELSE 'Lainnya' END AS Data1,
+                    SUM(ItemCount) AS Data2
+                FROM YearCounts
+                GROUP BY CASE WHEN rn <= 5 THEN CAST(TahunPembuatan AS VARCHAR(20)) ELSE 'Lainnya' END;
             ";
 
             try
