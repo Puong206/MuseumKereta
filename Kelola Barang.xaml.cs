@@ -14,8 +14,6 @@ namespace MuseumApp
     public partial class Kelola_Barang : Page
     {
         private readonly string connectionString;
-        
-
         private readonly MemoryCache _cache = MemoryCache.Default;
         private readonly CacheItemPolicy _policy = new CacheItemPolicy
         {
@@ -25,14 +23,12 @@ namespace MuseumApp
         private const string CacheKey = "BarangData";
         private string selectedBarangId;
 
-
         public Kelola_Barang(string connStr)
         {
             InitializeComponent();
             connectionString = connStr;
             EnsureIndexes();
             LoadData();
-           
         }
 
         private void EnsureIndexes()
@@ -60,7 +56,6 @@ namespace MuseumApp
             {
                 CustomMessageBox.ShowError("Gagal memastikan indeks: " + ex.Message, "Error Indeks");
             }
-            
         }
 
         private void LoadData()
@@ -69,7 +64,6 @@ namespace MuseumApp
             if (dt != null) 
             {
                 dataGridBarang.ItemsSource = dt.DefaultView;
-
             }
             else
             {
@@ -77,7 +71,6 @@ namespace MuseumApp
                 {
                     using (SqlConnection conn = new SqlConnection(connectionString))
                     {
-
                         conn.Open();
                         SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM BarangMuseum", conn);
                         DataTable newDt = new DataTable();
@@ -85,15 +78,12 @@ namespace MuseumApp
                         dataGridBarang.ItemsSource = newDt.DefaultView;
                         _cache.Set(CacheKey, newDt, _policy);
                     }
-
                 }
                 catch (Exception ex)
                 {
                     CustomMessageBox.ShowWarning("Gagal memuat data: " + ex.Message);
                 }
             }
-
-
         }
 
         private void BtnTambah_Click(object sender, RoutedEventArgs e)
@@ -131,7 +121,6 @@ namespace MuseumApp
                 }
 
                 if (string.IsNullOrWhiteSpace(asalBarang) || !regex.IsMatch(asalBarang)) { CustomMessageBox.ShowWarning("Asal Barang harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal"); return; }
-
 
                 try
                 {
@@ -184,7 +173,6 @@ namespace MuseumApp
                 {
                     CustomMessageBox.ShowError("Terjadi kesalahan umum: " + ex.Message, "Kesalahan");
                 }
-
             }
         }
 
@@ -227,13 +215,11 @@ namespace MuseumApp
                     return;
                 }
 
-               
                 if (string.IsNullOrWhiteSpace(namaBarang) || !regexFormat.IsMatch(namaBarang)) { CustomMessageBox.ShowWarning("Nama Barang harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal"); return; }
                 if (string.IsNullOrWhiteSpace(deskripsi)) { CustomMessageBox.ShowWarning("Deskripsi tidak boleh kosong.", "Validasi Gagal"); return; }
                 if (!int.TryParse(dialog.KoleksiID.Trim(), out koleksiIdInt)) { CustomMessageBox.ShowWarning("KoleksiID harus berupa angka yang valid.", "Validasi Gagal"); return; }
                 if (tahunPembuatan.Length != 4 || !int.TryParse(tahunPembuatan, out int tahunPembuatanInt)) { CustomMessageBox.ShowWarning("Tahun Pembuatan harus terdiri dari 4 digit angka.", "Validasi Gagal"); return; }
 
-             
                 if (tahunPembuatanInt > DateTime.Now.Year)
                 {
                     CustomMessageBox.ShowWarning($"Tahun Pembuatan tidak boleh lebih dari tahun sekarang ({DateTime.Now.Year}).", "Tahun Tidak Valid");
@@ -241,7 +227,6 @@ namespace MuseumApp
                 }
 
                 if (string.IsNullOrWhiteSpace(asalBarang) || !regexFormat.IsMatch(asalBarang)) { CustomMessageBox.ShowWarning("Asal Barang harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal"); return; }
-
 
                 try
                 {
@@ -298,7 +283,6 @@ namespace MuseumApp
                 {
                     CustomMessageBox.ShowError("Terjadi kesalahan tak terduga saat mengubah data: " + ex.Message, "Kesalahan Umum");
                 }
-
             }
         }
 
@@ -311,7 +295,6 @@ namespace MuseumApp
                 return;
             }
             
-
             if (string.IsNullOrWhiteSpace(selectedBarangId))
             {
                 CustomMessageBox.ShowError("BarangID dari data yang dipilih tidak valid.", "Kesalahan Data");
