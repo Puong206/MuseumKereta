@@ -103,36 +103,35 @@ namespace MuseumApp
             {
                 string barangID = dialog.BarangID.Trim();
                 string namaBarang = dialog.NamaBarang.Trim();
+                string deskripsi = dialog.Deskripsi.Trim();
                 string tahunPembuatan = dialog.TahunPembuatan.Trim();
                 string asalBarang = dialog.AsalBarang.Trim();
                 Regex regex = new Regex("^[a-zA-Z0-9 ]+$");
                 int koleksiIdInt;
 
-                if (barangID.Length != 5 || !barangID.All(char.IsDigit))
+                if (string.IsNullOrWhiteSpace(barangID) && string.IsNullOrWhiteSpace(namaBarang) && string.IsNullOrWhiteSpace(dialog.KoleksiID))
                 {
-                    CustomMessageBox.ShowWarning("BarangID harus terdiri dari 5 digit angka.", "Validasi Gagal");
+                    CustomMessageBox.ShowWarning("Semua data wajib diisi.", "Input Kosong");
+                    return; 
+                }
+                if (barangID.Length != 5 || !barangID.All(char.IsDigit)) 
+                { 
+                    CustomMessageBox.ShowWarning("BarangID harus terdiri dari 5 digit angka.", "Validasi Gagal"); 
+                    return; 
+                }
+                if (string.IsNullOrWhiteSpace(namaBarang) || !regex.IsMatch(namaBarang)) { CustomMessageBox.ShowWarning("Nama Barang harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal"); return; }
+                if (string.IsNullOrWhiteSpace(deskripsi)) { CustomMessageBox.ShowWarning("Deskripsi tidak boleh kosong.", "Validasi Gagal"); return; }
+                if (!int.TryParse(dialog.KoleksiID.Trim(), out koleksiIdInt)) { CustomMessageBox.ShowWarning("KoleksiID harus berupa angka yang valid.", "Validasi Gagal"); return; }
+                if (tahunPembuatan.Length != 4 || !int.TryParse(tahunPembuatan, out int tahunPembuatanInt)) { CustomMessageBox.ShowWarning("Tahun Pembuatan harus terdiri dari 4 digit angka.", "Validasi Gagal"); return; }
+
+                if (tahunPembuatanInt > DateTime.Now.Year)
+                {
+                    CustomMessageBox.ShowWarning($"Tahun Pembuatan tidak boleh lebih dari tahun sekarang ({DateTime.Now.Year}).", "Tahun Tidak Valid");
                     return;
                 }
-                if (string.IsNullOrWhiteSpace(namaBarang) || !regex.IsMatch(namaBarang))
-                {
-                    CustomMessageBox.ShowWarning("Nama Barang harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal");
-                    return;
-                }
-                if (tahunPembuatan.Length != 4 || !tahunPembuatan.All(char.IsDigit))
-                {
-                    CustomMessageBox.ShowWarning("Tahun Pembuatan harus terdiri dari 4 digit angka.", "Validasi Gagal");
-                    return;
-                }
-                if (string.IsNullOrWhiteSpace(asalBarang) || !regex.IsMatch(asalBarang))
-                {
-                    CustomMessageBox.ShowWarning("Asal Barang harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal");
-                    return;
-                }
-                if (!int.TryParse(dialog.KoleksiID, out koleksiIdInt))
-                {
-                    CustomMessageBox.ShowWarning("KoleksiID harus berupa angka yang valid.", "Validasi Gagal");
-                    return;
-                }
+
+                if (string.IsNullOrWhiteSpace(asalBarang) || !regex.IsMatch(asalBarang)) { CustomMessageBox.ShowWarning("Asal Barang harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal"); return; }
+
 
                 try
                 {
@@ -161,7 +160,7 @@ namespace MuseumApp
                     {
                         CustomMessageBox.ShowError($"Gagal menyimpan: BarangID '{barangID}' sudah terdaftar.", "Data Duplikat");
                     }
-                    else if (sqlEx.Number == 547) // foreign Key atau Check Constraint violation
+                    else if (sqlEx.Number == 547) // foreign Key atau check Constraint violation
                     {
                         if (sqlEx.Message.Contains("FK_"))
                         {
@@ -218,13 +217,30 @@ namespace MuseumApp
                 string namaBarang = dialog.NamaBarang.Trim();
                 string tahunPembuatan = dialog.TahunPembuatan.Trim();
                 string asalBarang = dialog.AsalBarang.Trim();
+                string deskripsi = dialog.Deskripsi.Trim();
                 Regex regexFormat = new Regex("^[a-zA-Z0-9 ]+$");
                 int koleksiIdInt;
 
+                if (string.IsNullOrWhiteSpace(namaBarang) && string.IsNullOrWhiteSpace(deskripsi) && string.IsNullOrWhiteSpace(dialog.KoleksiID))
+                {
+                    CustomMessageBox.ShowWarning("Data utama (Nama, Deskripsi, Koleksi ID) tidak boleh kosong saat mengedit.", "Input Kosong");
+                    return;
+                }
+
+               
                 if (string.IsNullOrWhiteSpace(namaBarang) || !regexFormat.IsMatch(namaBarang)) { CustomMessageBox.ShowWarning("Nama Barang harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal"); return; }
-                if (tahunPembuatan.Length != 4 || !tahunPembuatan.All(char.IsDigit)) { CustomMessageBox.ShowWarning("Tahun Pembuatan harus terdiri dari 4 digit angka.", "Validasi Gagal"); return; }
+                if (string.IsNullOrWhiteSpace(deskripsi)) { CustomMessageBox.ShowWarning("Deskripsi tidak boleh kosong.", "Validasi Gagal"); return; }
+                if (!int.TryParse(dialog.KoleksiID.Trim(), out koleksiIdInt)) { CustomMessageBox.ShowWarning("KoleksiID harus berupa angka yang valid.", "Validasi Gagal"); return; }
+                if (tahunPembuatan.Length != 4 || !int.TryParse(tahunPembuatan, out int tahunPembuatanInt)) { CustomMessageBox.ShowWarning("Tahun Pembuatan harus terdiri dari 4 digit angka.", "Validasi Gagal"); return; }
+
+             
+                if (tahunPembuatanInt > DateTime.Now.Year)
+                {
+                    CustomMessageBox.ShowWarning($"Tahun Pembuatan tidak boleh lebih dari tahun sekarang ({DateTime.Now.Year}).", "Tahun Tidak Valid");
+                    return;
+                }
+
                 if (string.IsNullOrWhiteSpace(asalBarang) || !regexFormat.IsMatch(asalBarang)) { CustomMessageBox.ShowWarning("Asal Barang harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal"); return; }
-                if (!int.TryParse(dialog.KoleksiID, out koleksiIdInt)) { CustomMessageBox.ShowWarning("KoleksiID harus berupa angka yang valid.", "Validasi Gagal"); return; }
 
 
                 try

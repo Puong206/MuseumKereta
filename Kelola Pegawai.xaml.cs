@@ -134,22 +134,26 @@ namespace MuseumApp
 
                 Regex regex = new Regex("^[a-zA-Z0-9 ]+$");
 
-                if (NIPP.Length != 5 || !NIPP.All(char.IsDigit))
+                if (string.IsNullOrWhiteSpace(NIPP) && string.IsNullOrWhiteSpace(Nama))
                 {
-                    CustomMessageBox.ShowWarning("NIPP harus terdiri dari 5 digit angka.", "Validasi Gagal");
+                    CustomMessageBox.ShowWarning("NIPP dan Nama Karyawan wajib diisi.", "Input Kosong");
                     return;
                 }
-                if (string.IsNullOrWhiteSpace(Nama) || !regex.IsMatch(Nama))
+                else if (string.IsNullOrWhiteSpace(NIPP) || NIPP.Length != 5 || !NIPP.All(char.IsDigit))
+                {
+                    CustomMessageBox.ShowWarning("NIPP harus diisi dan terdiri dari 5 digit angka.", "Validasi Gagal");
+                    return;
+                }
+                else if (string.IsNullOrWhiteSpace(Nama) || !regex.IsMatch(Nama))
                 {
                     CustomMessageBox.ShowWarning("Nama Karyawan harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal");
                     return;
                 }
-                if (string.IsNullOrWhiteSpace(Status))
+                else if (string.IsNullOrWhiteSpace(Status))
                 {
                     CustomMessageBox.ShowWarning("Status Karyawan harus dipilih.", "Validasi Gagal");
                     return;
                 }
-
 
                 try
                 {
@@ -218,10 +222,12 @@ namespace MuseumApp
 
             if (dialog.ShowDialog() == true)
             {
+                string NIPP = dialog.NIPP.Trim();
                 string namaBaru = dialog.NamaKaryawan.Trim();
                 string statusBaru = dialog.StatusKaryawan.Trim();
 
                 Regex regex = new Regex("^[a-zA-Z0-9 ]+$");
+
                 if (string.IsNullOrWhiteSpace(namaBaru) || !regex.IsMatch(namaBaru))
                 {
                     CustomMessageBox.ShowWarning("Nama Karyawan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal");

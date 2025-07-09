@@ -55,10 +55,7 @@ namespace MuseumApp
         private void NamaPegawaiTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             // Regex ini mengizinkan huruf (a-z, A-Z), spasi, dan titik.
-            // Anda bisa menambahkan karakter lain jika diperlukan, misalnya tanda kutip.
             //Regex regex = new Regex("[^a-zA-Z .]");
-
-            // e.Handled = true akan MENCEGAH karakter ditampilkan jika tidak cocok dengan pola.
             //e.Handled = regex.IsMatch(e.Text);
         }
 
@@ -69,17 +66,27 @@ namespace MuseumApp
 
         private void Simpan_Click(object sender, RoutedEventArgs e)
         {
-            // Validasi dasar sebelum menutup
-            if (string.IsNullOrWhiteSpace(NIPPTextBox.Text) && NIPPTextBox.IsEnabled)
+            if (NIPPTextBox.IsEnabled && string.IsNullOrWhiteSpace(NIPPTextBox.Text) && string.IsNullOrWhiteSpace(NamaPegawaiTextBox.Text))
+            {
+                CustomMessageBox.ShowWarning("NIPP dan Nama Karyawan wajib diisi.", "Peringatan");
+                return;
+            }
+
+            // Cek NIPP satu per satu (hanya untuk add)
+            if (NIPPTextBox.IsEnabled && string.IsNullOrWhiteSpace(NIPPTextBox.Text))
             {
                 CustomMessageBox.ShowWarning("NIPP tidak boleh kosong.", "Peringatan");
                 return;
             }
+
+            // Cek Nama Karyawan
             if (string.IsNullOrWhiteSpace(NamaPegawaiTextBox.Text))
             {
                 CustomMessageBox.ShowWarning("Nama Pegawai tidak boleh kosong.", "Peringatan");
                 return;
             }
+
+            // Cek Status
             if (StatusKaryawanComboBox.SelectedItem == null)
             {
                 CustomMessageBox.ShowWarning("Status Karyawan harus dipilih.", "Peringatan");
