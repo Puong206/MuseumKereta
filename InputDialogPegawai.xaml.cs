@@ -90,11 +90,6 @@ namespace MuseumApp
             this.Close();
         }
 
-        private void StatusKaryawanComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ButtonState == MouseButtonState.Pressed)
