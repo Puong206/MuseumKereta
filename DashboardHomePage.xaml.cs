@@ -159,6 +159,19 @@ namespace MuseumApp
                                 });
                             }
                             NewItemsList.ItemsSource = newItems;
+
+                            reader.NextResult();
+                            PieChartSeries.Clear();
+                            while (reader.Read())
+                            {
+                                PieChartSeries.Add(new PieSeries
+                                {
+                                    Title = reader["Data1"].ToString(),
+                                    Values = new ChartValues<int> { Convert.ToInt32(reader["Data2"]) },
+                                    DataLabels = true,
+                                    LabelPoint = chartPoint => string.Format("{0} ({1:P})", chartPoint.Y, chartPoint.Participation)
+                                });
+                            }
                         }
                     }
                 }
