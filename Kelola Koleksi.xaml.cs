@@ -187,11 +187,6 @@ namespace MuseumApp
 
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
-            if (dataGridKoleksi.SelectedItem == null)
-            {
-                CustomMessageBox.ShowWarning("Pilih koleksi yang ingin diedit");
-                return;
-            }
 
             if (selectedId <= 0)
             {
@@ -199,7 +194,9 @@ namespace MuseumApp
                 return;
             }
 
-            var dialog = new InputDialog();
+            var dialog = new InputDialog(selectedJenis, selectedDeskripsi);
+
+            //var dialog = new InputDialog();
             if (dialog.JenisTextBox != null) dialog.JenisTextBox.Text = selectedJenis;
             if (dialog.DeskripsiTextBox != null) dialog.DeskripsiTextBox.Text = selectedDeskripsi;
 
