@@ -9,57 +9,51 @@ namespace MuseumApp
         public string JenisKoleksi { get; private set; }
         public string Deskripsi { get; private set; }
 
+        // Constructor untuk mode "Tambah"
         public InputDialog()
         {
             InitializeComponent();
+            JenisTextBox.Focus();
         }
 
+        // Constructor untuk mode "Edit"
         public InputDialog(string jenisAwal, string deskripsiAwal)
         {
             InitializeComponent();
 
-            
+            // Mengisi field dengan data yang ada
             JenisTextBox.Text = jenisAwal;
             DeskripsiTextBox.Text = deskripsiAwal;
-        }
-
-        private void JenisTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
-
-        }
-
-        private void DeskripsiTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
-
+            JenisTextBox.Focus();
         }
 
         private void Simpan_Click(object sender, RoutedEventArgs e)
         {
             string jenisKoleksi = JenisTextBox.Text.Trim();
             string deskripsi = DeskripsiTextBox.Text.Trim();
+
+            // Validasi input sebelum menutup dialog
             Regex regex = new Regex("^[a-zA-Z0-9 ]+$");
             if (string.IsNullOrWhiteSpace(jenisKoleksi) || !regex.IsMatch(jenisKoleksi))
             {
                 CustomMessageBox.ShowWarning("Jenis Koleksi harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal");
-                return;
+                return; // Jangan tutup dialog jika validasi gagal
             }
             if (string.IsNullOrWhiteSpace(deskripsi))
             {
                 CustomMessageBox.ShowWarning("Deskripsi tidak boleh kosong.", "Peringatan");
-                return;
+                return; // Jangan tutup dialog jika validasi gagal
             }
 
+            // Jika validasi berhasil, set properti dan tutup dialog
             this.JenisKoleksi = jenisKoleksi;
             this.Deskripsi = deskripsi;
-
-
             this.DialogResult = true;
         }
 
         private void Batal_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = false;
-            this.Close();
+            this.DialogResult = false; // Cukup set DialogResult, window akan tertutup otomatis
         }
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
