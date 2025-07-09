@@ -21,10 +21,13 @@ namespace MuseumApp
         };
 
         private const string CacheKey = "BarangData";
-        private int selectedId;
-        private string selectedJenis;
-        private string selectedDeskripsi;
+
         private string selectedBarangId;
+        private string selectedNamaBarang;
+        private string selectedDeskripsi;
+        private string selectedKoleksiId;
+        private string selectedTahunPembuatan;
+        private string selectedAsalBarang;
 
         public Kelola_Barang(string connStr)
         {
@@ -32,6 +35,9 @@ namespace MuseumApp
             connectionString = connStr;
             EnsureIndexes();
             LoadData();
+            // Menonaktifkan tombol Edit dan Hapus saat pertama kali dimuat
+            BtnEdit.IsEnabled = false;
+            BtnHapus.IsEnabled = false;
         }
 
         private void EnsureIndexes()
@@ -41,14 +47,13 @@ namespace MuseumApp
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-
+                    // Skrip untuk memastikan indeks ada untuk performa query yang lebih baik
                     var indexScript = @"
                     IF OBJECT_ID('dbo.BarangMuseum', 'U') IS NOT NULL
-                BEGIN
-                    IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_Barang_KoleksiID' AND object_id = OBJECT_ID('dbo.BarangMuseum'))
-                        CREATE NONCLUSTERED INDEX idx_Barang_KoleksiID ON dbo.BarangMuseum(KoleksiID);
-                END
-                ";
+                    BEGIN
+                        IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_Barang_KoleksiID' AND object_id = OBJECT_ID('dbo.BarangMuseum'))
+                            CREATE NONCLUSTERED INDEX idx_Barang_KoleksiID ON dbo.BarangMuseum(KoleksiID);
+                    END";
                     using (SqlCommand cmd = new SqlCommand(indexScript, conn))
                     {
                         cmd.ExecuteNonQuery();
@@ -63,13 +68,15 @@ namespace MuseumApp
 
         private void LoadData()
         {
+            // Coba ambil data dari cache terlebih dahulu
             DataTable dt = _cache.Get(CacheKey) as DataTable;
-            if (dt != null) 
+            if (dt != null)
             {
                 dataGridBarang.ItemsSource = dt.DefaultView;
             }
             else
             {
+                // Jika tidak ada di cache, ambil dari database
                 try
                 {
                     using (SqlConnection conn = new SqlConnection(connectionString))
@@ -79,6 +86,8 @@ namespace MuseumApp
                         DataTable newDt = new DataTable();
                         adapter.Fill(newDt);
                         dataGridBarang.ItemsSource = newDt.DefaultView;
+
+                        // Simpan data ke cache
                         _cache.Set(CacheKey, newDt, _policy);
                     }
                 }
@@ -99,49 +108,49 @@ namespace MuseumApp
                 string deskripsi = dialog.Deskripsi.Trim();
                 string tahunPembuatan = dialog.TahunPembuatan.Trim();
                 string asalBarang = dialog.AsalBarang.Trim();
+                string koleksiIdStr = dialog.KoleksiID.Trim();
+
+                // Validasi Input
                 Regex regex = new Regex("^[a-zA-Z0-9 ]+$");
-                int koleksiIdInt;
 
-                if (string.IsNullOrWhiteSpace(barangID) && string.IsNullOrWhiteSpace(namaBarang) && string.IsNullOrWhiteSpace(dialog.KoleksiID))
+                if (string.IsNullOrWhiteSpace(barangID) || string.IsNullOrWhiteSpace(namaBarang) || string.IsNullOrWhiteSpace(koleksiIdStr))
                 {
-                    CustomMessageBox.ShowWarning("Semua data wajib diisi.", "Input Kosong");
-                    return; 
+                    CustomMessageBox.ShowWarning("BarangID, Nama Barang, dan KoleksiID wajib diisi.", "Input Kosong");
+                    return;
                 }
-                if (barangID.Length != 5 || !barangID.All(char.IsDigit)) 
-                { 
-                    CustomMessageBox.ShowWarning("BarangID harus terdiri dari 5 digit angka.", "Validasi Gagal"); 
-                    return; 
+                if (barangID.Length != 5 || !barangID.All(char.IsDigit))
+                {
+                    CustomMessageBox.ShowWarning("BarangID harus terdiri dari 5 digit angka.", "Validasi Gagal");
+                    return;
                 }
-                if (string.IsNullOrWhiteSpace(namaBarang) || !regex.IsMatch(namaBarang)) { CustomMessageBox.ShowWarning("Nama Barang harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal"); return; }
+                if (!regex.IsMatch(namaBarang)) { CustomMessageBox.ShowWarning("Nama Barang hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal"); return; }
                 if (string.IsNullOrWhiteSpace(deskripsi)) { CustomMessageBox.ShowWarning("Deskripsi tidak boleh kosong.", "Validasi Gagal"); return; }
-                if (!int.TryParse(dialog.KoleksiID.Trim(), out koleksiIdInt)) { CustomMessageBox.ShowWarning("KoleksiID harus berupa angka yang valid.", "Validasi Gagal"); return; }
+                if (!int.TryParse(koleksiIdStr, out int koleksiIdInt)) { CustomMessageBox.ShowWarning("KoleksiID harus berupa angka yang valid.", "Validasi Gagal"); return; }
                 if (tahunPembuatan.Length != 4 || !int.TryParse(tahunPembuatan, out int tahunPembuatanInt)) { CustomMessageBox.ShowWarning("Tahun Pembuatan harus terdiri dari 4 digit angka.", "Validasi Gagal"); return; }
-
                 if (tahunPembuatanInt > DateTime.Now.Year)
                 {
                     CustomMessageBox.ShowWarning($"Tahun Pembuatan tidak boleh lebih dari tahun sekarang ({DateTime.Now.Year}).", "Tahun Tidak Valid");
                     return;
                 }
-
                 if (string.IsNullOrWhiteSpace(asalBarang) || !regex.IsMatch(asalBarang)) { CustomMessageBox.ShowWarning("Asal Barang harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal"); return; }
 
                 try
                 {
                     using (SqlConnection conn = new SqlConnection(connectionString))
                     {
-                        using (SqlCommand cmd = new SqlCommand("Addbarang", conn))
+                        using (SqlCommand cmd = new SqlCommand("AddBarang", conn)) // Pastikan nama Stored Procedure benar
                         {
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@BarangID", dialog.BarangID);
-                            cmd.Parameters.AddWithValue("@NamaBarang", dialog.NamaBarang);
-                            cmd.Parameters.AddWithValue("@Deskripsi", dialog.Deskripsi);
+                            cmd.Parameters.AddWithValue("@BarangID", barangID);
+                            cmd.Parameters.AddWithValue("@NamaBarang", namaBarang);
+                            cmd.Parameters.AddWithValue("@Deskripsi", deskripsi);
                             cmd.Parameters.AddWithValue("@KoleksiID", koleksiIdInt);
-                            cmd.Parameters.AddWithValue("@TahunPembuatan", dialog.TahunPembuatan);
-                            cmd.Parameters.AddWithValue("@AsalBarang", dialog.AsalBarang);
+                            cmd.Parameters.AddWithValue("@TahunPembuatan", tahunPembuatan);
+                            cmd.Parameters.AddWithValue("@AsalBarang", asalBarang);
                             conn.Open();
                             cmd.ExecuteNonQuery();
                             CustomMessageBox.ShowSuccess("Barang berhasil ditambahkan");
-                            _cache.Remove(CacheKey);
+                            _cache.Remove(CacheKey); // Hapus cache agar data baru dimuat
                         }
                     }
                     LoadData();
@@ -181,51 +190,64 @@ namespace MuseumApp
 
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
-            if (selectedId <= 0)
+            // Pastikan sebuah baris telah dipilih
+            if (string.IsNullOrEmpty(selectedBarangId))
             {
-                CustomMessageBox.ShowWarning("Pilih koleksi yang valid untuk diedit.", "Peringatan");
+                CustomMessageBox.ShowWarning("Pilih barang yang ingin diedit.", "Peringatan");
                 return;
             }
 
-            // Panggil dialog dengan mengirim data yang sudah dipilih
-            var dialog = new InputDialog(selectedJenis, selectedDeskripsi);
+            // Buka dialog edit dengan data yang sudah ada
+            var dialog = new InputDialogBarang(selectedBarangId, selectedNamaBarang, selectedDeskripsi, selectedKoleksiId, selectedTahunPembuatan, selectedAsalBarang);
 
             if (dialog.ShowDialog() == true)
             {
-                // Ambil nilai BARU dari dialog setelah ditutup
-                string jenisKoleksi = dialog.JenisKoleksi.Trim();
+                // Ambil nilai BARU dari dialog
+                string namaBarang = dialog.NamaBarang.Trim();
                 string deskripsi = dialog.Deskripsi.Trim();
+                string tahunPembuatan = dialog.TahunPembuatan.Trim();
+                string asalBarang = dialog.AsalBarang.Trim();
+                string koleksiIdStr = dialog.KoleksiID.Trim();
 
                 // Validasi input baru
                 Regex regex = new Regex("^[a-zA-Z0-9 ]+$");
-                if (string.IsNullOrWhiteSpace(jenisKoleksi) || !regex.IsMatch(jenisKoleksi))
+                if (string.IsNullOrWhiteSpace(namaBarang) || string.IsNullOrWhiteSpace(koleksiIdStr))
                 {
-                    CustomMessageBox.ShowWarning("Jenis Koleksi harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal");
+                    CustomMessageBox.ShowWarning("Nama Barang dan KoleksiID wajib diisi.", "Input Kosong");
                     return;
                 }
-                if (string.IsNullOrWhiteSpace(deskripsi))
+                if (!regex.IsMatch(namaBarang)) { CustomMessageBox.ShowWarning("Nama Barang hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal"); return; }
+                if (string.IsNullOrWhiteSpace(deskripsi)) { CustomMessageBox.ShowWarning("Deskripsi tidak boleh kosong.", "Validasi Gagal"); return; }
+                if (!int.TryParse(koleksiIdStr, out int koleksiIdInt)) { CustomMessageBox.ShowWarning("KoleksiID harus berupa angka yang valid.", "Validasi Gagal"); return; }
+                if (tahunPembuatan.Length != 4 || !int.TryParse(tahunPembuatan, out int tahunPembuatanInt)) { CustomMessageBox.ShowWarning("Tahun Pembuatan harus terdiri dari 4 digit angka.", "Validasi Gagal"); return; }
+                if (tahunPembuatanInt > DateTime.Now.Year)
                 {
-                    CustomMessageBox.ShowWarning("Deskripsi harus diisi!", "Peringatan");
+                    CustomMessageBox.ShowWarning($"Tahun Pembuatan tidak boleh lebih dari tahun sekarang ({DateTime.Now.Year}).", "Tahun Tidak Valid");
                     return;
                 }
+                if (string.IsNullOrWhiteSpace(asalBarang) || !regex.IsMatch(asalBarang)) { CustomMessageBox.ShowWarning("Asal Barang harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal"); return; }
 
                 try
                 {
                     using (SqlConnection conn = new SqlConnection(connectionString))
                     {
-                        using (SqlCommand cmd = new SqlCommand("UpdateKoleksi", conn))
+                        // Ganti "UpdateBarang" dengan nama Stored Procedure Anda yang sesuai
+                        using (SqlCommand cmd = new SqlCommand("UpdateBarang", conn))
                         {
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@KoleksiID", selectedId);
-                            cmd.Parameters.AddWithValue("@JenisKoleksi", jenisKoleksi);
+                            cmd.Parameters.AddWithValue("@BarangID", selectedBarangId); // ID barang yang akan diupdate
+                            cmd.Parameters.AddWithValue("@NamaBarang", namaBarang);
                             cmd.Parameters.AddWithValue("@Deskripsi", deskripsi);
+                            cmd.Parameters.AddWithValue("@KoleksiID", koleksiIdInt);
+                            cmd.Parameters.AddWithValue("@TahunPembuatan", tahunPembuatan);
+                            cmd.Parameters.AddWithValue("@AsalBarang", asalBarang);
 
                             conn.Open();
                             cmd.ExecuteNonQuery();
 
-                            CustomMessageBox.ShowSuccess("Koleksi berhasil diperbarui.", "Sukses");
-                            _cache.Remove("KoleksiData");
-                            _cache.Remove("BarangData");
+                            CustomMessageBox.ShowSuccess("Barang berhasil diperbarui.", "Sukses");
+                            _cache.Remove(CacheKey); // Hapus cache
+                            LoadData();
                             LoadData();
                         }
                     }
@@ -234,7 +256,7 @@ namespace MuseumApp
                 {
                     if (sqlEx.Number == 2601) // Unique constraint violation
                     {
-                        CustomMessageBox.ShowError($"Gagal menyimpan: Jenis Koleksi '{jenisKoleksi}' sudah terdaftar.", "Data Duplikat");
+                        CustomMessageBox.ShowError($"Gagal menyimpan: Jenis Koleksi '{selectedKoleksiId}' sudah terdaftar.", "Data Duplikat");
                     }
                     else
                     {

@@ -14,15 +14,19 @@ namespace MuseumApp
         public string AsalBarang { get; private set; }
         public string KoleksiID { get; private set; }
 
+        // Constructor untuk mode "Tambah"
         public InputDialogBarang()
         {
             InitializeComponent();
             IDBarangTextBox.Focus();
         }
 
+        // Constructor untuk mode "Edit"
         public InputDialogBarang(string barangID, string namaBarang, string deskripsi, string koleksiID, string tahun, string asal)
         {
             InitializeComponent();
+
+            // Isi field dengan data yang ada
             IDBarangTextBox.Text = barangID;
             NamaBarangTextBox.Text = namaBarang;
             DeskripsiTextBox.Text = deskripsi;
@@ -30,6 +34,7 @@ namespace MuseumApp
             TahunPembuatanTextBox.Text = tahun;
             AsalBarangTextBox.Text = asal;
 
+            // Nonaktifkan pengeditan ID Barang (Primary Key)
             IDBarangTextBox.IsEnabled = false;
             NamaBarangTextBox.Focus();
         }
@@ -38,6 +43,7 @@ namespace MuseumApp
 
         private void Simpan_Click(object sender, RoutedEventArgs e)
         {
+            // Ambil nilai dari TextBox saat Simpan diklik
             this.BarangID = IDBarangTextBox.Text;
             this.NamaBarang = NamaBarangTextBox.Text;
             this.Deskripsi = DeskripsiTextBox.Text;
@@ -45,7 +51,7 @@ namespace MuseumApp
             this.TahunPembuatan = TahunPembuatanTextBox.Text;
             this.AsalBarang = AsalBarangTextBox.Text;
 
-            this.DialogResult = true;
+            this.DialogResult = true; // Tutup dialog dan kembalikan true
         }
 
         private void Batal_Click(object sender, RoutedEventArgs e)
