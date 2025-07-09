@@ -21,6 +21,9 @@ namespace MuseumApp
         };
 
         private const string CacheKey = "BarangData";
+        private int selectedId;
+        private string selectedJenis;
+        private string selectedDeskripsi;
         private string selectedBarangId;
 
         public Kelola_Barang(string connStr)
@@ -178,110 +181,69 @@ namespace MuseumApp
 
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
-            
-            DataRowView row = dataGridBarang.SelectedItem as DataRowView;
-            if (row == null)
+            if (selectedId <= 0)
             {
-                CustomMessageBox.ShowWarning("Pilih data barang yang akan diedit");
-                return;
-            }
-            string asalBarangID = row["BarangID"]?.ToString();
-            if (string.IsNullOrWhiteSpace(asalBarangID))
-            {
-                CustomMessageBox.ShowError("BarangID data yang dipilih tidak valid", "Kesalahan Data");
+                CustomMessageBox.ShowWarning("Pilih koleksi yang valid untuk diedit.", "Peringatan");
                 return;
             }
 
-            var dialog = new InputDialogBarang(
-                row["BarangID"].ToString(),
-                row["NamaBarang"].ToString(),
-                row["Deskripsi"].ToString(),
-                row["KoleksiID"].ToString(),
-                row["TahunPembuatan"].ToString(),
-                row["AsalBarang"].ToString()) ;
+            // Panggil dialog dengan mengirim data yang sudah dipilih
+            var dialog = new InputDialog(selectedJenis, selectedDeskripsi);
 
             if (dialog.ShowDialog() == true)
             {
-                string namaBarang = dialog.NamaBarang.Trim();
-                string tahunPembuatan = dialog.TahunPembuatan.Trim();
-                string asalBarang = dialog.AsalBarang.Trim();
+                // Ambil nilai BARU dari dialog setelah ditutup
+                string jenisKoleksi = dialog.JenisKoleksi.Trim();
                 string deskripsi = dialog.Deskripsi.Trim();
-                Regex regexFormat = new Regex("^[a-zA-Z0-9 ]+$");
-                int koleksiIdInt;
 
-                if (string.IsNullOrWhiteSpace(namaBarang) && string.IsNullOrWhiteSpace(deskripsi) && string.IsNullOrWhiteSpace(dialog.KoleksiID))
+                // Validasi input baru
+                Regex regex = new Regex("^[a-zA-Z0-9 ]+$");
+                if (string.IsNullOrWhiteSpace(jenisKoleksi) || !regex.IsMatch(jenisKoleksi))
                 {
-                    CustomMessageBox.ShowWarning("Data utama (Nama, Deskripsi, Koleksi ID) tidak boleh kosong saat mengedit.", "Input Kosong");
+                    CustomMessageBox.ShowWarning("Jenis Koleksi harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal");
                     return;
                 }
-
-                if (string.IsNullOrWhiteSpace(namaBarang) || !regexFormat.IsMatch(namaBarang)) { CustomMessageBox.ShowWarning("Nama Barang harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal"); return; }
-                if (string.IsNullOrWhiteSpace(deskripsi)) { CustomMessageBox.ShowWarning("Deskripsi tidak boleh kosong.", "Validasi Gagal"); return; }
-                if (!int.TryParse(dialog.KoleksiID.Trim(), out koleksiIdInt)) { CustomMessageBox.ShowWarning("KoleksiID harus berupa angka yang valid.", "Validasi Gagal"); return; }
-                if (tahunPembuatan.Length != 4 || !int.TryParse(tahunPembuatan, out int tahunPembuatanInt)) { CustomMessageBox.ShowWarning("Tahun Pembuatan harus terdiri dari 4 digit angka.", "Validasi Gagal"); return; }
-
-                if (tahunPembuatanInt > DateTime.Now.Year)
+                if (string.IsNullOrWhiteSpace(deskripsi))
                 {
-                    CustomMessageBox.ShowWarning($"Tahun Pembuatan tidak boleh lebih dari tahun sekarang ({DateTime.Now.Year}).", "Tahun Tidak Valid");
+                    CustomMessageBox.ShowWarning("Deskripsi harus diisi!", "Peringatan");
                     return;
                 }
-
-                if (string.IsNullOrWhiteSpace(asalBarang) || !regexFormat.IsMatch(asalBarang)) { CustomMessageBox.ShowWarning("Asal Barang harus diisi dan hanya boleh berisi huruf, angka, dan spasi.", "Validasi Gagal"); return; }
 
                 try
                 {
-                    using (SqlConnection conn = new SqlConnection(connectionString)) 
+                    using (SqlConnection conn = new SqlConnection(connectionString))
                     {
-                        using (SqlCommand cmd = new SqlCommand("UpdateBarang", conn))
+                        using (SqlCommand cmd = new SqlCommand("UpdateKoleksi", conn))
                         {
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@BarangID", selectedBarangId);
-                            cmd.Parameters.AddWithValue("@NamaBarang", (object)dialog.NamaBarang);
-                            cmd.Parameters.AddWithValue("@Deskripsi", (object)dialog.Deskripsi);
-                            cmd.Parameters.AddWithValue("@KoleksiID", koleksiIdInt);
-                            cmd.Parameters.AddWithValue("@TahunPembuatan", (object)dialog.TahunPembuatan);
-                            cmd.Parameters.AddWithValue("@AsalBarang", (object)(dialog.AsalBarang));
+                            cmd.Parameters.AddWithValue("@KoleksiID", selectedId);
+                            cmd.Parameters.AddWithValue("@JenisKoleksi", jenisKoleksi);
+                            cmd.Parameters.AddWithValue("@Deskripsi", deskripsi);
 
                             conn.Open();
                             cmd.ExecuteNonQuery();
 
-                            CustomMessageBox.ShowSuccess("Data barang berhasil diperbaharui");
-                            _cache.Remove(CacheKey);
+                            CustomMessageBox.ShowSuccess("Koleksi berhasil diperbarui.", "Sukses");
+                            _cache.Remove("KoleksiData");
+                            _cache.Remove("BarangData");
+                            LoadData();
                         }
                     }
-                    LoadData();
                 }
-                catch (SqlException SqlEx)
+                catch (SqlException sqlEx)
                 {
-                    if (SqlEx.Number == 50005)
+                    if (sqlEx.Number == 2601) // Unique constraint violation
                     {
-                        CustomMessageBox.ShowError("Data barang tidak ditemukan. Mungkin sudah dihapus atau ID tidak valid", "Kesalahan Update");
+                        CustomMessageBox.ShowError($"Gagal menyimpan: Jenis Koleksi '{jenisKoleksi}' sudah terdaftar.", "Data Duplikat");
                     }
-
-                    else if (SqlEx.Number == 50004) // Custom error dari SP
-                    {
-                        CustomMessageBox.ShowError($"Gagal menyimpan: KoleksiID '{dialog.KoleksiID}' tidak ditemukan.", "Referensi Salah");
-                    }
-                    else if (SqlEx.Number == 547) // Foreign Key atau Check Constraint
-                    {
-                        if (SqlEx.Message.Contains("FK_"))
-                        {
-                            CustomMessageBox.ShowError($"Gagal menyimpan: KoleksiID '{dialog.KoleksiID}' tidak ditemukan.", "Referensi Salah");
-                        }
-                        else
-                        {
-                            CustomMessageBox.ShowError("Gagal menyimpan: Data yang dimasukkan tidak sesuai format yang ditentukan.", "Format Salah");
-                        }
-                    }
-
                     else
                     {
-                        CustomMessageBox.ShowError("Gagal menambah data" + SqlEx.Message, "Kesalahan database");
+                        CustomMessageBox.ShowError("Gagal memperbarui Koleksi: " + sqlEx.Message, "Kesalahan Database");
                     }
                 }
                 catch (Exception ex)
                 {
-                    CustomMessageBox.ShowError("Terjadi kesalahan tak terduga saat mengubah data: " + ex.Message, "Kesalahan Umum");
+                    CustomMessageBox.ShowError("Terjadi kesalahan tak terduga: " + ex.Message, "Kesalahan Umum");
                 }
             }
         }
